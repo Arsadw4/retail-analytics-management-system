@@ -1,0 +1,44 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    {{ grn[1] }} -- {{ grn[2] }}
+                </h1>
+                <a href="/admin/grn" class="btn secondary">
+                    Back
+                </a>
+            </div>
+            <p>
+                Received: {{ grn[3] }} | Total: ₹{{ "%.2f"|format(grn[4]) }} | Notes: {{ grn[5] or "-" }}
+            </p>
+            <table>
+                <tr>
+                    <th>
+                        Product
+                    </th>
+                    <th>
+                        Qty Received
+                    </th>
+                    <th>
+                        Unit Cost
+                    </th>
+                </tr>
+                {% for i in items %}
+                    <tr>
+                        <td>
+                            {{ i[1] }}
+                        </td>
+                        <td>
+                            {{ i[2] }}
+                        </td>
+                        <td>
+                            ₹{{ "%.2f"|format(i[3]) }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}

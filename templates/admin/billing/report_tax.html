@@ -1,0 +1,70 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Tax Report (CGST / SGST / IGST)
+                </h1>
+                <div>
+                    <a href="/admin/billing/dashboard" class="btn secondary">
+                        Back
+                    </a>
+                    <a href="#" data-print="1" class="btn">
+                        Print
+                    </a>
+                </div>
+            </div>
+            {% if rows %}
+                <table>
+                    <tr>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            CGST
+                        </th>
+                        <th>
+                            SGST
+                        </th>
+                        <th>
+                            IGST
+                        </th>
+                        <th>
+                            Total Tax
+                        </th>
+                        <th>
+                            Taxable Amount
+                        </th>
+                    </tr>
+                    {% for r in rows %}
+                        <tr>
+                            <td>
+                                {{ r[0] }}
+                            </td>
+                            <td>
+                                {{ "%.2f"|format(r[1]) }}
+                            </td>
+                            <td>
+                                {{ "%.2f"|format(r[2]) }}
+                            </td>
+                            <td>
+                                {{ "%.2f"|format(r[3]) }}
+                            </td>
+                            <td>
+                                {{ "%.2f"|format(r[4]) }}
+                            </td>
+                            <td>
+                                {{ "%.2f"|format(r[5]) }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No completed sales recorded yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

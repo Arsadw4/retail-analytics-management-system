@@ -1,0 +1,320 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Invoice {{ sale[1] }}
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/billing_invoice.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="invoice-page">
+        <div class="invoice-toolbar no-print">
+            <div>
+                <a href="/admin/billing/search" class="invoice-btn secondary">
+                    ← Invoices
+                </a>
+                <a href="/admin/billing/invoice/{{ sale[0] }}?width=a4" class="invoice-btn secondary">
+                    A4
+                </a>
+                <a href="/admin/billing/invoice/{{ sale[0] }}?width=58" class="invoice-btn secondary">
+                    58mm
+                </a>
+                <a href="/admin/billing/invoice/{{ sale[0] }}?width=80" class="invoice-btn secondary">
+                    80mm
+                </a>
+            </div>
+            <div>
+                <button class="invoice-btn secondary" data-print="1">
+                    Print
+                </button>
+                <a href="/admin/billing/invoice/{{ sale[0] }}/pdf" class="invoice-btn primary">
+                    Download PDF
+                </a>
+                {% if sale[15] %}
+                    <form method="POST" action="/admin/billing/invoice/{{ sale[0] }}/email" style="display:inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="email" value="{{ sale[15] }}">
+                        <button class="invoice-btn warning">
+                            Email Invoice
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+        <div class="invoice-paper invoice-{{ width }}">
+            <header class="invoice-brand-head">
+                <div class="brand-block">
+                    <div class="invoice-logo">
+                        🛒
+                    </div>
+                    <div>
+                        <div class="invoice-brand">
+                            Retail
+                            <span>
+                                Analytics
+                            </span>
+                        </div>
+                        <small>
+                            Management System
+                        </small>
+                    </div>
+                </div>
+                <div class="invoice-meta">
+                    <strong>
+                        INVOICE
+                    </strong>
+                    <span>
+                        {{ sale[1] }}
+                    </span>
+                    <small>
+                        {{ sale[2] }}
+                    </small>
+                </div>
+            </header>
+            <div class="company-row">
+                <div>
+                    <h2>
+                        {{ company[1] if company else 'Retail Company' }}
+                    </h2>
+                    {% if company and company[3] %}
+                        <p>
+                            {{ company[3] }}
+                        </p>
+                    {% endif %}
+                </div>
+                <div class="company-contact">
+                    {% if company and company[2] %}
+                        <span>
+                            GSTIN: {{ company[2] }}
+                        </span>
+                    {% endif %}
+                    {% if company and company[5] %}
+                        <span>
+                            {{ company[5] }}
+                        </span>
+                    {% endif %}
+                    {% if company and company[6] %}
+                        <span>
+                            {{ company[6] }}
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="invoice-info-grid">
+                <div>
+                    <small>
+                        BILL TO
+                    </small>
+                    <strong>
+                        {{ sale[13] or 'Walk-in Customer' }}
+                    </strong>
+                    {% if sale[14] %}
+                        <span>
+                            {{ sale[14] }}
+                        </span>
+                    {% endif %}
+                    {% if sale[15] %}
+                        <span>
+                            {{ sale[15] }}
+                        </span>
+                    {% endif %}
+                    {% if sale[16] %}
+                        <span>
+                            {{ sale[16] }}
+                        </span>
+                    {% endif %}
+                </div>
+                <div>
+                    <small>
+                        TRANSACTION
+                    </small>
+                    <span>
+                        <b>
+                            Invoice:
+                        </b>
+                        {{ sale[1] }}
+                    </span>
+                    <span>
+                        <b>
+                            Date:
+                        </b>
+                        {{ sale[2] }}
+                    </span>
+                    <span>
+                        <b>
+                            Served by:
+                        </b>
+                        {{ sale[17] or '—' }}
+                    </span>
+                    <span>
+                        <b>
+                            Status:
+                        </b>
+                        <i>
+                            {{ sale[5]|title }}
+                        </i>
+                    </span>
+                </div>
+            </div>
+            <div class="invoice-table-wrap">
+                <table class="invoice-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Item
+                            </th>
+                            <th>
+                                SKU
+                            </th>
+                            <th>
+                                Qty
+                            </th>
+                            <th>
+                                Unit Price
+                            </th>
+                            <th>
+                                GST
+                            </th>
+                            <th>
+                                Line Total
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for it in items %}
+                            <tr>
+                                <td>
+                                    <div class="invoice-product">
+                                        {% if it[6] %}
+                                            <img src="{{ url_for('static', filename='uploads/' ~ it[6]) }}" alt="">
+                                        {% endif %}
+                                        <span>
+                                            {{ it[1] }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    {{ it[7] or '—' }}
+                                </td>
+                                <td>
+                                    {{ it[2] }}
+                                </td>
+                                <td>
+                                    ₹{{ '%.2f'|format(it[3]|float) }}
+                                </td>
+                                <td>
+                                    {{ '%.1f'|format(it[5]|float) }}%
+                                </td>
+                                <td class="money">
+                                    ₹{{ '%.2f'|format(it[4]|float) }}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="empty">
+                                    No invoice items found.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="invoice-bottom">
+                <div class="payment-card">
+                    <h3>
+                        Payment
+                    </h3>
+                    {% for p in payments %}
+                        <div>
+                            <span>
+                                {{ p[0]|upper }}
+                            </span>
+                            <strong>
+                                ₹{{ '%.2f'|format(p[1]|float) }}
+                            </strong>
+                        </div>
+                    {% else %}
+                        <div>
+                            <span>
+                                Payment
+                            </span>
+                            <strong>
+                                —
+                            </strong>
+                        </div>
+                    {% endfor %}
+                    <small>
+                        Payment status: {{ sale[5]|title }}
+                    </small>
+                </div>
+                <div class="invoice-summary">
+                    <div>
+                        <span>
+                            Subtotal / Taxable
+                        </span>
+                        <strong>
+                            ₹{{ '%.2f'|format(sale[6]|float + sale[10]|float) }}
+                        </strong>
+                    </div>
+                    <div>
+                        <span>
+                            Discount
+                        </span>
+                        <strong>
+                            -₹{{ '%.2f'|format(sale[10]|float) }}
+                        </strong>
+                    </div>
+                    {% if sale[11] %}
+                        <div>
+                            <span>
+                                Coupon
+                            </span>
+                            <strong>
+                                {{ sale[11] }}
+                            </strong>
+                        </div>
+                    {% endif %}
+                    <div>
+                        <span>
+                            CGST
+                        </span>
+                        <strong>
+                            ₹{{ '%.2f'|format(sale[7]|float) }}
+                        </strong>
+                    </div>
+                    <div>
+                        <span>
+                            SGST
+                        </span>
+                        <strong>
+                            ₹{{ '%.2f'|format(sale[8]|float) }}
+                        </strong>
+                    </div>
+                    <div>
+                        <span>
+                            IGST
+                        </span>
+                        <strong>
+                            ₹{{ '%.2f'|format(sale[9]|float) }}
+                        </strong>
+                    </div>
+                    <div class="grand">
+                        <span>
+                            Grand Total
+                        </span>
+                        <strong>
+                            ₹{{ '%.2f'|format(sale[3]|float) }}
+                        </strong>
+                    </div>
+                </div>
+            </div>
+            <footer class="invoice-footer">
+                <span>
+                    Thank you for your business.
+                </span>
+                <span>
+                    Retail Analytics Management System · Computer-generated invoice
+                </span>
+            </footer>
+        </div>
+    </div>
+{% endblock %}

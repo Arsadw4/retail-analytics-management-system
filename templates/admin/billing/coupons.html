@@ -1,0 +1,88 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Discount Coupons
+                </h1>
+                <div>
+                    <a href="/admin/billing/dashboard" class="btn secondary">
+                        Back
+                    </a>
+                    <a href="/admin/coupons/add" class="btn success">
+                        + Add Coupon
+                    </a>
+                </div>
+            </div>
+            {% if coupons %}
+                <table>
+                    <tr>
+                        <th>
+                            Code
+                        </th>
+                        <th>
+                            Type
+                        </th>
+                        <th>
+                            Value
+                        </th>
+                        <th>
+                            Min Purchase
+                        </th>
+                        <th>
+                            Valid
+                        </th>
+                        <th>
+                            Usage
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Actions
+                        </th>
+                    </tr>
+                    {% for c in coupons %}
+                        <tr>
+                            <td>
+                                {{ c[1] }}
+                            </td>
+                            <td>
+                                {{ c[2] }}
+                            </td>
+                            <td>
+                                {{ c[3] }}
+                            </td>
+                            <td>
+                                {{ c[4] }}
+                            </td>
+                            <td>
+                                {{ c[5] or "-" }} to {{ c[6] or "-" }}
+                            </td>
+                            <td>
+                                {{ c[8] }}
+                                {% if c[7] %}
+                                    / {{ c[7] }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ "Active" if c[9] else "Inactive" }}
+                            </td>
+                            <td>
+                                <a href="#" class="btn danger" data-confirm-delete="/admin/coupons/delete/{{ c[0] }}"
+                   data-confirm-message="Delete this coupon?">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No coupons created yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

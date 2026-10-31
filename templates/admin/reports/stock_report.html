@@ -1,0 +1,193 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Inventory Report
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/enterprise_reports.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="report-page">
+        <div class="report-head">
+            <div>
+                <div class="report-breadcrumb">
+                    Dashboard
+                    <span>
+                        ›
+                    </span>
+                    Reports
+                    <span>
+                        ›
+                    </span>
+                    Inventory
+                </div>
+                <h1>
+                    Inventory Report
+                </h1>
+                <p>
+                    Live stock position, valuation and attention indicators.
+                </p>
+            </div>
+            <div class="report-head-actions">
+                <a class="report-btn secondary" href="/admin/reports">
+                    Back
+                </a>
+                <a class="report-btn danger" href="/admin/stock-report/export/pdf">
+                    PDF
+                </a>
+                <a class="report-btn excel" href="/admin/stock-report/export/excel">
+                    Excel
+                </a>
+                <a class="report-btn csv" href="/admin/stock-report/export/csv">
+                    CSV
+                </a>
+                <button class="report-btn secondary" data-print="1">
+                    Print
+                </button>
+            </div>
+        </div>
+        <section class="report-cards">
+            <div class="report-stat">
+                <small>
+                    Inventory Value
+                </small>
+                <strong>
+                    ₹{{ '%.2f'|format(summary.total_value|float) }}
+                </strong>
+                <em>
+                    Current stock valuation
+                </em>
+            </div>
+            <div class="report-stat">
+                <small>
+                    Total Items
+                </small>
+                <strong>
+                    {{ summary.total_items }}
+                </strong>
+                <em>
+                    Inventory records
+                </em>
+            </div>
+            <div class="report-stat">
+                <small>
+                    Total Stock
+                </small>
+                <strong>
+                    {{ summary.total_stock }}
+                </strong>
+                <em>
+                    Available units
+                </em>
+            </div>
+            <div class="report-stat">
+                <small>
+                    Profit Potential
+                </small>
+                <strong>
+                    ₹{{ '%.2f'|format(summary.profit|float) }}
+                </strong>
+                <em>
+                    Current stock potential
+                </em>
+            </div>
+            <div class="report-stat">
+                <small>
+                    Attention Needed
+                </small>
+                <strong>
+                    {{ low_stock + out_of_stock }}
+                </strong>
+                <em>
+                    {{ low_stock }} low · {{ out_of_stock }} out
+                </em>
+            </div>
+        </section>
+        <section class="report-main-card">
+            <div class="card-head">
+                <div>
+                    <h2>
+                        Inventory Summary
+                    </h2>
+                    <p>
+                        Stock values are calculated from products and the live inventory view.
+                    </p>
+                </div>
+                <span class="live-badge">
+                    ● Live database
+                </span>
+            </div>
+            <div class="table-wrap">
+                <table class="enterprise-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Product
+                            </th>
+                            <th>
+                                Stock
+                            </th>
+                            <th>
+                                Min Stock
+                            </th>
+                            <th>
+                                Purchase Price
+                            </th>
+                            <th>
+                                Selling Price
+                            </th>
+                            <th>
+                                Stock Value
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in inventory %}
+                            <tr>
+                                <td>
+                                    <strong>
+                                        {{ item[1] }}
+                                    </strong>
+                                </td>
+                                <td>
+                                    {{ item[2] }}
+                                </td>
+                                <td>
+                                    {{ item[3] }}
+                                </td>
+                                <td class="money">
+                                    ₹{{ '%.2f'|format(item[5]|float) }}
+                                </td>
+                                <td class="money">
+                                    ₹{{ '%.2f'|format(item[6]|float) }}
+                                </td>
+                                <td class="money">
+                                    ₹{{ '%.2f'|format(item[7]|float) }}
+                                </td>
+                                <td>
+                                    {{ item[8] }}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="7" class="empty">
+                                    No inventory records found.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <footer class="report-footer">
+            <span>
+                Retail Analytics Management System
+            </span>
+            <span>
+                Confidential Business Report · Actual database values
+            </span>
+        </footer>
+    </div>
+{% endblock %}

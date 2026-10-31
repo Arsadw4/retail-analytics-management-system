@@ -1,0 +1,45 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Profit &amp; Loss Overview
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/analytics.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="analytics-container">
+            <div class="page-header">
+                <h1>
+                    Profit &amp; Loss Overview
+                </h1>
+                <p>
+                    Estimated revenue vs. current inventory value
+                </p>
+            </div>
+            <div class="analytics-cards">
+                <div class="analytics-card revenue">
+                    <h3>
+                        Estimated Revenue
+                    </h3>
+                    <h2>
+                        {{ revenue }}
+                    </h2>
+                </div>
+                <div class="analytics-card orange">
+                    <h3>
+                        Inventory Value
+                    </h3>
+                    <h2>
+                        {{ inventory_value }}
+                    </h2>
+                </div>
+            </div>
+            <div class="analytics-buttons">
+                <a href="/admin/analytics">
+                    Back to Analytics
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

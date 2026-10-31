@@ -1,0 +1,55 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Sales Trend by Category
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ai_bi.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Sales Trend by Category
+                </h1>
+                <a href="/admin/ai-dashboard" class="btn secondary">
+                    Back
+                </a>
+            </div>
+            {% if categories %}
+                <table>
+                    <tr>
+                        <th>
+                            Category
+                        </th>
+                        <th>
+                            Revenue (90d)
+                        </th>
+                        <th>
+                            Trend
+                        </th>
+                    </tr>
+                    {% for c in categories %}
+                        <tr>
+                            <td>
+                                {{ c.category_name }}
+                            </td>
+                            <td>
+                                ₹{{ "%.2f"|format(c.total_revenue) }}
+                            </td>
+                            <td>
+                                <span class="badge {{ c.trend }}">
+                                    {{ c.trend }}
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No sales recorded yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Categories
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_pages.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="ra-module">
+        <div class="ra-page-head">
+            <div>
+                <div class="ra-breadcrumb">
+                    Dashboard / Inventory / Categories
+                </div>
+                <h1>
+                    Category Management
+                </h1>
+                <p>
+                    Organize the product catalogue for faster operations and reporting.
+                </p>
+            </div>
+            <div class="ra-head-actions">
+                <a href="/admin/products" class="ra-btn secondary">
+                    Products
+                </a>
+                <a href="/admin/add-category" class="ra-btn">
+                    ＋ Add Category
+                </a>
+            </div>
+        </div>
+        <div class="ra-card">
+            <div class="ra-toolbar">
+                <input class="ra-input" id="categoryFilter" placeholder="Search categories...">
+                <span class="ra-note">
+                    Categories power product filtering and analytics.
+                </span>
+            </div>
+            <div class="ra-table-wrap">
+                <table class="ra-table" id="categoryTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                ID
+                            </th>
+                            <th>
+                                Category
+                            </th>
+                            <th>
+                                Created
+                            </th>
+                            <th>
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for category in categories %}
+                            <tr>
+                                <td>
+                                    {{ category[0] }}
+                                </td>
+                                <td>
+                                    <strong>
+                                        {{ category[1] }}
+                                    </strong>
+                                </td>
+                                <td>
+                                    {{ category[2] }}
+                                </td>
+                                <td>
+                                    <div class="ra-action-menu">
+                                        <a href="/admin/edit-category/{{ category[0] }}">
+                                            Edit
+                                        </a>
+                                        <a href="#" data-confirm-delete="/admin/delete-category/{{ category[0] }}" data-confirm-message="Delete this category? This cannot be undone.">
+                                            Delete
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="4">
+                                    <div class="ra4-empty">
+                                        No categories found.
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+<script nonce="{{ csp_nonce }}">document.getElementById('categoryFilter')?.addEventListener('input',function(){const q=this.value.toLowerCase();document.querySelectorAll('#categoryTable tbody tr').forEach(r=>r.style.display=r.innerText.toLowerCase().includes(q)?'':'none')});</script>
+{% endblock %}

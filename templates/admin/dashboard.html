@@ -1,0 +1,865 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Dashboard
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard_module.css') }}">
+{% endblock %}
+{% block page_content %}
+    {% set role = session.get('role') %}
+    <div class="dashboard-page">
+        <section class="dashboard-heading">
+            <div>
+                <div class="ra-breadcrumb">
+                    Dashboard
+                    <span>
+                        ›
+                    </span>
+                    Overview
+                </div>
+                <h1>
+                    Good Morning, {{ session.get('name') or 'System Administrator' }}
+                    <span class="heading-wave" aria-hidden="true">
+                        👋
+                    </span>
+                </h1>
+                <p>
+                    Here's what's happening with your retail business today.
+                </p>
+            </div>
+            <div class="dashboard-date">
+                <span class="date-icon">
+                    ▣
+                </span>
+                <span>
+                    Today
+                </span>
+                <b>
+                    ⌄
+                </b>
+            </div>
+        </section>
+        <section class="ra-kpis dashboard-kpis" aria-label="Business KPIs">
+            <article class="ra-card ra-kpi">
+                <div>
+                    <small>
+                        Total Sales
+                    </small>
+                    <strong>
+                        ₹{{ '%.2f'|format(total_sales|float) }}
+                    </strong>
+                    <span class="trend positive">
+                        ↗ {{ total_transactions }} transaction{{ '' if total_transactions == 1 else 's' }}
+                    </span>
+                </div>
+                <div class="ra-kpi-icon sales">
+                    ₹
+                </div>
+            </article>
+            <article class="ra-card ra-kpi">
+                <div>
+                    <small>
+                        Revenue
+                    </small>
+                    <strong>
+                        ₹{{ '%.2f'|format(total_sales|float) }}
+                    </strong>
+                    <span class="trend positive">
+                        ↗ Completed sales
+                    </span>
+                </div>
+                <div class="ra-kpi-icon revenue">
+                    ↗
+                </div>
+            </article>
+            <article class="ra-card ra-kpi">
+                <div>
+                    <small>
+                        Profit
+                    </small>
+                    <strong>
+                        ₹{{ '%.2f'|format(total_profit|float) }}
+                    </strong>
+                    <span class="trend positive">
+                        ↗ Actual profit
+                    </span>
+                </div>
+                <div class="ra-kpi-icon profit">
+                    ◔
+                </div>
+            </article>
+            <article class="ra-card ra-kpi">
+                <div>
+                    <small>
+                        Total Products
+                    </small>
+                    <strong>
+                        {{ total_products }}
+                    </strong>
+                    <span class="trend neutral">
+                        Catalogue records
+                    </span>
+                </div>
+                <div class="ra-kpi-icon products">
+                    ▱
+                </div>
+            </article>
+            <article class="ra-card ra-kpi">
+                <div>
+                    <small>
+                        Customers
+                    </small>
+                    <strong>
+                        {{ total_customers }}
+                    </strong>
+                    <span class="trend neutral">
+                        Customer records
+                    </span>
+                </div>
+                <div class="ra-kpi-icon customers">
+                    ♙
+                </div>
+            </article>
+            <article class="ra-card ra-kpi">
+                <div>
+                    <small>
+                        Loss
+                    </small>
+                    <strong>
+                        ₹{{ '%.2f'|format(total_loss|float) }}
+                    </strong>
+                    <span class="trend negative">
+                        {% if total_loss > 0 %}
+                            ! Actual loss
+                        {% else %}
+                            ✓ No recorded loss
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="ra-kpi-icon loss">
+                    !
+                </div>
+            </article>
+        </section>
+        <section class="dashboard-grid dashboard-primary-grid">
+            <article class="ra-card dashboard-panel sales-panel">
+                <div class="dashboard-panel-head">
+                    <div>
+                        <h2>
+                            Business Overview
+                        </h2>
+                        <p>
+                            Live summary from your business data.
+                        </p>
+                    </div>
+                    <div class="chart-filter-wrap">
+                        <label class="sr-only" for="dashboardPeriod">
+                            Reporting period
+                        </label>
+                        <select id="dashboardPeriod" class="chart-filter">
+                            <option value="this_year" {% if period == 'this_year' %}selected{% endif %}>
+                                This Year
+                            </option>
+                            <option value="last_year" {% if period == 'last_year' %}selected{% endif %}>
+                                Last Year
+                            </option>
+                            <option value="this_month" {% if period == 'this_month' %}selected{% endif %}>
+                                This Month
+                            </option>
+                            <option value="last_month" {% if period == 'last_month' %}selected{% endif %}>
+                                Last Month
+                            </option>
+                            <option value="custom" {% if period == 'custom' %}selected{% endif %}>
+                                Custom Range
+                            </option>
+                        </select>
+                        <div class="custom-range" id="customRange" {% if period != 'custom' %}hidden{% endif %}>
+                            <input id="rangeStart" type="date" value="{{ custom_start }}" aria-label="Start date">
+                            <span>
+                                to
+                            </span>
+                            <input id="rangeEnd" type="date" value="{{ custom_end }}" aria-label="End date">
+                            <button id="applyRange" type="button">
+                                Apply
+                            </button>
+                            <span id="customRangeError" role="alert" hidden></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="sales-chart" id="salesChart"
+                     data-chart-url="{{ chart_url }}"
+                     data-period="{{ period }}"
+                     data-start="{{ custom_start }}"
+                     data-end="{{ custom_end }}"
+                     data-currency="₹">
+                    <div class="chart-y" aria-hidden="true">
+                        <span data-y="1">
+                            100K
+                        </span>
+                        <span data-y=".75">
+                            75K
+                        </span>
+                        <span data-y=".5">
+                            50K
+                        </span>
+                        <span data-y=".25">
+                            25K
+                        </span>
+                        <span>
+                            0
+                        </span>
+                    </div>
+                    <div class="chart-area">
+                        <div class="chart-grid-lines">
+                            <i>
+                            </i>
+                            <i>
+                            </i>
+                            <i>
+                            </i>
+                            <i>
+                            </i>
+                            <i>
+                            </i>
+                        </div>
+                        <svg viewBox="0 0 760 250" preserveAspectRatio="none" aria-label="Database-backed sales chart" hidden>
+                            <defs>
+                                <linearGradient id="salesFill" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-opacity=".28"/>
+                                    <stop offset="100%" stop-opacity="0"/>
+                                </linearGradient>
+                            </defs>
+                            <path class="chart-fill" d="">
+                            </path>
+                            <path class="chart-line" d="">
+                            </path>
+                            <g class="chart-points">
+                            </g>
+                        </svg>
+                        <div class="chart-tooltip" id="chartTooltip" hidden>
+                        </div>
+                        <div class="chart-months" id="chartLabels" hidden>
+                        </div>
+                        <div class="chart-empty chart-state" id="chartLoading" role="status" aria-live="polite">
+                            Loading sales data…
+                        </div>
+                        <div class="chart-empty" id="chartEmpty" hidden>
+                            No completed sales recorded for this period.
+                        </div>
+                        <div class="chart-empty chart-state chart-error" id="chartError" role="alert" hidden>
+                            <span id="chartErrorMessage">Sales chart data is temporarily unavailable.</span>
+                            <button id="retryChart" type="button">Retry</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboard-summary">
+                    <div class="summary-heading">
+                        <strong>
+                            Business Summary
+                        </strong>
+                        <span>
+                            {{ period_label }} · Actual database totals
+                        </span>
+                    </div>
+                    <div class="summary-grid">
+                        <div>
+                            <small>
+                                Total Sales
+                            </small>
+                            <strong>
+                                ₹{{ '%.2f'|format(total_sales|float) }}
+                            </strong>
+                        </div>
+                        <div>
+                            <small>
+                                Profit Generated
+                            </small>
+                            <strong>
+                                ₹{{ '%.2f'|format(total_profit|float) }}
+                            </strong>
+                        </div>
+                        <div>
+                            <small>
+                                Customers
+                            </small>
+                            <strong>
+                                {{ total_customers }}
+                            </strong>
+                        </div>
+                        <div>
+                            <small>
+                                Loss
+                            </small>
+                            <strong>
+                                ₹{{ '%.2f'|format(total_loss|float) }}
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <article class="ra-card dashboard-panel quick-panel">
+                <div class="dashboard-panel-head">
+                    <div>
+                        <h2>
+                            Quick Actions
+                        </h2>
+                        <p>
+                            Common business tasks.
+                        </p>
+                    </div>
+                </div>
+                <div class="dashboard-actions">
+                    {% if role in ('admin','manager','super_admin') %}
+                        <a href="/admin/add-product">
+                            <span class="qa-blue">
+                                ▱
+                            </span>
+                            <div>
+                                <strong>
+                                    Add Product
+                                </strong>
+                                <small>
+                                    Create a new product
+                                </small>
+                            </div>
+                            <b>
+                                ›
+                            </b>
+                        </a>
+                    {% endif %}
+                    {% if role in ('admin','manager','super_admin','employee') %}
+                        <a href="/admin/add-customer">
+                            <span class="qa-green">
+                                ♙
+                            </span>
+                            <div>
+                                <strong>
+                                    Add Customer
+                                </strong>
+                                <small>
+                                    Register a customer
+                                </small>
+                            </div>
+                            <b>
+                                ›
+                            </b>
+                        </a>
+                    {% endif %}
+                    {% if role in ('admin','manager','super_admin','employee','cashier') %}
+                        <a href="/admin/billing/pos">
+                            <span class="qa-cyan">
+                                ₹
+                            </span>
+                            <div>
+                                <strong>
+                                    New Sale
+                                </strong>
+                                <small>
+                                    Start a sales transaction
+                                </small>
+                            </div>
+                            <b>
+                                ›
+                            </b>
+                        </a>
+                    {% endif %}
+                    {% if role in ('admin','manager','super_admin') %}
+                        <a href="/admin/reports">
+                            <span class="qa-purple">
+                                ▤
+                            </span>
+                            <div>
+                                <strong>
+                                    Generate Report
+                                </strong>
+                                <small>
+                                    Open reporting centre
+                                </small>
+                            </div>
+                            <b>
+                                ›
+                            </b>
+                        </a>
+                    {% endif %}
+                </div>
+            </article>
+        </section>
+        <section class="dashboard-lower-grid">
+            <article class="ra-card dashboard-data-panel">
+                <div class="data-panel-head">
+                    <div>
+                        <h2>
+                            Recent Sales
+                        </h2>
+                        <p>
+                            Latest completed sales transactions.
+                        </p>
+                    </div>
+                    <a class="panel-view" href="/admin/sales">
+                        View All
+                    </a>
+                </div>
+                <div class="table-wrap">
+                    <table class="dashboard-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    #
+                                </th>
+                                <th>
+                                    Date
+                                </th>
+                                <th>
+                                    Customer
+                                </th>
+                                <th>
+                                    Items
+                                </th>
+                                <th>
+                                    Total
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in recent_sales %}
+                                <tr>
+                                    <td>
+                                        {{ loop.index }}
+                                    </td>
+                                    <td>
+                                        {{ row[1].strftime('%d %b %Y') if row[1] else '—' }}
+                                    </td>
+                                    <td>
+                                        {{ row[2] }}
+                                    </td>
+                                    <td>
+                                        {{ row[3] }}
+                                    </td>
+                                    <td>
+                                        ₹{{ '%.2f'|format(row[4]|float) }}
+                                    </td>
+                                    <td>
+                                        <span class="table-status ok">
+                                            {{ row[5]|title }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="6" class="table-empty">
+                                        No completed sales recorded for {{ period_label }}.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+            <article class="ra-card dashboard-data-panel">
+                <div class="data-panel-head">
+                    <div>
+                        <h2>
+                            Low Stock Products
+                        </h2>
+                        <p>
+                            Products that need attention.
+                        </p>
+                    </div>
+                    <a class="panel-view" href="/admin/low-stock">
+                        View All
+                    </a>
+                </div>
+                <div class="table-wrap">
+                    <table class="dashboard-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    #
+                                </th>
+                                <th>
+                                    Product
+                                </th>
+                                <th>
+                                    SKU
+                                </th>
+                                <th>
+                                    Current
+                                </th>
+                                <th>
+                                    Min Stock
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in low_stock_products %}
+                                <tr>
+                                    <td>
+                                        {{ loop.index }}
+                                    </td>
+                                    <td>
+                                        {{ row[0] }}
+                                    </td>
+                                    <td>
+                                        {{ row[1] }}
+                                    </td>
+                                    <td>
+                                        {{ row[2] }}
+                                    </td>
+                                    <td>
+                                        {{ row[3] }}
+                                    </td>
+                                    <td>
+                                        <span class="table-status danger">
+                                            {{ row[4] }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="6" class="table-empty">
+                                        No low-stock products found.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+            <article class="ra-card dashboard-data-panel">
+                <div class="data-panel-head">
+                    <div>
+                        <h2>
+                            Top Selling Products
+                        </h2>
+                        <p>
+                            Best performing products for {{ period_label }}.
+                        </p>
+                    </div>
+                    <a class="panel-view" href="/admin/analytics">
+                        View All
+                    </a>
+                </div>
+                <div class="table-wrap">
+                    <table class="dashboard-table top-products">
+                        <thead>
+                            <tr>
+                                <th>
+                                    #
+                                </th>
+                                <th>
+                                    Product
+                                </th>
+                                <th>
+                                    Sales
+                                </th>
+                                <th>
+                                    Revenue
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in top_products %}
+                                {% set max_sales = top_products[0][1]|float if top_products and top_products[0][1]|float else 1 %}
+                                {% set bar_width = ((row[1]|float / max_sales) * 100)|round(0, 'floor') %}
+                                <tr>
+                                    <td>
+                                        {{ loop.index }}
+                                    </td>
+                                    <td>
+                                        <strong>
+                                            {{ row[0] }}
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <div class="mini-bar">
+                                                <i style="width&#58; {{ bar_width|int }}&#37;;">
+                                            </i>
+                                        </div>
+                                        <span>
+                                            {{ row[1] }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        ₹{{ '%.2f'|format(row[2]|float) }}
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="table-empty">
+                                        No product sales recorded for {{ period_label }}.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+            <article class="ra-card dashboard-data-panel">
+                <div class="data-panel-head">
+                    <div>
+                        <h2>
+                            New Customers
+                        </h2>
+                        <p>
+                            Recently registered customers.
+                        </p>
+                    </div>
+                    <a class="panel-view" href="/admin/customers">
+                        View All
+                    </a>
+                </div>
+                <div class="table-wrap">
+                    <table class="dashboard-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    #
+                                </th>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Phone
+                                </th>
+                                <th>
+                                    Date
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in new_customers %}
+                                <tr>
+                                    <td>
+                                        {{ loop.index }}
+                                    </td>
+                                    <td>
+                                        {{ row[0] }}
+                                    </td>
+                                    <td>
+                                        {{ row[1] }}
+                                    </td>
+                                    <td>
+                                        {{ row[2].strftime('%d %b %Y') if row[2] else '—' }}
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="table-empty">
+                                        No customers registered for {{ period_label }}.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+        <footer class="dashboard-footer">
+            <span>
+                © 2026 Retail Analytics Management System. All rights reserved.
+            </span>
+            <span>
+                Secure&nbsp; · &nbsp;Reliable&nbsp; · &nbsp;Built for Growth
+            </span>
+        </footer>
+    </div>
+<script nonce="{{ csp_nonce }}">
+(function() {
+    const chart = document.getElementById('salesChart');
+    if (!chart) return;
+
+    const chartUrl = chart.dataset.chartUrl;
+    const periodFilter = document.getElementById('dashboardPeriod');
+    const customRange = document.getElementById('customRange');
+    const rangeStart = document.getElementById('rangeStart');
+    const rangeEnd = document.getElementById('rangeEnd');
+    const rangeError = document.getElementById('customRangeError');
+    const loadingState = document.getElementById('chartLoading');
+    const emptyState = document.getElementById('chartEmpty');
+    const errorState = document.getElementById('chartError');
+    const errorMessage = document.getElementById('chartErrorMessage');
+    const retryButton = document.getElementById('retryChart');
+    const labelsBox = document.getElementById('chartLabels');
+    const tooltip = document.getElementById('chartTooltip');
+    const svg = chart.querySelector('svg');
+    const line = chart.querySelector('.chart-line');
+    const fill = chart.querySelector('.chart-fill');
+    const points = chart.querySelector('.chart-points');
+
+    let latestRequest = 0;
+    let activeRequest = null;
+
+    function setChartState(state) {
+        loadingState.hidden = state !== 'loading';
+        emptyState.hidden = state !== 'empty';
+        errorState.hidden = state !== 'error';
+        svg.hidden = state !== 'ready';
+        labelsBox.hidden = state !== 'ready';
+    }
+
+    function clearChart() {
+        line.removeAttribute('d');
+        fill.removeAttribute('d');
+        points.replaceChildren();
+        labelsBox.replaceChildren();
+        tooltip.hidden = true;
+    }
+
+    function drawChart(data) {
+        const transactionCount = Number(data.transactions);
+        if (!Number.isInteger(transactionCount) || transactionCount < 0) {
+            throw new Error('The sales response did not include a valid transaction count.');
+        }
+        if (!Array.isArray(data.labels) || !Array.isArray(data.values)) {
+            throw new Error('The sales response did not include chart labels and values.');
+        }
+        if (data.labels.length !== data.values.length) {
+            throw new Error('The sales response contained mismatched chart labels and values.');
+        }
+
+        const values = data.values.map(value => {
+            if (value === null || value === undefined || value === '') return 0;
+            const numericValue = Number(value);
+            if (!Number.isFinite(numericValue)) {
+                throw new Error('The sales response contained an invalid chart value.');
+            }
+            return Math.max(0, numericValue);
+        });
+        const labels = data.labels.map(label => String(label ?? ''));
+        const hasPositiveValue = values.some(value => value > 0);
+
+        if (transactionCount === 0 && hasPositiveValue) {
+            throw new Error('The sales totals did not match the transaction count.');
+        }
+        if (transactionCount > 0 && values.length === 0) {
+            throw new Error('Sales transactions were found but no chart buckets were returned.');
+        }
+
+        labels.forEach(label => {
+            const item = document.createElement('span');
+            item.textContent = label;
+            labelsBox.appendChild(item);
+        });
+
+        if (transactionCount === 0) return 'empty';
+
+        const width = 760;
+        const top = 12;
+        const bottom = 226;
+        const maxValue = Math.max(...values, 1);
+        const step = values.length === 1 ? width / 2 : width / (values.length - 1);
+        const coordinates = values.map((value, index) => [
+            values.length === 1 ? width / 2 : index * step,
+            bottom - (value / maxValue) * (bottom - top),
+        ]);
+        const path = coordinates.map((point, index) =>
+            `${index === 0 ? 'M' : 'L'}${point[0].toFixed(1)} ${point[1].toFixed(1)}`
+        ).join(' ');
+
+        line.setAttribute('d', path);
+        fill.setAttribute('d', `${path} L ${width} ${bottom} L 0 ${bottom} Z`);
+
+        coordinates.forEach((point, index) => {
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', point[0].toFixed(1));
+            circle.setAttribute('cy', point[1].toFixed(1));
+            circle.setAttribute('r', '3.2');
+            circle.setAttribute('tabindex', '0');
+
+            const showTooltip = () => {
+                const heading = document.createElement('strong');
+                heading.textContent = labels[index];
+                const value = document.createElement('span');
+                value.textContent = `Sales: ${chart.dataset.currency || '₹'}${values[index].toLocaleString('en-IN', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                })}`;
+                tooltip.replaceChildren(heading, value);
+                tooltip.hidden = false;
+                tooltip.style.left = `${point[0] / width * 100}%`;
+                tooltip.style.top = `${point[1] / 250 * 100 - 10}%`;
+            };
+            const hideTooltip = () => { tooltip.hidden = true; };
+
+            circle.addEventListener('mouseenter', showTooltip);
+            circle.addEventListener('focus', showTooltip);
+            circle.addEventListener('mouseleave', hideTooltip);
+            circle.addEventListener('blur', hideTooltip);
+            points.appendChild(circle);
+        });
+
+        chart.querySelectorAll('.chart-y span[data-y]').forEach(label => {
+            label.textContent = new Intl.NumberFormat('en-IN', {
+                notation: 'compact',
+                maximumFractionDigits: 1,
+            }).format(maxValue * Number(label.dataset.y));
+        });
+
+        return 'ready';
+    }
+
+    async function loadChart() {
+        const requestId = ++latestRequest;
+        if (activeRequest) activeRequest.abort();
+        activeRequest = new AbortController();
+        clearChart();
+        errorMessage.textContent = 'Sales chart data is temporarily unavailable.';
+        setChartState('loading');
+
+        const query = new URLSearchParams();
+        query.set('period', chart.dataset.period || 'this_year');
+        if (query.get('period') === 'custom') {
+            query.set('start', chart.dataset.start || '');
+            query.set('end', chart.dataset.end || '');
+        }
+        const url = `${chartUrl}?${query.toString()}`;
+
+        try {
+            const response = await fetch(url, {
+                headers: { Accept: 'application/json' },
+                signal: activeRequest.signal,
+            });
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.error || 'Sales chart data is temporarily unavailable.');
+            }
+            if (requestId !== latestRequest) return;
+            setChartState(drawChart(result));
+        } catch (error) {
+            if (requestId !== latestRequest || error.name === 'AbortError') return;
+            errorMessage.textContent = error.message || 'Sales chart data is temporarily unavailable.';
+            setChartState('error');
+        }
+    }
+
+    periodFilter?.addEventListener('change', () => {
+        if (periodFilter.value === 'custom') {
+            customRange.hidden = false;
+            rangeError.hidden = true;
+            return;
+        }
+        window.location.assign(`/admin/dashboard?period=${encodeURIComponent(periodFilter.value)}`);
+    });
+
+    document.getElementById('applyRange')?.addEventListener('click', () => {
+        const start = rangeStart.value;
+        const end = rangeEnd.value;
+        if (!start || !end || start > end) {
+            rangeError.textContent = 'Choose a valid start and end date.';
+            rangeError.hidden = false;
+            return;
+        }
+        window.location.assign(`/admin/dashboard?period=custom&start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`);
+    });
+
+    retryButton?.addEventListener('click', loadChart);
+    loadChart();
+})();
+</script>
+{% endblock %}

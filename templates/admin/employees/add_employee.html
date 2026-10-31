@@ -1,0 +1,209 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Add Employee
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+<style>.employee-form-card{max-width:1000px;margin:0 auto;background:var(--theme-surface);border:1px solid var(--theme-border);border-radius:15px;box-shadow:var(--theme-shadow);padding:22px}.form-help{font-size:9px;color:var(--theme-muted);margin:4px 0 0}.required{color:#e24b4b}</style>
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="ra-page-head">
+            <div>
+                <div class="ra-breadcrumb">
+                    Dashboard / People / Employees / Add
+                </div>
+                <h1>
+                    Add Employee
+                </h1>
+                <p>
+                    Create the employee HR record and linked login account.
+                </p>
+            </div>
+            <div class="ra-head-actions">
+                <a class="ra-btn secondary" href="/admin/employees">
+                    Back to Employees
+                </a>
+            </div>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category,message in messages %}
+                    <div class="ra-flash">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form class="employee-form-card" id="employeeForm" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="profile-form-grid">
+                <div class="profile-field">
+                    <label for="name">
+                        Employee Name
+                        <span class="required">
+                            *
+                        </span>
+                    </label>
+                    <input id="name" type="text" name="name" value="{{ employee_form.get('name', '') }}" required maxlength="100">
+                </div>
+                <div class="profile-field">
+                    <label for="email">
+                        Email
+                        <span class="required">
+                            *
+                        </span>
+                    </label>
+                    <input id="email" type="email" name="email" value="{{ employee_form.get('email', '') }}" required maxlength="100">
+                </div>
+                <div class="profile-field">
+                    <label for="department_id">
+                        Department
+                    </label>
+                    <select id="department_id" name="department_id">
+                        <option value="">Unassigned</option>
+                        {% for department in departments %}
+                            <option value="{{ department[0] }}" {% if employee_form.get('department_id')|string == department[0]|string %}selected{% endif %}>
+                                {{ department[1] }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <p class="form-help">Optional. You can assign a department later from the employee profile.</p>
+                </div>
+                <div class="profile-field">
+                    <label for="phone">
+                        Phone
+                    </label>
+                    <input id="phone" type="text" name="phone" value="{{ employee_form.get('phone', '') }}" maxlength="20">
+                </div>
+                <div class="profile-field">
+                    <label for="designation">
+                        Designation
+                    </label>
+                    <input id="designation" type="text" name="designation" value="{{ employee_form.get('designation', '') }}" maxlength="100">
+                </div>
+                <div class="profile-field">
+                    <label for="salary">
+                        Salary
+                    </label>
+                    <input id="salary" type="number" name="salary" value="{{ employee_form.get('salary', '') }}" step="0.01" min="0" required>
+                </div>
+                <div class="profile-field">
+                    <label for="password">
+                        Login Password
+                        <span class="required">
+                            *
+                        </span>
+                    </label>
+                    <input id="password" type="password" name="password" required autocomplete="new-password">
+                    <p class="form-help">
+                        Password is hashed by the existing security layer before storage.
+                    </p>
+                </div>
+                <div class="profile-field">
+                    <label for="date_of_birth">
+                        Date of Birth
+                    </label>
+                    <input id="date_of_birth" type="date" name="date_of_birth" value="{{ employee_form.get('date_of_birth', '') }}">
+                </div>
+                <div class="profile-field">
+                    <label for="gender">
+                        Gender
+                    </label>
+                    <input id="gender" type="text" name="gender" value="{{ employee_form.get('gender', '') }}" maxlength="30">
+                </div>
+                <div class="profile-field">
+                    <label for="blood_group">
+                        Blood Group
+                    </label>
+                    <input id="blood_group" type="text" name="blood_group" value="{{ employee_form.get('blood_group', '') }}" maxlength="10">
+                </div>
+                <div class="profile-field">
+                    <label for="father_name">
+                        Father's Name
+                    </label>
+                    <input id="father_name" type="text" name="father_name" value="{{ employee_form.get('father_name', '') }}" maxlength="100">
+                </div>
+                <div class="profile-field">
+                    <label for="marital_status">
+                        Marital Status
+                    </label>
+                    <input id="marital_status" type="text" name="marital_status" value="{{ employee_form.get('marital_status', '') }}" maxlength="30">
+                </div>
+                <div class="profile-field">
+                    <label for="nationality">
+                        Nationality
+                    </label>
+                    <input id="nationality" type="text" name="nationality" value="{{ employee_form.get('nationality', '') }}" maxlength="60">
+                </div>
+                <div class="profile-field">
+                    <label for="language">
+                        Language
+                    </label>
+                    <input id="language" type="text" name="language" value="{{ employee_form.get('language', '') }}" maxlength="100">
+                </div>
+                <div class="profile-field">
+                    <label for="alternate_phone">
+                        Alternate Phone
+                    </label>
+                    <input id="alternate_phone" type="text" name="alternate_phone" value="{{ employee_form.get('alternate_phone', '') }}" maxlength="20">
+                </div>
+                <div class="profile-field">
+                    <label for="address">
+                        Address
+                    </label>
+                    <input id="address" type="text" name="address" value="{{ employee_form.get('address', '') }}" maxlength="255">
+                </div>
+                <div class="profile-field">
+                    <label for="city">
+                        City
+                    </label>
+                    <input id="city" type="text" name="city" value="{{ employee_form.get('city', '') }}" maxlength="80">
+                </div>
+                <div class="profile-field">
+                    <label for="state">
+                        State
+                    </label>
+                    <input id="state" type="text" name="state" value="{{ employee_form.get('state', '') }}" maxlength="60">
+                </div>
+                <div class="profile-field">
+                    <label for="pin_code">
+                        PIN Code
+                    </label>
+                    <input id="pin_code" type="text" name="pin_code" value="{{ employee_form.get('pin_code', '') }}" maxlength="10">
+                </div>
+                <div class="profile-field" style="grid-column:1/-1">
+                    <label for="photo">
+                        Profile Photo
+                    </label>
+                    <input id="photo" type="file" name="profile_photo" accept="image/png,image/jpeg,image/webp">
+                    <p class="form-help">
+                        Optional. The administrator can also upload/change it from the employee profile after creation.
+                    </p>
+                </div>
+            </div>
+            <div class="profile-form-actions">
+                <a class="ra-btn secondary" href="/admin/employees">
+                    Cancel
+                </a>
+                <button class="ra-btn" id="createEmployeeButton" type="submit">
+                    Create Employee
+                </button>
+            </div>
+        </form>
+    </div>
+<script nonce="{{ csp_nonce }}">
+(function () {
+    const form = document.getElementById('employeeForm');
+    const submitButton = document.getElementById('createEmployeeButton');
+    if (!form || !submitButton) return;
+
+    form.addEventListener('submit', function () {
+        if (form.dataset.submitting === 'true') return;
+        form.dataset.submitting = 'true';
+        submitButton.disabled = true;
+        submitButton.textContent = 'Creating employee…';
+    });
+})();
+</script>
+{% endblock %}

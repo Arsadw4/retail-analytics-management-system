@@ -1,0 +1,83 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Batch &amp; Lot Management
+                </h1>
+                <div>
+                    <a href="/admin/inventory" class="btn secondary">
+                        Back
+                    </a>
+                    <a href="/admin/inventory/expiry-report" class="btn warning">
+                        Expiry Report
+                    </a>
+                    <a href="/admin/inventory/add-batch" class="btn success">
+                        + Add Batch
+                    </a>
+                </div>
+            </div>
+            {% if batches %}
+                <table>
+                    <tr>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Batch No.
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Manufactured
+                        </th>
+                        <th>
+                            Expiry
+                        </th>
+                        <th>
+                            Warehouse
+                        </th>
+                        <th>
+                            Actions
+                        </th>
+                    </tr>
+                    {% for b in batches %}
+                        <tr>
+                            <td>
+                                {{ b[1] }}
+                            </td>
+                            <td>
+                                {{ b[2] }}
+                            </td>
+                            <td>
+                                {{ b[3] }}
+                            </td>
+                            <td>
+                                {{ b[4] or "-" }}
+                            </td>
+                            <td>
+                                {{ b[5] or "-" }}
+                            </td>
+                            <td>
+                                {{ b[6] or "-" }}
+                            </td>
+                            <td>
+                                <a href="#" class="btn danger"
+                   data-confirm-delete="/admin/inventory/delete-batch/{{ b[0] }}"
+                   data-confirm-message="Delete this batch record?">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No batches recorded yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

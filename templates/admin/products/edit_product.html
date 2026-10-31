@@ -1,0 +1,129 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Edit Product
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/product_forms.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="product-form-page">
+        <section class="ra-page-head">
+            <div>
+                <div class="ra-breadcrumb">
+                    Dashboard
+                    <span>
+                        ›
+                    </span>
+                    Inventory
+                    <span>
+                        ›
+                    </span>
+                    Products
+                    <span>
+                        ›
+                    </span>
+                    Edit
+                </div>
+                <h1>
+                    Edit Product
+                </h1>
+                <p>
+                    Update the existing product record without changing its database structure.
+                </p>
+            </div>
+            <div class="ra-head-actions">
+                <a class="ra-btn secondary" href="/admin/products">
+                    Back to Products
+                </a>
+            </div>
+        </section>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="ra-flashes">
+                    {% for category,message in messages %}
+                        <div class="ra-flash">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        <article class="product-form-card">
+            <form method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="product-image-upload">
+                    <div class="product-image-preview" id="imagePreview">
+                        {% if product[8] %}
+                            <img src="{{ url_for('static', filename='uploads/' ~ product[8]) }}" alt="{{ product[2] }}">
+                        {% else %}
+                            ▱
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h2>
+                            Product Image
+                        </h2>
+                        <p>
+                            Upload a replacement image or keep the current image unchanged.
+                        </p>
+                        <label class="ra-btn secondary" for="productImage">
+                            Choose Image
+                        </label>
+                        <input id="productImage" type="file" name="product_image" accept="image/png,image/jpeg,image/webp" hidden>
+                        <label class="remove-image">
+                            <input type="checkbox" name="remove_product_image" value="1">
+                            Remove current image
+                        </label>
+                    </div>
+                </div>
+                <div class="product-form-grid">
+                    <div class="product-field">
+                        <label>
+                            Category
+                        </label>
+                        <select name="category_id" required>
+                            {% for c in categories %}
+                                <option value="{{ c[0] }}" {% if product[1] == c[0] %}selected{% endif %}>
+                                    {{ c[1] }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="product-field">
+                        <label>
+                            Product Name
+                        </label>
+                        <input type="text" name="product_name" value="{{ product[2] }}" required maxlength="150">
+                    </div>
+                    <div class="product-field">
+                        <label>
+                            Purchase Price
+                        </label>
+                        <input type="number" step="0.01" min="0" name="purchase_price" value="{{ product[5] }}" required>
+                    </div>
+                    <div class="product-field">
+                        <label>
+                            Selling Price
+                        </label>
+                        <input type="number" step="0.01" min="0" name="selling_price" value="{{ product[6] }}" required>
+                    </div>
+                    <div class="product-field">
+                        <label>
+                            Stock Quantity
+                        </label>
+                        <input type="number" min="0" name="stock_quantity" value="{{ product[7] }}" required>
+                    </div>
+                </div>
+                <div class="product-form-actions">
+                    <a class="ra-btn secondary" href="/admin/products">
+                        Cancel
+                    </a>
+                    <button class="ra-btn" type="submit">
+                        Save Product Changes
+                    </button>
+                </div>
+            </form>
+        </article>
+    </div>
+<script nonce="{{ csp_nonce }}">document.getElementById('productImage')?.addEventListener('change',function(){const f=this.files?.[0],p=document.getElementById('imagePreview');if(!f||!p)return;const u=URL.createObjectURL(f);p.innerHTML='<img src="'+u+'" alt="Preview">';});</script>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    {{ po[1] }} -- {{ po[3] }}
+                </h1>
+                <div>
+                    <a href="/admin/purchase-orders" class="btn secondary">
+                        Back
+                    </a>
+                    {% if po[4] not in ['received','cancelled'] %}
+                        <a href="/admin/grn/add?po_id={{ po[0] }}" class="btn success">
+                            Receive (GRN)
+                        </a>
+                        <form method="POST" action="/admin/purchase-orders/{{ po[0] }}/cancel" style="display:inline;">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button class="btn danger">
+                                Cancel PO
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+            <p>
+                Status:
+                <span class="badge {{ po[4] }}">
+                    {{ po[4] }}
+                </span>
+                | Expected: {{ po[5] or "-" }} | Total: ₹{{ "%.2f"|format(po[6]) }}
+            </p>
+            <table>
+                <tr>
+                    <th>
+                        Product
+                    </th>
+                    <th>
+                        Ordered
+                    </th>
+                    <th>
+                        Received
+                    </th>
+                    <th>
+                        Unit Cost
+                    </th>
+                    <th>
+                        Subtotal
+                    </th>
+                </tr>
+                {% for i in items %}
+                    <tr>
+                        <td>
+                            {{ i[2] }}
+                        </td>
+                        <td>
+                            {{ i[3] }}
+                        </td>
+                        <td>
+                            {{ i[4] }}
+                        </td>
+                        <td>
+                            ₹{{ "%.2f"|format(i[5]) }}
+                        </td>
+                        <td>
+                            ₹{{ "%.2f"|format(i[6]) }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,191 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    All Employees
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_pages.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="employee-directory-page">
+        <section class="ra-page-head">
+            <div>
+                <div class="ra-breadcrumb">
+                    Dashboard
+                    <span>
+                        ›
+                    </span>
+                    Human Resources
+                    <span>
+                        ›
+                    </span>
+                    Employees
+                </div>
+                <h1>
+                    All Employees
+                </h1>
+                <p>
+                    Manage and view all employee profiles.
+                </p>
+            </div>
+            <div class="ra-head-actions">
+                {% if session.get('role') in ('admin','manager','super_admin') %}
+                    <a href="/admin/add-employee" class="ra-btn">
+                        ＋ Add Employee
+                    </a>
+                {% endif %}
+            </div>
+        </section>
+        <div class="employee-toolbar ra-card">
+            <div class="employee-search">
+                <span>
+                    ⌕
+                </span>
+                <input id="employeeFilter" placeholder="Search employees...">
+            </div>
+            <select id="departmentFilter" class="ra-select">
+                <option value="">
+                    All Departments
+                </option>
+                {% set depts=[] %}
+                {% for e in employees %}
+                    {% if e[3] and e[3] not in depts %}
+                        {% set _=depts.append(e[3]) %}
+                    {% endif %}
+                {% endfor %}
+                {% for d in depts|sort %}
+                    <option value="{{ d|lower }}">
+                        {{ d }}
+                    </option>
+                {% endfor %}
+            </select>
+            <select id="statusFilter" class="ra-select">
+                <option value="">
+                    All Status
+                </option>
+                <option value="active">
+                    Active
+                </option>
+                <option value="inactive">
+                    Inactive
+                </option>
+            </select>
+        </div>
+        <article class="ra-card employee-table-card">
+            <div class="ra-table-wrap">
+                <table class="ra-table" id="employeeTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                #
+                            </th>
+                            <th>
+                                Photo
+                            </th>
+                            <th>
+                                Employee ID
+                            </th>
+                            <th>
+                                Full Name
+                            </th>
+                            <th>
+                                Department
+                            </th>
+                            <th>
+                                Designation
+                            </th>
+                            <th>
+                                Phone
+                            </th>
+                            <th>
+                                Email
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for e in employees %}
+                            <tr data-search="{{ (e[0] ~ ' ' ~ e[1] ~ ' ' ~ e[2] ~ ' ' ~ e[3] ~ ' ' ~ e[4] ~ ' ' ~ e[5] ~ ' ' ~ e[6])|lower }}" data-department="{{ (e[3] or '')|lower }}" data-status="{{ (e[7] or '')|lower }}">
+                                <td>
+                                    {{ loop.index }}
+                                </td>
+                                <td>
+                                    {% if profile_photos.get(e[8]) %}
+                                        <img class="employee-photo" src="{{ url_for('static', filename='uploads/profiles/' ~ profile_photos[e[8]]) }}?v={{ profile_photo_versions.get(e[8], '') }}" alt="{{ e[1] }}">
+                                    {% else %}
+                                        <span class="employee-photo fallback">
+                                            {{ (e[1] or 'E')[0]|upper }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ e[2] or '-' }}
+                                </td>
+                                <td>
+                                    <strong class="employee-name">
+                                        {{ e[1] or '-' }}
+                                    </strong>
+                                </td>
+                                <td>
+                                    {{ e[3] or '-' }}
+                                </td>
+                                <td>
+                                    {{ e[4] or '-' }}
+                                </td>
+                                <td>
+                                    {{ e[5] or '-' }}
+                                </td>
+                                <td>
+                                    {{ e[6] or '-' }}
+                                </td>
+                                <td>
+                                    <span class="ra-status {{ 'ok' if e[7] == 'active' else 'out' }}">
+                                        {{ (e[7] or 'Unknown')|title }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="employee-action">
+                                        {% if session.get('role') in ('admin','manager','super_admin') %}
+                                            <a href="/admin/hr/employees/{{ e[0] }}" title="View profile">
+                                                ⋮
+                                            </a>
+                                        {% else %}
+                                            <a href="/admin/hr/employees/{{ e[0] }}" title="View profile">
+                                                ›
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="10">
+                                    <div class="ra-empty">
+                                        No employees found.
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="employee-table-footer">
+                <span id="employeeCount">
+                    Showing {{ employees|length }} employees
+                </span>
+                <div class="employee-pagination" id="employeePagination" aria-label="Employee pages">
+                </div>
+                <span>
+                    Use search and filters to narrow the directory.
+                </span>
+            </div>
+        </article>
+    </div>
+<script nonce="{{ csp_nonce }}">
+(function(){const q=document.getElementById('employeeFilter'),d=document.getElementById('departmentFilter'),s=document.getElementById('statusFilter'),rows=[...document.querySelectorAll('#employeeTable tbody tr[data-search]')],count=document.getElementById('employeeCount'),pager=document.getElementById('employeePagination');const pageSize=10;let page=1;function run(){const a=q.value.toLowerCase().trim(),b=d.value.toLowerCase(),c=s.value.toLowerCase();const filtered=rows.filter(r=>(!a||r.dataset.search.includes(a))&&(!b||r.dataset.department===b)&&(!c||r.dataset.status===c));const pages=Math.max(1,Math.ceil(filtered.length/pageSize));page=Math.min(page,pages);rows.forEach(r=>r.style.display='none');filtered.slice((page-1)*pageSize,page*pageSize).forEach((r,i)=>{r.style.display='';r.querySelector('td').textContent=String((page-1)*pageSize+i+1);});count.textContent=filtered.length?'Showing '+((page-1)*pageSize+1)+'–'+Math.min(page*pageSize,filtered.length)+' of '+filtered.length+' employees':'Showing 0 employees';if(pager){pager.innerHTML='';for(let i=1;i<=pages;i++){const b=document.createElement('button');b.type='button';b.textContent=i;b.className=i===page?'active':'';b.addEventListener('click',()=>{page=i;run();});pager.appendChild(b);}}}function reset(){page=1;run();}q.addEventListener('input',reset);d.addEventListener('change',reset);s.addEventListener('change',reset);run();})();
+</script>
+{% endblock %}

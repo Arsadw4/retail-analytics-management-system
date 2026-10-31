@@ -1,0 +1,84 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Expiry Report
+                </h1>
+                <div>
+                    <a href="/admin/inventory/batches" class="btn secondary">
+                        Back
+                    </a>
+                    <a href="#" data-print="1" class="btn">
+                        Print Report
+                    </a>
+                </div>
+            </div>
+            {% if batches %}
+                <table>
+                    <tr>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Batch No.
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Expiry Date
+                        </th>
+                        <th>
+                            Days Remaining
+                        </th>
+                        <th>
+                            Warehouse
+                        </th>
+                    </tr>
+                    {% for b in batches %}
+                        <tr>
+                            <td>
+                                {{ b[2] }}
+                            </td>
+                            <td>
+                                {{ b[3] }}
+                            </td>
+                            <td>
+                                {{ b[4] }}
+                            </td>
+                            <td>
+                                {{ b[5] }}
+                            </td>
+                            <td>
+                                {% if b[6] < 0 %}
+                                    <span class="badge expired">
+                                        Expired {{ -b[6] }}d ago
+                                    </span>
+                                {% elif b[6] <= 7 %}
+                                    <span class="badge expired">
+                                        {{ b[6] }} days left
+                                    </span>
+                                {% elif b[6] <= 30 %}
+                                    <span class="badge soon">
+                                        {{ b[6] }} days left
+                                    </span>
+                                {% else %}
+                                    {{ b[6] }} days left
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ b[7] or "-" }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No batches with an expiry date recorded.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

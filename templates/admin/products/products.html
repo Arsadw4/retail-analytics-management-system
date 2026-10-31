@@ -1,0 +1,190 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Products
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/products_reference.css') }}">
+{% endblock %}
+{% block page_content %}
+    <section class="ra-page-head">
+        <div>
+            <div class="ra-breadcrumb">
+                Dashboard
+                <span>
+                    ›
+                </span>
+                Inventory
+                <span>
+                    ›
+                </span>
+                Products
+            </div>
+            <h1>
+                Products
+            </h1>
+            <p>
+                Manage your product catalogue.
+            </p>
+        </div>
+        <div class="ra-head-actions">
+            <a class="ra-btn secondary" href="/admin/categories">
+                Categories
+            </a>
+            {% if session.get('role') in ('admin','manager','super_admin') %}
+                <a class="ra-btn" href="/admin/add-product">
+                    ＋ Add Product
+                </a>
+            {% endif %}
+        </div>
+    </section>
+    <div class="product-toolbar ra-card">
+        <div class="product-search">
+            <span>
+                ⌕
+            </span>
+            <input class="ra-input" id="productFilter" placeholder="Search products...">
+        </div>
+        <select class="ra-select" id="categoryFilter">
+            <option value="">
+                All Categories
+            </option>
+            {% set cats=[] %}
+            {% for product in products %}
+                {% if product[1] and product[1] not in cats %}
+                    {% set _=cats.append(product[1]) %}
+                {% endif %}
+            {% endfor %}
+            {% for c in cats|sort %}
+                <option value="{{ c|lower }}">
+                    {{ c }}
+                </option>
+            {% endfor %}
+        </select>
+        <select class="ra-select" id="stockFilter">
+            <option value="">
+                All Status
+            </option>
+            <option value="in">
+                Active
+            </option>
+            <option value="low">
+                Low Stock
+            </option>
+            <option value="out">
+                Out of Stock
+            </option>
+        </select>
+    </div>
+    <article class="ra-card product-table-card">
+        <div class="ra-table-wrap">
+            <table class="ra-table">
+                <thead>
+                    <tr>
+                        <th>
+                            Image
+                        </th>
+                        <th>
+                            Product ID
+                        </th>
+                        <th>
+                            Product Name
+                        </th>
+                        <th>
+                            Category
+                        </th>
+                        <th>
+                            Stock
+                        </th>
+                        <th>
+                            Purchase Price
+                        </th>
+                        <th>
+                            Selling Price
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="productRows">
+                    {% for product in products %}
+                        {% set stock=product[5]|int %}
+                        <tr data-search="{{ (product[0] ~ ' ' ~ product[1] ~ ' ' ~ product[2])|lower }}" data-category="{{ (product[1] or '')|lower }}" data-stock="{{ 'out' if stock<=0 else 'low' if stock<=10 else 'in' }}">
+                            <td>
+                                {% if product[6] %}
+                                    <img class="product-photo" src="{{ url_for('static', filename='uploads/' ~ product[6]) }}" alt="{{ product[2] }}" loading="lazy">
+                                {% else %}
+                                    <span class="product-photo fallback">
+                                        ▱
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                #{{ product[0] }}
+                            </td>
+                            <td>
+                                <strong>
+                                    {{ product[2] }}
+                                </strong>
+                            </td>
+                            <td>
+                                {{ product[1] or 'Uncategorized' }}
+                            </td>
+                            <td>
+                                {{ stock }}
+                            </td>
+                            <td>
+                                ₹{{ '%.2f'|format(product[3]|float) }}
+                            </td>
+                            <td>
+                                <strong>
+                                    ₹{{ '%.2f'|format(product[4]|float) }}
+                                </strong>
+                            </td>
+                            <td>
+                                <span class="ra-status {{ 'out' if stock<=0 else 'low' if stock<=10 else 'ok' }}">
+                                    {{ 'Out of Stock' if stock
+                                    <=0 else 'Low Stock' if stock<=10 else 'Active' }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="product-action-menu">
+                                            {% if session.get('role') in ('admin','manager','super_admin') %}
+                                                <a href="/admin/products/{{ product[0] }}">
+                                                    View
+                                                </a>
+                                                <a href="/admin/edit-product/{{ product[0] }}">
+                                                    Edit
+                                                </a>
+                                            {% endif %}
+                                            <a target="_blank" href="/admin/products/{{ product[0] }}/barcode.png">
+                                                Barcode
+                                            </a>
+                                            {% if session.get('role') in ('admin','manager','super_admin') %}
+                                                <form method="post" action="/admin/delete-product/{{ product[0] }}">
+                                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                                    <button type="submit">
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="9">
+                                        <div class="ra-empty">
+                                            No products found. Add your first product to start building the catalogue.
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        <script nonce="{{ csp_nonce }}">(function(){const q=document.getElementById('productFilter'),c=document.getElementById('categoryFilter'),s=document.getElementById('stockFilter'),rows=[...document.querySelectorAll('#productRows tr[data-search]')];function run(){const a=q.value.toLowerCase().trim(),b=c.value.toLowerCase(),d=s.value;rows.forEach(r=>r.style.display=(!a||r.dataset.search.includes(a))&&(!b||r.dataset.category===b)&&(!d||r.dataset.stock===d)?'':'none')}q.addEventListener('input',run);c.addEventListener('change',run);s.addEventListener('change',run)})();</script>
+        {% endblock %}

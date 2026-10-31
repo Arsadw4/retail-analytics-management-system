@@ -1,0 +1,77 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Sales Dashboard
+                </h1>
+                <div>
+                    <a href="/admin/billing/pos" class="btn secondary">
+                        POS
+                    </a>
+                    <a href="/admin/billing/reports/daily" class="btn">
+                        Daily
+                    </a>
+                    <a href="/admin/billing/reports/weekly" class="btn">
+                        Weekly
+                    </a>
+                    <a href="/admin/billing/reports/monthly" class="btn">
+                        Monthly
+                    </a>
+                    <a href="/admin/billing/reports/tax" class="btn warning">
+                        Tax Report
+                    </a>
+                    <a href="/admin/coupons" class="btn secondary">
+                        Coupons
+                    </a>
+                    <a href="/admin/billing/returns" class="btn secondary">
+                        Returns
+                    </a>
+                </div>
+            </div>
+            <div class="cards">
+                <div class="card">
+                    <h2>
+                        ₹{{ "%.2f"|format(summary.today_revenue) }}
+                    </h2>
+                    <p>
+                        Today's Revenue
+                    </p>
+                </div>
+                <div class="card">
+                    <h2>
+                        {{ summary.today_bills }}
+                    </h2>
+                    <p>
+                        Bills Today
+                    </p>
+                </div>
+                <div class="card">
+                    <h2>
+                        ₹{{ "%.2f"|format(summary.week_revenue) }}
+                    </h2>
+                    <p>
+                        This Week
+                    </p>
+                </div>
+                <div class="card">
+                    <h2>
+                        ₹{{ "%.2f"|format(summary.month_revenue) }}
+                    </h2>
+                    <p>
+                        This Month
+                    </p>
+                </div>
+                <div class="card">
+                    <h2>
+                        ₹{{ "%.2f"|format(summary.today_tax) }}
+                    </h2>
+                    <p>
+                        Tax Collected Today
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

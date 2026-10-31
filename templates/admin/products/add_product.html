@@ -1,0 +1,130 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Add Product
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/product_forms.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="product-form-page">
+        <section class="ra-page-head">
+            <div>
+                <div class="ra-breadcrumb">
+                    Dashboard
+                    <span>
+                        ›
+                    </span>
+                    Inventory
+                    <span>
+                        ›
+                    </span>
+                    Products
+                    <span>
+                        ›
+                    </span>
+                    Add
+                </div>
+                <h1>
+                    Add Product
+                </h1>
+                <p>
+                    Create a new catalogue product using the existing inventory system.
+                </p>
+            </div>
+            <div class="ra-head-actions">
+                <a class="ra-btn secondary" href="/admin/products">
+                    Back to Products
+                </a>
+            </div>
+        </section>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="ra-flashes">
+                    {% for category,message in messages %}
+                        <div class="ra-flash">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        <article class="product-form-card">
+            <form method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="product-image-upload">
+                    <div class="product-image-preview" id="imagePreview">
+                        ▱
+                    </div>
+                    <div>
+                        <h2>
+                            Product Image
+                        </h2>
+                        <p>
+                            Optional. JPG, PNG or WEBP using the existing secure upload flow.
+                        </p>
+                        <label class="ra-btn secondary" for="productImage">
+                            Choose Image
+                        </label>
+                        <input id="productImage" type="file" name="product_image" accept="image/png,image/jpeg,image/webp" hidden>
+                    </div>
+                </div>
+                <div class="product-form-grid">
+                    <div class="product-field">
+                        <label>
+                            Category
+                        </label>
+                        <select name="category_id" required>
+                            {% for c in categories %}
+                                <option value="{{ c[0] }}">
+                                    {{ c[1] }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="product-field">
+                        <label>
+                            Product Name
+                        </label>
+                        <input type="text" name="product_name" required maxlength="150">
+                    </div>
+                    <div class="product-field">
+                        <label>
+                            Purchase Price
+                        </label>
+                        <input type="number" step="0.01" min="0" name="purchase_price" required>
+                    </div>
+                    <div class="product-field">
+                        <label>
+                            Selling Price
+                        </label>
+                        <input type="number" step="0.01" min="0" name="selling_price" required>
+                    </div>
+                    <div class="product-field">
+                        <label>
+                            Stock Quantity
+                        </label>
+                        <input type="number" min="0" name="stock_quantity" required>
+                    </div>
+                    <div class="product-field">
+                        <label>
+                            SKU
+                            <span>
+                                Optional
+                            </span>
+                        </label>
+                        <input type="text" name="sku" maxlength="64" placeholder="Auto-generate if blank">
+                    </div>
+                </div>
+                <div class="product-form-actions">
+                    <a class="ra-btn secondary" href="/admin/products">
+                        Cancel
+                    </a>
+                    <button class="ra-btn" type="submit">
+                        Save Product
+                    </button>
+                </div>
+            </form>
+        </article>
+    </div>
+<script nonce="{{ csp_nonce }}">document.getElementById('productImage')?.addEventListener('change',function(){const f=this.files?.[0],p=document.getElementById('imagePreview');if(!f||!p)return;const u=URL.createObjectURL(f);p.innerHTML='<img src="'+u+'" alt="Preview">';});</script>
+{% endblock %}

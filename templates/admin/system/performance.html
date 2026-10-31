@@ -1,0 +1,80 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Performance Monitoring
+                </h1>
+                <a href="/admin/system/health" class="btn secondary">
+                    Back
+                </a>
+            </div>
+            <p style="color:#64748b;margin-bottom:15px;">
+                Rolling window of the last {{ stats.request_count }} requests handled by this process. See PERFORMANCE_GUIDE.md.
+            </p>
+            <div class="cards">
+                <div class="card">
+                    <h2>
+                        {{ stats.avg_ms }} ms
+                    </h2>
+                    <p>
+                        Average Response Time
+                    </p>
+                </div>
+                <div class="card">
+                    <h2>
+                        {{ stats.max_ms }} ms
+                    </h2>
+                    <p>
+                        Slowest Response
+                    </p>
+                </div>
+                <div class="card {{ 'alert' if stats.error_count >
+                    0 else 'ok' }}">
+                    <h2>
+                        {{ stats.error_count }}
+                    </h2>
+                    <p>
+                        5xx Errors
+                    </p>
+                </div>
+            </div>
+            <h2 style="font-size:18px;margin:15px 0;">
+                Slowest Endpoints (avg)
+            </h2>
+            {% if stats.slowest_endpoints %}
+                <table>
+                    <tr>
+                        <th>
+                            Endpoint
+                        </th>
+                        <th>
+                            Avg Time
+                        </th>
+                        <th>
+                            Requests
+                        </th>
+                    </tr>
+                    {% for e in stats.slowest_endpoints %}
+                        <tr>
+                            <td>
+                                {{ e.endpoint }}
+                            </td>
+                            <td>
+                                {{ e.avg_ms }} ms
+                            </td>
+                            <td>
+                                {{ e.count }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    Not enough traffic recorded yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

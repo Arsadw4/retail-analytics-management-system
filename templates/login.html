@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta name="theme-color" content="#0b1f3a">
+        <script nonce="{{ csp_nonce }}">(function(){try{if(localStorage.getItem("ra_theme")==="dark"){document.documentElement.dataset.theme="dark";}}catch(e){}})();</script>
+            <title>
+                Sign In | Retail Analytics
+            </title>
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/global_theme.css') }}">
+        </head>
+        <body>
+            <button class="auth-theme-toggle" data-theme-toggle type="button" aria-label="Switch to dark mode">
+                <span data-theme-icon>
+                    ☾
+                </span>
+            </button>
+            <main class="login-page">
+                <section class="login-hero" aria-label="Retail Analytics overview">
+                    <div class="store-scene" aria-hidden="true">
+                        <div class="store-ceiling">
+                        </div>
+                        <div class="store-shelf shelf-a">
+                            <i>
+                            </i>
+                            <i>
+                            </i>
+                            <i>
+                            </i>
+                            <i>
+                            </i>
+                            <i>
+                            </i>
+                        </div>
+                        <div class="store-shelf shelf-b">
+                            <i>
+                            </i>
+                            <i>
+                            </i>
+                            <i>
+                            </i>
+                            <i>
+                            </i>
+                        </div>
+                        <div class="store-counter">
+                            <span>
+                            </span>
+                            <b>
+                            </b>
+                            <em>
+                            </em>
+                        </div>
+                        <div class="store-screen">
+                            <span>
+                            </span>
+                            <strong>
+                                SALES OVERVIEW
+                            </strong>
+                            <b>
+                                ₹
+                            </b>
+                        </div>
+                        <div class="store-bag">
+                            <small>
+                                GOOD
+                                <br>
+                                PRODUCTS
+                                <br>
+                                BETTER
+                                <br>
+                                LIVES
+                            </small>
+                        </div>
+                    </div>
+                    <div class="hero-overlay">
+                    </div>
+                    <div class="hero-content">
+                        <div class="brand-lockup">
+                            <div class="brand-mark" aria-hidden="true">
+                                <svg viewBox="0 0 48 48" fill="none">
+                                    <path d="M8 11h5l4 21h19l4-15H15" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <circle cx="20" cy="39" r="2.7" fill="currentColor"/>
+                                    <circle cx="34" cy="39" r="2.7" fill="currentColor"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="brand-name">
+                                    Retail Analytics
+                                </div>
+                                <div class="brand-subtitle">
+                                    Management System
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hero-copy">
+                            <span class="eyebrow">
+                                SMART RETAIL
+                            </span>
+                            <h1>
+                                Brighter business
+                                <br>
+                                <span>
+                                    through data.
+                                </span>
+                            </h1>
+                            <p>
+                                Manage sales, track inventory, understand customers and turn everyday transactions into smarter decisions.
+                            </p>
+                        </div>
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <span class="feature-icon">
+                                    ▥
+                                </span>
+                                <span>
+                                    Data Driven
+                                    <br>
+                                    Decisions
+                                </span>
+                            </div>
+                            <div class="feature-card">
+                                <span class="feature-icon">
+                                    □
+                                </span>
+                                <span>
+                                    Efficient
+                                    <br>
+                                    Inventory
+                                </span>
+                            </div>
+                            <div class="feature-card">
+                                <span class="feature-icon">
+                                    ♙
+                                </span>
+                                <span>
+                                    Happy
+                                    <br>
+                                    Customers
+                                </span>
+                            </div>
+                            <div class="feature-card">
+                                <span class="feature-icon">
+                                    ↗
+                                </span>
+                                <span>
+                                    Business
+                                    <br>
+                                    Growth
+                                </span>
+                            </div>
+                        </div>
+                        <div class="hero-quote">
+                            “Transform everyday transactions into extraordinary opportunities.”
+                        </div>
+                    </div>
+                    <div class="hero-footer">
+                        <span>
+                            Sales
+                        </span>
+                        <span>
+                            Inventory
+                        </span>
+                        <span>
+                            Customers
+                        </span>
+                        <span>
+                            AI
+                        </span>
+                        <span>
+                            Reports
+                        </span>
+                        <span class="hero-footer-right">
+                            Data Today · A Smarter Tomorrow
+                        </span>
+                    </div>
+                </section>
+                <section class="login-panel">
+                    <div class="panel-topline">
+                        <span class="security-pill">
+                            <span>
+                                ●
+                            </span>
+                            Secure Access
+                        </span>
+                        <span>
+                            Retail Intelligence
+                        </span>
+                    </div>
+                    <div class="login-card">
+                        <div class="login-icon" aria-hidden="true">
+                            <svg viewBox="0 0 48 48" fill="none">
+                                <path d="M8 11h5l4 21h19l4-15H15" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                <circle cx="20" cy="39" r="2.7" fill="currentColor"/>
+                                <circle cx="34" cy="39" r="2.7" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <h2>
+                            Welcome Back
+                        </h2>
+                        <p class="login-subtitle">
+                            Sign in to your account
+                        </p>
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <div class="error-message" role="alert">
+                                    <span class="alert-dot">
+                                        !
+                                    </span>
+                                    <span>
+                                        {{ messages[0] }}
+                                    </span>
+                                </div>
+                            {% endif %}
+                        {% endwith %}
+                        <form method="POST" class="login-form" autocomplete="on">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <label for="email">
+                                Email Address
+                            </label>
+                            <div class="input-wrap">
+                                <span class="input-icon" aria-hidden="true">
+                                    ✉
+                                </span>
+                                <input id="email" type="email" name="email" placeholder="Enter your email address" autocomplete="username" required autofocus>
+                            </div>
+                            <label for="password">
+                                Password
+                            </label>
+                            <div class="input-wrap">
+                                <span class="input-icon" aria-hidden="true">
+                                    ▣
+                                </span>
+                                <input id="password" type="password" name="password" placeholder="Enter your password" autocomplete="current-password" required>
+                                <button type="button" class="password-toggle" id="passwordToggle" aria-label="Show password">
+                                    ◉
+                                </button>
+                            </div>
+                            <div class="form-options">
+                                <label class="remember-option">
+                                    <input type="checkbox" name="remember">
+                                    <span class="checkmark">
+                                    </span>
+                                    <span>
+                                        Remember me
+                                    </span>
+                                </label>
+                                <a href="{{ url_for('auth.forgot_password') }}">
+                                    Forgot password?
+                                </a>
+                            </div>
+                            <button class="login-button" type="submit" id="loginButton">
+                                <span>
+                                    Login
+                                </span>
+                                <span class="button-arrow">
+                                    →
+                                </span>
+                            </button>
+                        </form>
+                        <div class="trust-line">
+                            <span>
+                            </span>
+                            <b>
+                                Secure
+                            </b>
+                            <i>
+                                •
+                            </i>
+                            <b>
+                                Reliable
+                            </b>
+                            <i>
+                                •
+                            </i>
+                            <b>
+                                Built for Growth
+                            </b>
+                            <span>
+                            </span>
+                        </div>
+                        <div class="admin-note">
+                            <div class="note-icon">
+                                ✓
+                            </div>
+                            <div>
+                                <strong>
+                                    Authorized users only
+                                </strong>
+                                <p>
+                                    New user access is provisioned by an administrator.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <span>
+                            © 2026 Retail Analytics Management System
+                        </span>
+                        <span>
+                            Secure · Reliable · Professional
+                        </span>
+                    </div>
+                </section>
+            </main>
+        <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+        </body>
+    </html>

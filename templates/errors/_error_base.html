@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/global_theme.css') }}">
+        <script nonce="{{ csp_nonce }}">(function(){try{if(localStorage.getItem("ra_theme")==="dark"){document.documentElement.dataset.theme="dark";}}catch(e){}})();</script>
+            <title>
+                {% block title %}
+                    Error
+                {% endblock %}
+                | Retail Analytics System
+            </title>
+        <style>
+        body {
+            font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+            background: var(--theme-bg);
+            color: var(--theme-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .error-card {
+            text-align: center;
+            max-width: 420px;
+            padding: 2.5rem;
+        }
+        .error-code {
+            font-size: 4rem;
+            font-weight: 700;
+            margin: 0;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .error-message { font-size: 1rem; color: var(--theme-muted); margin: 0.5rem 0 1.5rem; }
+        a.home-link {
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        a.home-link:hover { text-decoration: underline; }
+    </style>
+        </head>
+        <body>
+            <button class="auth-theme-toggle" data-theme-toggle type="button" aria-label="Switch to dark mode">
+                <span data-theme-icon>
+                    ☾
+                </span>
+            </button>
+            <div class="error-card">
+                <p class="error-code">
+                    {% block code %}
+                    {% endblock %}
+                </p>
+                <p class="error-message">
+                    {% block message %}
+                    {% endblock %}
+                </p>
+                <a class="home-link" href="/">
+                    Return to dashboard
+                </a>
+            </div>
+        <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+        </body>
+    </html>

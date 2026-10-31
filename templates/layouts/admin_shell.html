@@ -1,0 +1,317 @@
+{% extends 'layouts/base.html' %}
+{% block title %}
+    {{ page_title|default('Retail Analytics') }}
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_shell.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_legacy.css') }}">
+    {% block page_css %}
+    {% endblock %}
+{% endblock %}
+{% block sidebar %}
+    {% include 'layouts/admin_sidebar.html' %}
+{% endblock %}
+{% block content %}
+    <div class="ra-main">
+        <header class="ra-topbar">
+            <button class="ra-mobile-menu" id="mobileMenu" aria-label="Open navigation">
+                ☰
+            </button>
+            <div class="ra-search" id="globalSearch">
+                <span>
+                    ⌕
+                </span>
+                <input id="globalSearchInput" autocomplete="off" placeholder="Search products, customers, invoices, reports...">
+                <kbd>
+                    Ctrl K
+                </kbd>
+                <div class="ra-search-results" id="globalSearchResults">
+                </div>
+            </div>
+            <div class="ra-top-actions">
+                <button class="ra-theme-switch" data-theme-toggle type="button" title="Toggle light / dark mode" aria-label="Switch to dark mode">
+                    <span class="sun">
+                        ☀
+                    </span>
+                    <span class="moon">
+                        ☾
+                    </span>
+                </button>
+                <div class="ra-notify-wrap">
+                    <button class="ra-icon-btn" id="notifyButton" title="Notifications" aria-label="Notifications">
+                        ♧
+                        <b id="notifyCount" hidden>
+                        </b>
+                    </button>
+                    <div class="ra-notify-menu" id="notifyMenu">
+                        <div class="ra-notify-title">
+                            Live Notifications
+                        </div>
+                        <div id="notifyItems">
+                            <div class="ra-empty">
+                                Loading live notifications…
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="ra-quick" id="quickAction">
+                    ＋ Quick Action
+                </button>
+                <div class="ra-profile-wrap">
+                    <button class="ra-profile" id="profileButton" type="button" aria-haspopup="true" aria-expanded="false" title="Account menu">
+                        {% if session.get('profile_photo') %}
+                            <img class="ra-avatar ra-avatar-image" src="{{ url_for('static', filename='uploads/profiles/' ~ session.get('profile_photo')) }}?v={{ session.get('profile_photo_version', '') }}" alt="Profile">
+                        {% else %}
+                            <div class="ra-avatar">
+                                {{ (session.get('name') or session.get('email') or 'A')[0]|upper }}
+                            </div>
+                        {% endif %}
+                        <div>
+                            <strong>
+                                {{ session.get('name') or 'Admin' }}
+                            </strong>
+                            <small>
+                                {{ session.get('role','Administrator')|replace('_',' ')|title }}
+                            </small>
+                        </div>
+                        <span>
+                            ⌄
+                        </span>
+                    </button>
+                    <div class="ra-profile-menu" id="profileMenu">
+                        <div class="ra-profile-menu-head">
+                            {% if session.get('profile_photo') %}
+                                <img class="ra-avatar ra-avatar-image" src="{{ url_for('static', filename='uploads/profiles/' ~ session.get('profile_photo')) }}?v={{ session.get('profile_photo_version', '') }}" alt="Profile">
+                            {% else %}
+                                <div class="ra-avatar">
+                                    {{ (session.get('name') or session.get('email') or 'A')[0]|upper }}
+                                </div>
+                            {% endif %}
+                            <div>
+                                <strong>
+                                    {{ session.get('name') or 'Admin' }}
+                                </strong>
+                                <small>
+                                    {{ session.get('role','Administrator')|replace('_',' ')|title }}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="ra-profile-menu-links">
+                            <a href="/employee/profile">
+                                <span>
+                                    ♙
+                                </span>
+                                <div>
+                                    <strong>
+                                        My Profile
+                                    </strong>
+                                    <small>
+                                        Personal account details
+                                    </small>
+                                </div>
+                            </a>
+                            <a href="/account/security">
+                                <span>
+                                    ⌑
+                                </span>
+                                <div>
+                                    <strong>
+                                        My Security
+                                    </strong>
+                                    <small>
+                                        Password and MFA
+                                    </small>
+                                </div>
+                            </a>
+                            {% if session.get('role') not in ('admin','super_admin') %}
+                                <button type="button" class="ra-profile-menu-theme" data-theme-toggle>
+                                    <span class="menu-theme-icon">
+                                        ☾
+                                    </span>
+                                    <div>
+                                        <strong>
+                                            Theme
+                                        </strong>
+                                        <small>
+                                            Light / Dark mode
+                                        </small>
+                                    </div>
+                                </button>
+                            {% endif %}
+                            {% if session.get('role') in ('admin','super_admin') %}
+                                <a href="/admin/settings">
+                                    <span>
+                                        ⚙
+                                    </span>
+                                    <div>
+                                        <strong>
+                                            Business Settings
+                                        </strong>
+                                        <small>
+                                            Company and billing details
+                                        </small>
+                                    </div>
+                                </a>
+                                <a href="/admin/activity-logs">
+                                    <span>
+                                        ≡
+                                    </span>
+                                    <div>
+                                        <strong>
+                                            Activity Logs
+                                        </strong>
+                                        <small>
+                                            Review system activity
+                                        </small>
+                                    </div>
+                                </a>
+                                <a href="/admin/sessions">
+                                    <span>
+                                        ◉
+                                    </span>
+                                    <div>
+                                        <strong>
+                                            Active Sessions
+                                        </strong>
+                                        <small>
+                                            Manage signed-in sessions
+                                        </small>
+                                    </div>
+                                </a>
+                                <button type="button" class="ra-profile-menu-theme" data-theme-toggle>
+                                    <span class="menu-theme-icon">
+                                        ☾
+                                    </span>
+                                    <div>
+                                        <strong>
+                                            Theme
+                                        </strong>
+                                        <small>
+                                            Light / Dark mode
+                                        </small>
+                                    </div>
+                                </button>
+                            {% endif %}
+                        </div>
+                        <div class="ra-profile-menu-foot">
+                            <form action="{{ url_for('auth.logout') }}" method="post">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit">
+                                <span>
+                                    ↪
+                                </span>
+                                Sign out
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main class="ra-page">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="ra-flashes">
+                        {% for message in messages %}
+                            <div class="ra-flash">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            {% block page_content %}
+            {% endblock %}
+        </main>
+    </div>
+    <div class="ra-quick-modal" id="quickModal" aria-hidden="true">
+        <div class="ra-quick-card">
+            <button class="ra-modal-close" id="modalClose">
+                ×
+            </button>
+            <h2>
+                Quick Action
+            </h2>
+            <p>
+                Jump directly to a common business task.
+            </p>
+            <div class="ra-action-grid">
+                {% if session.get('role') in ('admin','manager','super_admin') %}
+                    <a href="/admin/add-product">
+                        ＋
+                        <span>
+                            <strong>
+                                Add Product
+                            </strong>
+                            <small>
+                                Catalogue
+                            </small>
+                        </span>
+                    </a>
+                    <a href="/admin/add-customer">
+                        ♙
+                        <span>
+                            <strong>
+                                Add Customer
+                            </strong>
+                            <small>
+                                CRM
+                            </small>
+                        </span>
+                    </a>
+                {% endif %}
+                {% if session.get('role') in ('admin','manager','employee','cashier') %}
+                    <a href="/admin/billing/pos">
+                        ₹
+                        <span>
+                            <strong>
+                                New Sale
+                            </strong>
+                            <small>
+                                POS / Billing
+                            </small>
+                        </span>
+                    </a>
+                {% endif %}
+                {% if session.get('role') in ('admin','manager','employee','inventory_manager') %}
+                    <a href="/admin/inventory/stock-in">
+                        ▣
+                        <span>
+                            <strong>
+                                Stock In
+                            </strong>
+                            <small>
+                                Inventory
+                            </small>
+                        </span>
+                    </a>
+                {% endif %}
+                {% if session.get('role') in ('admin','manager','super_admin') %}
+                    <a href="/admin/purchase-orders/add">
+                        🚚
+                        <span>
+                            <strong>
+                                Purchase Order
+                            </strong>
+                            <small>
+                                Procurement
+                            </small>
+                        </span>
+                    </a>
+                    <a href="/admin/reports">
+                        ▤
+                        <span>
+                            <strong>
+                                Generate Report
+                            </strong>
+                            <small>
+                                Reporting
+                            </small>
+                        </span>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+<script src="{{ url_for('static', filename='js/admin_shell.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Process Return -- Invoice {{ sale[1] if sale else "" }}
+                </h1>
+                <a href="/admin/billing/returns" class="btn secondary">
+                    Back
+                </a>
+            </div>
+            {% if items %}
+                <form method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <table>
+                        <tr>
+                            <th>
+                                Product
+                            </th>
+                            <th>
+                                Sold Qty
+                            </th>
+                            <th>
+                                Unit Price
+                            </th>
+                            <th>
+                                Returnable
+                            </th>
+                            <th>
+                                Return Qty
+                            </th>
+                        </tr>
+                        {% for it in items %}
+                            <tr>
+                                <td>
+                                    {{ it[1] }}
+                                </td>
+                                <td>
+                                    {{ it[2] }}
+                                </td>
+                                <td>
+                                    {{ "%.2f"|format(it[3]) }}
+                                </td>
+                                <td>
+                                    {{ it[4] }}
+                                </td>
+                                <td>
+                                    <input type="number" name="qty_{{ it[0] }}" min="0" max="{{ it[4] }}" value="0" {% if it[4] == 0 %}disabled{% endif %}>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    <div class="form-group" style="margin-top:20px;">
+                        <label>
+                            Reason
+                        </label>
+                        <input type="text" name="reason" placeholder="e.g. Damaged, wrong item, customer changed mind">
+                    </div>
+                    <button class="btn warning" type="submit">
+                        Process Return
+                    </button>
+                </form>
+            {% else %}
+                <div class="empty-state">
+                    This sale has no items eligible for return.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

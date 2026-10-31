@@ -1,0 +1,80 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    My Sales
+{% endblock %}
+{% block page_content %}
+    <div class="ra-page-head">
+        <div>
+            <div class="ra-breadcrumb">
+                Dashboard / Sales / My Sales
+            </div>
+            <h1>
+                My Sales
+            </h1>
+            <p>
+                Transactions recorded against your user account.
+            </p>
+        </div>
+        <div class="ra-head-actions">
+            <a class="ra-btn secondary" href="/admin/sales">
+                All Sales
+            </a>
+            <a class="ra-btn" href="/admin/billing/pos">
+                ＋ New Sale
+            </a>
+        </div>
+    </div>
+    <div class="ra-card">
+        <div class="ra-toolbar">
+            <span class="ra-subtle">
+                {{ sales|length }} transactions
+            </span>
+        </div>
+        <div class="ra-table-wrap">
+            <table class="ra-table">
+                <thead>
+                    <tr>
+                        <th>
+                            ID
+                        </th>
+                        <th>
+                            Amount
+                        </th>
+                        <th>
+                            Profit
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sale in sales %}
+                        <tr>
+                            <td>
+                                #{{ sale[0] }}
+                            </td>
+                            <td>
+                                ₹{{ sale[1] }}
+                            </td>
+                            <td>
+                                ₹{{ sale[2] }}
+                            </td>
+                            <td>
+                                {{ sale[3] }}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4">
+                                <div class="ra-empty">
+                                    No sales recorded for your account.
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

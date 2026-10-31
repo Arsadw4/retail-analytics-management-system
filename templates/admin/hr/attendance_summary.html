@@ -1,0 +1,76 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Monthly Attendance Summary
+                </h1>
+                <div>
+                    <a href="/admin/hr/attendance" class="btn secondary">
+                        Back
+                    </a>
+                    <a href="/admin/hr/reports/attendance/export/csv" class="btn secondary">
+                        CSV
+                    </a>
+                    <a href="/admin/hr/reports/attendance/export/excel" class="btn secondary">
+                        Excel
+                    </a>
+                    <a href="/admin/hr/reports/attendance/export/pdf" class="btn secondary">
+                        PDF
+                    </a>
+                </div>
+            </div>
+            {% if rows %}
+                <table>
+                    <tr>
+                        <th>
+                            Employee
+                        </th>
+                        <th>
+                            Month
+                        </th>
+                        <th>
+                            Present
+                        </th>
+                        <th>
+                            Absent
+                        </th>
+                        <th>
+                            On Leave
+                        </th>
+                        <th>
+                            Half Days
+                        </th>
+                    </tr>
+                    {% for r in rows %}
+                        <tr>
+                            <td>
+                                {{ r[1] }}
+                            </td>
+                            <td>
+                                {{ r[2] }}
+                            </td>
+                            <td>
+                                {{ r[3] }}
+                            </td>
+                            <td>
+                                {{ r[4] }}
+                            </td>
+                            <td>
+                                {{ r[5] }}
+                            </td>
+                            <td>
+                                {{ r[6] }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No attendance data yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

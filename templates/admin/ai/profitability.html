@@ -1,0 +1,59 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Profitability Analysis
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ai_bi.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Profitability Analysis
+                </h1>
+                <a href="/admin/ai-dashboard" class="btn secondary">
+                    Back
+                </a>
+            </div>
+            {% if products %}
+                <table>
+                    <tr>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Revenue
+                        </th>
+                        <th>
+                            Profit
+                        </th>
+                        <th>
+                            Margin %
+                        </th>
+                    </tr>
+                    {% for p in products %}
+                        <tr>
+                            <td>
+                                {{ p[1] }}
+                            </td>
+                            <td>
+                                ₹{{ "%.2f"|format(p[2]) }}
+                            </td>
+                            <td>
+                                ₹{{ "%.2f"|format(p[3]) }}
+                            </td>
+                            <td>
+                                {{ p[4] }}%
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No sales recorded yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,49 @@
+:root  {
+    --ra-accent:#1473ff;
+    --ra-surface:#fff;
+    --ra-border:#e1e9f3
+}
+.legacy-page .header h1,.legacy-page .page-title  {
+    letter-spacing:-.4px
+}
+.legacy-page .btn,.legacy-page button,.legacy-page input,.legacy-page select,.legacy-page textarea  {
+    transition:border-color .16s,box-shadow .16s,transform .16s
+}
+.legacy-page .btn:hover  {
+    transform:translateY(-1px)
+}
+.legacy-page input:focus,.legacy-page select:focus,.legacy-page textarea:focus  {
+    outline:none;
+    border-color:#6aaeff;
+    box-shadow:0 0 0 3px rgba(20,115,255,.09)
+}
+.legacy-page table tbody tr  {
+    transition:background .12s
+}
+.legacy-page table tbody tr:hover  {
+    background:#f7faff
+}
+.legacy-page .badge,.legacy-page .status,.legacy-page .pill  {
+    white-space:nowrap
+}
+
+@media(max-width:720px)  {
+    .legacy-page  {
+        padding:12px!important
+    }
+    .legacy-page .header  {
+        gap:10px
+    }
+    .legacy-page .header h1  {
+        font-size:20px
+    }
+    .legacy-page .actions  {
+        width:100%;
+        display:flex;
+        flex-wrap:wrap
+    }
+    .legacy-page .actions .btn  {
+        flex:1;
+        min-width:120px
+    }
+}

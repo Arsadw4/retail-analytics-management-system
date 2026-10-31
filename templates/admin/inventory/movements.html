@@ -1,0 +1,108 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Stock Movement History
+                </h1>
+                <a href="/admin/inventory" class="btn secondary">
+                    Back
+                </a>
+            </div>
+            <form method="GET" class="filters">
+                <div class="form-group">
+                    <label>
+                        Product
+                    </label>
+                    <select name="product_id">
+                        <option value="">
+                            All Products
+                        </option>
+                        {% for p in products %}
+                            <option value="{{ p[0] }}" {% if selected_product == p[0] %}selected{% endif %}>
+                                {{ p[2] }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>
+                        Type
+                    </label>
+                    <select name="movement_type">
+                        <option value="">
+                            All Types
+                        </option>
+                        {% for t in ['in','out','adjustment','sale','return'] %}
+                            <option value="{{ t }}" {% if selected_type == t %}selected{% endif %}>
+                                {{ t|capitalize }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button class="btn" type="submit">
+                    Filter
+                </button>
+            </form>
+            {% if movements %}
+                <table>
+                    <tr>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Type
+                        </th>
+                        <th>
+                            Qty
+                        </th>
+                        <th>
+                            Reason
+                        </th>
+                        <th>
+                            Warehouse
+                        </th>
+                        <th>
+                            Performed By
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                    </tr>
+                    {% for m in movements %}
+                        <tr>
+                            <td>
+                                {{ m[1] }}
+                            </td>
+                            <td>
+                                <span class="badge {{ m[2] }}">
+                                    {{ m[2] }}
+                                </span>
+                            </td>
+                            <td>
+                                {{ m[3] }}
+                            </td>
+                            <td>
+                                {{ m[4] or "-" }}
+                            </td>
+                            <td>
+                                {{ m[6] or "-" }}
+                            </td>
+                            <td>
+                                {{ m[7] or "System" }}
+                            </td>
+                            <td>
+                                {{ m[8] }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No stock movements match this filter.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

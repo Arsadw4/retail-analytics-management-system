@@ -1,0 +1,69 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Attendance -- {{ selected_date }}
+                </h1>
+                <div>
+                    <a href="/admin/hr/employees" class="btn secondary">
+                        Back
+                    </a>
+                    <a href="/admin/hr/attendance/summary" class="btn secondary">
+                        Monthly Summary
+                    </a>
+                </div>
+            </div>
+            <form method="GET" style="margin-bottom:15px;">
+                <input type="date" name="date" value="{{ selected_date }}" data-submit-form="1">
+            </form>
+            <form method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="date" value="{{ selected_date }}">
+                <table>
+                    <tr>
+                        <th>
+                            Employee
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Check In
+                        </th>
+                        <th>
+                            Check Out
+                        </th>
+                    </tr>
+                    {% for r in records %}
+                        <tr>
+                            <td>
+                                {{ r[1] }}
+                            </td>
+                            <td>
+                                <select name="status_{{ r[0] }}">
+                                    {% for s in ['present','absent','half_day','leave','holiday'] %}
+                                        <option value="{{ s }}" {% if r[2]==s %}selected{% endif %}>
+                                            {{ s }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <input type="time" name="checkin_{{ r[0] }}" value="{{ r[3] or '' }}">
+                            </td>
+                            <td>
+                                <input type="time" name="checkout_{{ r[0] }}" value="{{ r[4] or '' }}">
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                <br>
+                <button class="btn success">
+                    Save Attendance
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

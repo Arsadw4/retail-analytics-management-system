@@ -1,0 +1,331 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    POS & Billing
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pos_enterprise.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="pos-page">
+        <div class="pos-head">
+            <div>
+                <div class="pos-breadcrumb">
+                    Dashboard
+                    <span>
+                        ›
+                    </span>
+                    Operations
+                    <span>
+                        ›
+                    </span>
+                    POS / Billing
+                </div>
+                <h1>
+                    Point of Sale
+                    <span>
+                        (POS)
+                    </span>
+                </h1>
+                <p>
+                    Fast checkout with barcode scanning, product search and reliable manual entry.
+                </p>
+            </div>
+            <div class="pos-head-actions">
+                <a href="/admin/billing/dashboard" class="pos-btn secondary">
+                    Billing Dashboard
+                </a>
+                <a href="/admin/billing/held" class="pos-btn secondary">
+                    Held Bills
+                </a>
+                <a href="/admin/billing/search" class="pos-btn secondary">
+                    Invoices
+                </a>
+            </div>
+        </div>
+        <div class="pos-workspace">
+            <section class="pos-panel catalog-panel">
+                <div class="pos-panel-head">
+                    <div>
+                        <h2>
+                            Products
+                        </h2>
+                        <p>
+                            Scan, search or enter a product manually. All prices and stock come from MySQL.
+                        </p>
+                    </div>
+                    <span class="pos-count" id="product-count">
+                        {{ products|length }} products
+                    </span>
+                </div>
+                <div class="pos-tabs" role="tablist">
+                    <button class="pos-tab active" type="button" data-pos-tab="scan">
+                        Scan / Search Product
+                    </button>
+                    <button class="pos-tab" type="button" data-pos-tab="manual">
+                        Manual Entry
+                    </button>
+                </div>
+                <div class="pos-tab-panel active" id="pos-tab-scan">
+                    <div class="scan-row">
+                        <div class="field-with-icon">
+                            <span>
+                                ⌕
+                            </span>
+                            <input id="barcode-input" class="pos-input" placeholder="Scan barcode, enter SKU or product name" autocomplete="off" autofocus>
+                        </div>
+                        <button id="scan-focus" class="pos-btn secondary" type="button">
+                            Focus Scanner
+                        </button>
+                    </div>
+                    <div class="catalog-grid" id="pos-product-grid">
+                        {% for p in products %}
+                            <button type="button" class="product-tile" data-product-id="{{ p[0] }}" data-product-name="{{ p[2] }}" data-sku="{{ p[3] or '' }}" data-barcode="{{ p[4] or '' }}" data-price="{{ p[6] }}" data-stock="{{ p[7] }}">
+                                <span class="product-stock {% if p[7] <= 0 %}out{% endif %}">
+                                    {{ 'Out of stock' if p[7]
+                                    <= 0 else 'Stock ' ~ p[7] }}</span>
+                                        <strong>
+                                            {{ p[2] }}
+                                        </strong>
+                                        <small>
+                                            {{ p[3] or p[4] or 'No SKU / barcode' }}
+                                        </small>
+                                        <b>
+                                            ₹{{ '%.2f'|format(p[6]|float) }}
+                                        </b>
+                                    </button>
+                                {% else %}
+                                    <div class="pos-empty">
+                                        No active products are available in the database.
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="pos-tab-panel" id="pos-tab-manual" hidden>
+                            <div class="manual-entry-card">
+                                <div class="manual-title">
+                                    <div>
+                                        <h3>
+                                            Manual Product Entry
+                                        </h3>
+                                        <p>
+                                            Use this when the barcode scanner is unavailable. Select a real product from the database; price and stock remain system-controlled.
+                                        </p>
+                                    </div>
+                                    <span class="manual-badge">
+                                        Database backed
+                                    </span>
+                                </div>
+                                <div class="manual-grid">
+                                    <label>
+                                        Product Name
+                                        <input id="manual-product-name" class="pos-input" list="manual-product-options" placeholder="Type product name" autocomplete="off">
+                                        <datalist id="manual-product-options">
+                                            {% for p in products %}
+                                                <option value="{{ p[2] }}" data-product-id="{{ p[0] }}">
+                                                    {{ p[3] or p[4] or '' }}
+                                                </option>
+                                            {% endfor %}
+                                        </datalist>
+                                    </label>
+                                    <label>
+                                        SKU / Barcode
+                                        <input id="manual-code" class="pos-input" placeholder="Enter SKU or barcode" autocomplete="off">
+                                    </label>
+                                    <label>
+                                        Price (₹)
+                                        <input id="manual-price" class="pos-input readonly" readonly placeholder="Auto from database">
+                                    </label>
+                                    <label>
+                                        Quantity
+                                        <input id="manual-qty" class="pos-input" type="number" min="1" value="1">
+                                    </label>
+                                </div>
+                                <div class="manual-selected" id="manual-selected">
+                                    Select a product to see its live price and available stock.
+                                </div>
+                                <button id="manual-add" class="pos-primary wide" type="button">
+                                    Add Selected Product to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="pos-panel bill-panel">
+                        <div class="pos-panel-head bill-head">
+                            <div>
+                                <h2>
+                                    Current Bill
+                                </h2>
+                                <p>
+                                    Review items, customer and payment before completing the sale.
+                                </p>
+                            </div>
+                            <span class="pos-count" id="cart-count">
+                                0 items
+                            </span>
+                        </div>
+                        <div class="bill-body">
+                            <div class="customer-row">
+                                <label>
+                                    Customer
+                                    <select id="customer-select" class="pos-select">
+                                        <option value="">
+                                            Walk-in Customer
+                                        </option>
+                                        {% for c in customers %}
+                                            <option value="{{ c[0] }}">
+                                                {{ c[1] }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </label>
+                                <label>
+                                    Customer State
+                                    <input id="customer-state" class="pos-input" value="{{ company[4] if company and company|length >
+                                    4 and company[4] else '' }}" placeholder="Same State / State">
+                                </label>
+                            </div>
+                            <div class="cart-head">
+                                <span>
+                                    Item
+                                </span>
+                                <span>
+                                    Price
+                                </span>
+                                <span>
+                                    Qty
+                                </span>
+                                <span>
+                                    Total
+                                </span>
+                                <span>
+                                </span>
+                            </div>
+                            <div id="cart-items" class="cart-list">
+                                <div class="cart-empty">
+                                    No items added yet. Scan or manually select a product.
+                                </div>
+                            </div>
+                            <div class="coupon-row">
+                                <input id="coupon-code" class="pos-input" placeholder="Coupon code (optional)">
+                                <button id="coupon-apply" class="pos-btn secondary" type="button">
+                                    Apply
+                                </button>
+                            </div>
+                            <div class="bill-totals">
+                                <div>
+                                    <span>
+                                        Subtotal
+                                    </span>
+                                    <strong id="t-subtotal">
+                                        ₹0.00
+                                    </strong>
+                                </div>
+                                <div>
+                                    <span>
+                                        Discount
+                                    </span>
+                                    <strong id="t-discount">
+                                        ₹0.00
+                                    </strong>
+                                </div>
+                                <div>
+                                    <span>
+                                        CGST
+                                    </span>
+                                    <strong id="t-cgst">
+                                        ₹0.00
+                                    </strong>
+                                </div>
+                                <div>
+                                    <span>
+                                        SGST
+                                    </span>
+                                    <strong id="t-sgst">
+                                        ₹0.00
+                                    </strong>
+                                </div>
+                                <div>
+                                    <span>
+                                        IGST
+                                    </span>
+                                    <strong id="t-igst">
+                                        ₹0.00
+                                    </strong>
+                                </div>
+                                <div class="grand">
+                                    <span>
+                                        Grand Total
+                                    </span>
+                                    <strong id="t-total">
+                                        ₹0.00
+                                    </strong>
+                                </div>
+                            </div>
+                            <div class="payment-box">
+                                <label>
+                                    Payment Method
+                                    <select id="payment-method" class="pos-select">
+                                        <option value="cash">
+                                            Cash
+                                        </option>
+                                        <option value="upi">
+                                            UPI
+                                        </option>
+                                        <option value="card">
+                                            Card
+                                        </option>
+                                        <option value="wallet">
+                                            Wallet
+                                        </option>
+                                        <option value="split">
+                                            Split Payment
+                                        </option>
+                                    </select>
+                                </label>
+                                <label>
+                                    Amount Received
+                                    <input id="amount-received" class="pos-input" type="number" min="0" step="0.01" placeholder="Auto for exact payment">
+                                </label>
+                            </div>
+                            <div id="split-payments" class="split-box" hidden>
+                                <input type="number" id="split-cash" class="pos-input" min="0" step="0.01" placeholder="Cash">
+                                <input type="number" id="split-upi" class="pos-input" min="0" step="0.01" placeholder="UPI">
+                                <input type="number" id="split-card" class="pos-input" min="0" step="0.01" placeholder="Card">
+                                <input type="number" id="split-wallet" class="pos-input" min="0" step="0.01" placeholder="Wallet">
+                            </div>
+                            <div class="change-row">
+                                <span>
+                                    Change
+                                </span>
+                                <strong id="change-due">
+                                    ₹0.00
+                                </strong>
+                            </div>
+                            <div class="bill-actions">
+                                <button class="pos-btn hold" data-pos-action="hold" type="button">
+                                    Hold Bill
+                                </button>
+                                <button class="pos-primary" data-pos-action="checkout" type="button">
+                                    Complete Sale (F9)
+                                </button>
+                            </div>
+                            <div class="ready-line">
+                                <span class="ready-dot">
+                                </span>
+                                Ready for billing
+                                <span>
+                                    •
+                                </span>
+                                All totals are verified server-side.
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        <script nonce="{{ csp_nonce }}">
+window.RESUME_CART={{ resume_cart|tojson if resume_cart else "null" }};
+window.RESUME_ID={{ resume_id|tojson if resume_id else "null" }};
+window.PRODUCT_CATALOG=[{% for p in products %}{id:{{ p[0] }},name:{{ p[2]|tojson }},sku:{{ (p[3] or '')|tojson }},barcode:{{ (p[4] or '')|tojson }},price:{{ p[6]|tojson }},stock:{{ p[7]|tojson }}},{% endfor %}];
+</script>
+        <script src="{{ url_for('static', filename='js/pos.js') }}"></script>
+        {% endblock %}

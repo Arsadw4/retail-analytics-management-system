@@ -1,0 +1,58 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Security Settings
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="ra-page-head">
+            <div>
+                <div class="ra-breadcrumb">
+                    Dashboard / My Security
+                </div>
+                <h1>
+                    Security Settings
+                </h1>
+                <p>
+                    Manage two-factor authentication for your account.
+                </p>
+            </div>
+            <div class="ra-head-actions">
+                <a class="ra-btn secondary" href="/employee/profile">
+                    My Profile
+                </a>
+            </div>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category,message in messages %}
+                    <div class="ra-flash">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form method="POST" action="/account/security/mfa/disable" style="max-width:700px;margin:0 auto">
+            <div class="ra-card" style="padding:20px">
+                <h2 style="font-size:14px;margin:0 0 8px">
+                    Two-Factor Authentication
+                </h2>
+                {% if mfa_enabled %}
+                    <p style="font-size:10px;color:var(--ra-muted);margin:0 0 15px">
+                        Two-factor authentication is enabled on this account.
+                    </p>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="ra-btn warning" type="submit">
+                        Disable Two-Factor Authentication
+                    </button>
+                {% else %}
+                    <p style="font-size:10px;color:var(--ra-muted);margin:0 0 15px">
+                        Two-factor authentication is currently disabled. Enable it for additional account protection.
+                    </p>
+                    <a class="ra-btn success" href="/account/security/mfa/setup">
+                        Enable Two-Factor Authentication
+                    </a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+{% endblock %}

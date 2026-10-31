@@ -1,0 +1,81 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Activity / Audit Logs
+                </h1>
+                <div>
+                    <a href="/admin/login-history" class="btn secondary">
+                        Login History
+                    </a>
+                    <a href="/admin/sessions" class="btn secondary">
+                        Sessions
+                    </a>
+                </div>
+            </div>
+            {% if logs %}
+                <table>
+                    <tr>
+                        <th>
+                            User
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                        <th>
+                            Details
+                        </th>
+                        <th>
+                            IP
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                    </tr>
+                    {% for l in logs %}
+                        <tr>
+                            <td>
+                                {{ l[1] or "System" }}
+                            </td>
+                            <td>
+                                {{ l[2] }}
+                            </td>
+                            <td>
+                                {{ l[3] or "-" }}
+                            </td>
+                            <td>
+                                {{ l[4] or "-" }}
+                            </td>
+                            <td>
+                                {{ l[5] }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No activity recorded yet.
+                </div>
+            {% endif %}
+            {% if page_info %}
+                <div style="margin-top:15px;display:flex;gap:10px;align-items:center;">
+                    {% if page_info.has_prev %}
+                        <a class="btn secondary" href="?page={{ page_info.page - 1 }}{% if action_filter %}&action={{ action_filter }}{% endif %}">
+                            Previous
+                        </a>
+                    {% endif %}
+                    <span>
+                        Page {{ page_info.page }} of {{ page_info.total_pages }} ({{ page_info.total_count }} total)
+                    </span>
+                    {% if page_info.has_next %}
+                        <a class="btn secondary" href="?page={{ page_info.page + 1 }}{% if action_filter %}&action={{ action_filter }}{% endif %}">
+                            Next
+                        </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

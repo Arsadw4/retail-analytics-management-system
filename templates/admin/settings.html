@@ -1,0 +1,129 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Business Settings | Retail Analytics
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_settings.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="ra-page-head">
+        <div>
+            <div class="ra-breadcrumb">
+                Dashboard
+                <span>
+                    ›
+                </span>
+                System
+                <span>
+                    ›
+                </span>
+                Settings
+            </div>
+            <h1>
+                Business Settings
+            </h1>
+            <p>
+                Manage the company information used across billing and invoices.
+            </p>
+        </div>
+    </div>
+    <div class="settings-layout">
+        <section class="ra-card settings-card">
+            <div class="settings-card-head">
+                <div>
+                    <h2>
+                        Company Profile
+                    </h2>
+                    <p>
+                        Keep your legal and contact details up to date.
+                    </p>
+                </div>
+                <span class="settings-badge">
+                    Admin only
+                </span>
+            </div>
+            <form method="post" action="{{ url_for('admin.admin_settings') }}" class="settings-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="settings-grid">
+                    <label>
+                        <span>
+                            Company Name
+                            <b>
+                                *
+                            </b>
+                        </span>
+                        <input name="company_name" maxlength="150" required value="{{ company[1] if company else '' }}" placeholder="Your Retail Company">
+                    </label>
+                    <label>
+                        <span>
+                            GST Number
+                        </span>
+                        <input name="gst_number" maxlength="20" value="{{ company[2] if company else '' }}" placeholder="22AAAAA0000A1Z5">
+                    </label>
+                    <label class="full">
+                        <span>
+                            Business Address
+                        </span>
+                        <textarea name="address" maxlength="255" rows="3" placeholder="Registered business address">
+                            {{ company[3] if company else '' }}
+                        </textarea>
+                    </label>
+                    <label>
+                        <span>
+                            State
+                            <b>
+                                *
+                            </b>
+                        </span>
+                        <input name="state" maxlength="60" required value="{{ company[4] if company else '' }}" placeholder="Bihar">
+                    </label>
+                    <label>
+                        <span>
+                            Business Phone
+                        </span>
+                        <input name="phone" maxlength="20" value="{{ company[5] if company else '' }}" placeholder="+91 98765 43210">
+                    </label>
+                    <label class="full">
+                        <span>
+                            Business Email
+                        </span>
+                        <input type="email" name="email" maxlength="100" value="{{ company[6] if company else '' }}" placeholder="business@example.com">
+                    </label>
+                </div>
+                <div class="settings-actions">
+                    <a class="ra-btn secondary" href="{{ url_for('admin.admin_dashboard') }}">
+                        Cancel
+                    </a>
+                    <button class="ra-btn" type="submit">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </section>
+        <aside class="ra-card settings-info">
+            <div class="info-icon">
+                ✓
+            </div>
+            <h3>
+                Used across the system
+            </h3>
+            <p>
+                These details are read by the billing and invoice modules, so you only need to maintain them here.
+            </p>
+            <ul>
+                <li>
+                    Invoice header & contact details
+                </li>
+                <li>
+                    GST and business information
+                </li>
+                <li>
+                    Billing and PDF invoice output
+                </li>
+                <li>
+                    Centralized company profile
+                </li>
+            </ul>
+        </aside>
+    </div>
+{% endblock %}

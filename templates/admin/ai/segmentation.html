@@ -1,0 +1,100 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Customer Segmentation
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ai_bi.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Customer Segmentation (RFM)
+                </h1>
+                <div>
+                    <a href="/admin/ai/churn-risk" class="btn secondary">
+                        Churn Risk
+                    </a>
+                    <a href="/admin/ai/clv" class="btn secondary">
+                        Predicted CLV
+                    </a>
+                </div>
+            </div>
+            <div class="cards">
+                {% for seg, count in counts.items() %}
+                    <div class="card">
+                        <h2>
+                            {{ count }}
+                        </h2>
+                        <p>
+                            {{ seg }}
+                        </p>
+                    </div>
+                {% endfor %}
+            </div>
+            <table>
+                <tr>
+                    <th>
+                        Customer
+                    </th>
+                    <th>
+                        Recency (days)
+                    </th>
+                    <th>
+                        Frequency
+                    </th>
+                    <th>
+                        Monetary
+                    </th>
+                    <th>
+                        Segment
+                    </th>
+                </tr>
+                {% for s in segments %}
+                    <tr>
+                        <td>
+                            {{ s.customer_name }}
+                        </td>
+                        <td>
+                            {{ s.recency_days if s.recency_days is not none else "-" }}
+                        </td>
+                        <td>
+                            {{ s.frequency }}
+                        </td>
+                        <td>
+                            ₹{{ "%.2f"|format(s.monetary) }}
+                        </td>
+                        <td>
+                            {% if s.segment == "Champions" %}
+                                <span class="badge champions">
+                                    {{ s.segment }}
+                                </span>
+                            {% elif s.segment == "Loyal Customers" %}
+                                <span class="badge loyal">
+                                    {{ s.segment }}
+                                </span>
+                            {% elif s.segment == "At Risk" %}
+                                <span class="badge at-risk">
+                                    {{ s.segment }}
+                                </span>
+                            {% elif s.segment == "Lost" %}
+                                <span class="badge lost">
+                                    {{ s.segment }}
+                                </span>
+                            {% elif s.segment == "Regular" %}
+                                <span class="badge regular">
+                                    {{ s.segment }}
+                                </span>
+                            {% else %}
+                                <span class="badge new">
+                                    {{ s.segment }}
+                                </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}

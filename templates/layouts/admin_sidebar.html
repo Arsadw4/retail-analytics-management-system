@@ -1,0 +1,481 @@
+{% set role = session.get('role') %}
+{% macro icon(name) -%}
+    <svg class="ra-nav-svg" viewBox="0 0 24 24" aria-hidden="true">
+        <use href="#ra-i-{{ name }}">
+        </use>
+    </svg>
+    {%- endmacro %}
+    <aside class="ra-sidebar" id="sidebar">
+        <svg class="ra-icon-sprite" aria-hidden="true">
+            <symbol id="ra-i-dashboard" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+                <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+                <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+                <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+            </symbol>
+            <symbol id="ra-i-sales" viewBox="0 0 24 24">
+                <path d="M4 5h2l2.1 10.1a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 1.9-1.5L21 8H7"/>
+                <circle cx="10" cy="20" r="1.4"/>
+                <circle cx="18" cy="20" r="1.4"/>
+            </symbol>
+            <symbol id="ra-i-pos" viewBox="0 0 24 24">
+                <rect x="3" y="5" width="18" height="14" rx="2"/>
+                <path d="M7 9h10M7 13h4M15 13h2M7 16h2"/>
+            </symbol>
+            <symbol id="ra-i-customers" viewBox="0 0 24 24">
+                <circle cx="9" cy="8" r="3"/>
+                <path d="M3.5 20a5.5 5.5 0 0 1 11 0M16 5.5a3 3 0 0 1 0 5.8M16.5 14.5a4.5 4.5 0 0 1 4 5.5"/>
+            </symbol>
+            <symbol id="ra-i-suppliers" viewBox="0 0 24 24">
+                <path d="M3 7h11v10H3zM14 10h4l3 3v4h-7zM6 20h.01M18 20h.01"/>
+                <circle cx="6" cy="19" r="1.5"/>
+                <circle cx="18" cy="19" r="1.5"/>
+            </symbol>
+            <symbol id="ra-i-products" viewBox="0 0 24 24">
+                <path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/>
+                <path d="m4.5 7.5 7.5 4 7.5-4M12 11.5V21"/>
+            </symbol>
+            <symbol id="ra-i-categories" viewBox="0 0 24 24">
+                <path d="M4 5h16M4 12h16M4 19h16"/>
+                <circle cx="8" cy="5" r="2"/>
+                <circle cx="16" cy="12" r="2"/>
+                <circle cx="10" cy="19" r="2"/>
+            </symbol>
+            <symbol id="ra-i-stock" viewBox="0 0 24 24">
+                <path d="M4 6h16v12H4zM4 10h16M8 6V4M16 6V4"/>
+            </symbol>
+            <symbol id="ra-i-movement" viewBox="0 0 24 24">
+                <path d="M7 3v18M17 21V3M4 7l3-4 3 4M14 17l3 4 3-4"/>
+            </symbol>
+            <symbol id="ra-i-batches" viewBox="0 0 24 24">
+                <path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/>
+            </symbol>
+            <symbol id="ra-i-alert" viewBox="0 0 24 24">
+                <path d="M12 4 21 20H3L12 4Z"/>
+                <path d="M12 9v5M12 17h.01"/>
+            </symbol>
+            <symbol id="ra-i-calendar" viewBox="0 0 24 24">
+                <rect x="4" y="5" width="16" height="15" rx="2"/>
+                <path d="M8 3v4M16 3v4M4 9h16"/>
+            </symbol>
+            <symbol id="ra-i-hr" viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="3"/>
+                <path d="M5 21a7 7 0 0 1 14 0M4 5h2M18 5h2"/>
+            </symbol>
+            <symbol id="ra-i-department" viewBox="0 0 24 24">
+                <rect x="9" y="3" width="6" height="5" rx="1"/>
+                <rect x="3" y="16" width="6" height="5" rx="1"/>
+                <rect x="15" y="16" width="6" height="5" rx="1"/>
+                <path d="M12 8v4M6 16v-2h12v2"/>
+            </symbol>
+            <symbol id="ra-i-leave" viewBox="0 0 24 24">
+                <path d="M5 4h14v16H5zM8 8h8M8 12h5M8 16h8"/>
+            </symbol>
+            <symbol id="ra-i-money" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="8"/>
+                <path d="M14.5 9.5c-.7-.7-1.5-1-2.6-1-1.4 0-2.4.7-2.4 1.7 0 2.7 5.2 1.1 5.2 3.8 0 1-.9 1.7-2.4 1.7-1.2 0-2.2-.4-2.9-1.1M12 6.5v11"/>
+            </symbol>
+            <symbol id="ra-i-analytics" viewBox="0 0 24 24">
+                <path d="M4 19V5M4 19h17M8 16v-4M12 16V8M16 16v-6M20 16V4"/>
+            </symbol>
+            <symbol id="ra-i-ai" viewBox="0 0 24 24">
+                <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/>
+                <circle cx="12" cy="12" r="4"/>
+            </symbol>
+            <symbol id="ra-i-report" viewBox="0 0 24 24">
+                <path d="M6 3h9l4 4v14H6zM14 3v5h5M9 12h6M9 16h6"/>
+            </symbol>
+            <symbol id="ra-i-users" viewBox="0 0 24 24">
+                <circle cx="9" cy="8" r="3"/>
+                <circle cx="17" cy="9" r="2.5"/>
+                <path d="M3 20a6 6 0 0 1 12 0M14 20a4.5 4.5 0 0 1 7 0"/>
+            </symbol>
+            <symbol id="ra-i-shield" viewBox="0 0 24 24">
+                <path d="M12 3 20 6v6c0 5-3.2 8-8 9-4.8-1-8-4-8-9V6l8-3Z"/>
+                <path d="m9 12 2 2 4-4"/>
+            </symbol>
+            <symbol id="ra-i-activity" viewBox="0 0 24 24">
+                <path d="M3 12h4l2-6 4 12 2-6h6"/>
+            </symbol>
+            <symbol id="ra-i-history" viewBox="0 0 24 24">
+                <path d="M4 12a8 8 0 1 0 2.4-5.7"/>
+                <path d="M4 5v5h5M12 7v5l3 2"/>
+            </symbol>
+            <symbol id="ra-i-health" viewBox="0 0 24 24">
+                <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/>
+                <path d="M8 12h2l1-2 2 4 1-2h2"/>
+            </symbol>
+            <symbol id="ra-i-settings" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19 13.5a7.8 7.8 0 0 0 0-3l2-1.5-2-3.4-2.3.9a8 8 0 0 0-2.6-1.5L13.8 3h-3.6l-.3 2a8 8 0 0 0-2.6 1.5L5 5.6 3 9l2 1.5a7.8 7.8 0 0 0 0 3L3 15l2 3.4 2.3-.9a8 8 0 0 0 2.6 1.5l.3 2h3.6l.3-2a8 8 0 0 0 2.6-1.5l2.3.9 2-3.4-2-1.5Z"/>
+            </symbol>
+            <symbol id="ra-i-backup" viewBox="0 0 24 24">
+                <path d="M5 7h14v13H5zM8 7V4h8v3M8 12h8M9 16h6"/>
+            </symbol>
+            <symbol id="ra-i-restore" viewBox="0 0 24 24">
+                <path d="M4 10a8 8 0 1 1 2 6"/>
+                <path d="M4 5v5h5M12 8v5l3 2"/>
+            </symbol>
+            <symbol id="ra-i-security" viewBox="0 0 24 24">
+                <rect x="6" y="10" width="12" height="10" rx="2"/>
+                <path d="M9 10V7a3 3 0 0 1 6 0v3M12 14v2"/>
+            </symbol>
+            <symbol id="ra-i-logout" viewBox="0 0 24 24">
+                <path d="M10 5H5v14h5M14 8l4 4-4 4M18 12H9"/>
+            </symbol>
+            <symbol id="ra-i-powerbi" viewBox="0 0 24 24">
+                <path d="M5 19V9h4v10M10 19V5h4v14M15 19V2h4v17"/>
+            </symbol>
+        </svg>
+        <div class="ra-brand">
+            <div class="ra-brand-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 4h2l2.1 10.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 1.9-1.5L21 8H7"/>
+                    <circle cx="10" cy="20" r="1.5"/>
+                    <circle cx="18" cy="20" r="1.5"/>
+                </svg>
+            </div>
+            <div>
+                <strong>
+                    Retail Analytics
+                </strong>
+                <small>
+                    Management System
+                </small>
+            </div>
+        </div>
+        <nav class="ra-nav">
+            {% if role in ('admin','manager','super_admin','employee') %}
+                <div class="ra-nav-group">
+                    <div class="ra-nav-label">
+                        OVERVIEW
+                    </div>
+                    <div class="ra-nav-links">
+                        {% if role == 'employee' %}
+                            <a class="ra-nav-item" href="/employee/dashboard">
+                                {{ icon('dashboard') }}
+                                <em>
+                                    Dashboard
+                                </em>
+                            </a>
+                        {% else %}
+                            <a class="ra-nav-item" href="/admin/dashboard">
+                                {{ icon('dashboard') }}
+                                <em>
+                                    Dashboard
+                                </em>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+            <div class="ra-nav-group">
+                <div class="ra-nav-label">
+                    OPERATIONS
+                </div>
+                <div class="ra-nav-links">
+                    {% if role in ('admin','super_admin','manager','employee') %}
+                        <a class="ra-nav-item" href="/admin/sales">
+                            {{ icon('sales') }}
+                            <em>
+                                Sales
+                            </em>
+                        </a>
+                    {% endif %}
+                    {% if role in ('admin','super_admin','manager','employee','cashier') %}
+                        <a class="ra-nav-item" href="/admin/billing/pos">
+                            {{ icon('pos') }}
+                            <em>
+                                POS / Billing
+                            </em>
+                        </a>
+                    {% endif %}
+                    {% if role in ('admin','super_admin','manager','employee') %}
+                        <a class="ra-nav-item" href="/admin/customers">
+                            {{ icon('customers') }}
+                            <em>
+                                Customers
+                            </em>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="ra-nav-group">
+                <div class="ra-nav-label">
+                    INVENTORY
+                </div>
+                <div class="ra-nav-links">
+                    {% if role in ('admin','super_admin','manager','employee') %}
+                        <a class="ra-nav-item" href="/admin/products">
+                            {{ icon('products') }}
+                            <em>
+                                Products
+                            </em>
+                        </a>
+                    {% endif %}
+                    {% if role in ('admin','super_admin','manager') %}
+                        <a class="ra-nav-item" href="/admin/categories">
+                            {{ icon('categories') }}
+                            <em>
+                                Categories
+                            </em>
+                        </a>
+                    {% endif %}
+                    {% if role in ('admin','super_admin','manager','inventory_manager') %}
+                        <a class="ra-nav-item" href="/admin/inventory/dashboard">
+                            {{ icon('stock') }}
+                            <em>
+                                Inventory / Stock
+                            </em>
+                        </a>
+                        <a class="ra-nav-item" href="/admin/inventory/movements">
+                            {{ icon('movement') }}
+                            <em>
+                                Stock Movements
+                            </em>
+                        </a>
+                        <a class="ra-nav-item" href="/admin/inventory/batches">
+                            {{ icon('batches') }}
+                            <em>
+                                Batches
+                            </em>
+                        </a>
+                        <a class="ra-nav-item" href="/admin/low-stock">
+                            {{ icon('alert') }}
+                            <em>
+                                Low Stock
+                            </em>
+                        </a>
+                        <a class="ra-nav-item" href="/admin/inventory/expiry-report">
+                            {{ icon('calendar') }}
+                            <em>
+                                Expiry
+                            </em>
+                        </a>
+                        <a class="ra-nav-item" href="/admin/inventory/reorder-suggestions">
+                            {{ icon('movement') }}
+                            <em>
+                                Reorder
+                            </em>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="ra-nav-group">
+                <div class="ra-nav-label">
+                    PROCUREMENT
+                </div>
+                <div class="ra-nav-links">
+                    {% if role in ('admin','super_admin','manager','accountant') %}
+                        <a class="ra-nav-item" href="/admin/suppliers">
+                            {{ icon('suppliers') }}
+                            <em>
+                                Suppliers / GRN
+                            </em>
+                        </a>
+                        <a class="ra-nav-item" href="/admin/purchase-orders">
+                            {{ icon('report') }}
+                            <em>
+                                Purchase Orders
+                            </em>
+                        </a>
+                        <a class="ra-nav-item" href="/admin/grn">
+                            {{ icon('batches') }}
+                            <em>
+                                GRN
+                            </em>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="ra-nav-group">
+                <div class="ra-nav-label">
+                    HUMAN RESOURCES
+                </div>
+                <div class="ra-nav-links">
+                    {% if role in ('admin','super_admin','manager','hr') %}
+                        <a class="ra-nav-item" href="/admin/hr/employees">
+                            {{ icon('hr') }}
+                            <em>
+                                Employees
+                            </em>
+                        </a>
+                    {% endif %}
+                    {% if role in ('admin','super_admin','manager','hr') %}
+                        <a class="ra-nav-item" href="/admin/departments">
+                            {{ icon('department') }}
+                            <em>
+                                Departments
+                            </em>
+                        </a>
+                        <a class="ra-nav-item" href="/admin/hr/attendance">
+                            {{ icon('calendar') }}
+                            <em>
+                                Attendance
+                            </em>
+                        </a>
+                        <a class="ra-nav-item" href="/admin/hr/leaves">
+                            {{ icon('leave') }}
+                            <em>
+                                Leave Management
+                            </em>
+                        </a>
+                    {% endif %}
+                    {% if role in ('admin','super_admin','manager','hr','accountant') %}
+                        <a class="ra-nav-item" href="/admin/hr/salary">
+                            {{ icon('money') }}
+                            <em>
+                                Salary / Payroll
+                            </em>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="ra-nav-group">
+                <div class="ra-nav-label">
+                    REPORTS &amp; ANALYTICS
+                </div>
+                <div class="ra-nav-links">
+                    {% if role in ('admin','super_admin','manager') %}
+                        <a class="ra-nav-item" href="/admin/reports">
+                            {{ icon('report') }}
+                            <em>
+                                Reports
+                            </em>
+                        </a>
+                        <a class="ra-nav-item" href="/admin/analytics">
+                            {{ icon('analytics') }}
+                            <em>
+                                Analytics
+                            </em>
+                        </a>
+                        <a class="ra-nav-item" href="/admin/ai-dashboard">
+                            {{ icon('ai') }}
+                            <em>
+                                AI Insights
+                            </em>
+                        </a>
+                        <a class="ra-nav-item" href="/admin/predictions">
+                            {{ icon('analytics') }}
+                            <em>
+                                Forecasting
+                            </em>
+                        </a>
+                    {% endif %}
+                    {% if role in ('admin','super_admin','manager','employee','cashier') %}
+                        <a class="ra-nav-item" href="/admin/recommendations">
+                            {{ icon('ai') }}
+                            <em>
+                                Recommendations
+                            </em>
+                        </a>
+                    {% endif %}
+                    {% if role in ('admin','super_admin') %}
+                        <a class="ra-nav-item" href="/admin/bi/store-access">
+                            {{ icon('powerbi') }}
+                            <em>
+                                Power BI
+                            </em>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="ra-nav-group">
+                <div class="ra-nav-label">
+                    ADMINISTRATION
+                </div>
+                <div class="ra-nav-links">
+                    {% if role in ('admin','super_admin') %}
+                        <a class="ra-nav-item" href="/admin/users">
+                            {{ icon('users') }}
+                            <em>
+                                Users &amp; Roles
+                            </em>
+                        </a>
+                        <a class="ra-nav-item" href="/admin/permissions">
+                            {{ icon('shield') }}
+                            <em>
+                                Roles &amp; Permissions
+                            </em>
+                        </a>
+                        <a class="ra-nav-item" href="/admin/sessions">
+                            {{ icon('security') }}
+                            <em>
+                                Sessions
+                            </em>
+                        </a>
+                    {% endif %}
+                    {% if role in ('admin','super_admin','hr','accountant') %}
+                        <a class="ra-nav-item" href="/admin/activity-logs">
+                            {{ icon('activity') }}
+                            <em>
+                                Activity Logs
+                            </em>
+                        </a>
+                    {% endif %}
+                    {% if role in ('admin','super_admin','hr') %}
+                        <a class="ra-nav-item" href="/admin/login-history">
+                            {{ icon('history') }}
+                            <em>
+                                Login History
+                            </em>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="ra-nav-group">
+                <div class="ra-nav-label">
+                    SYSTEM
+                </div>
+                <div class="ra-nav-links">
+                    {% if role in ('admin','super_admin') %}
+                        <a class="ra-nav-item" href="/admin/system/health">
+                            {{ icon('health') }}
+                            <em>
+                                System Health
+                            </em>
+                        </a>
+                        <a class="ra-nav-item" href="/admin/system/logs">
+                            {{ icon('activity') }}
+                            <em>
+                                System Logs
+                            </em>
+                        </a>
+                        <a class="ra-nav-item" href="/admin/system/backups">
+                            {{ icon('backup') }}
+                            <em>
+                                Backups
+                            </em>
+                        </a>
+                        <a class="ra-nav-item" href="/admin/system/restore">
+                            {{ icon('restore') }}
+                            <em>
+                                Restore
+                            </em>
+                        </a>
+                        <a class="ra-nav-item" href="/admin/settings">
+                            {{ icon('settings') }}
+                            <em>
+                                Settings
+                            </em>
+                        </a>
+                    {% endif %}
+                    <a class="ra-nav-item" href="/account/security">
+                        {{ icon('security') }}
+                        <em>
+                            My Security
+                        </em>
+                    </a>
+                    <form class="ra-logout-form" action="{{ url_for('auth.logout') }}" method="post">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="ra-nav-item ra-logout" type="submit">
+                            {{ icon('logout') }}
+                            <em>
+                                Logout
+                            </em>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </aside>

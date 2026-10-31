@@ -1,0 +1,109 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Salary -- {{ month }}
+                </h1>
+                <div>
+                    <a href="/admin/hr/employees" class="btn secondary">
+                        Back
+                    </a>
+                    <a href="/admin/hr/reports/salary/export/csv?month={{ month }}" class="btn secondary">
+                        CSV
+                    </a>
+                    <a href="/admin/hr/reports/salary/export/excel?month={{ month }}" class="btn secondary">
+                        Excel
+                    </a>
+                    <a href="/admin/hr/reports/salary/export/pdf?month={{ month }}" class="btn secondary">
+                        PDF
+                    </a>
+                </div>
+            </div>
+            <form method="GET" style="margin-bottom:15px;">
+                <input type="month" name="month" value="{{ month }}" data-submit-form="1">
+            </form>
+            <form method="POST" style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <select name="employee_id" required>
+                    {% for e in employees %}
+                        <option value="{{ e[0] }}">
+                            {{ e[1] }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <input type="number" step="0.01" name="basic_salary" placeholder="Basic Salary" required>
+                <input type="number" step="0.01" name="allowances" placeholder="Allowances">
+                <input type="number" step="0.01" name="deductions" placeholder="Deductions">
+                <button class="btn success">
+                    Generate / Update
+                </button>
+            </form>
+            {% if records %}
+                <table>
+                    <tr>
+                        <th>
+                            Employee
+                        </th>
+                        <th>
+                            Basic
+                        </th>
+                        <th>
+                            Allowances
+                        </th>
+                        <th>
+                            Deductions
+                        </th>
+                        <th>
+                            Net
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                    {% for r in records %}
+                        <tr>
+                            <td>
+                                {{ r[1] }}
+                            </td>
+                            <td>
+                                {{ r[2] }}
+                            </td>
+                            <td>
+                                {{ r[3] }}
+                            </td>
+                            <td>
+                                {{ r[4] }}
+                            </td>
+                            <td>
+                                ₹{{ r[5] }}
+                            </td>
+                            <td>
+                                <span class="badge {{ r[6] }}">
+                                    {{ r[6] }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if r[6] == "pending" %}
+                                    <form method="POST" action="/admin/hr/salary/{{ r[0] }}/mark-paid">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <button class="btn success">
+                                            Mark Paid
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No salary records for this month.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

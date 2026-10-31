@@ -1,0 +1,155 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Database Backups
+                </h1>
+                <div>
+                    <a href="/admin/system/health" class="btn secondary">
+                        System Health
+                    </a>
+                    <a href="/admin/system/restore" class="btn danger">
+                        Restore
+                    </a>
+                </div>
+            </div>
+            <form method="POST" action="/admin/system/backups/create">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn success">
+                    Create Manual Backup Now
+                </button>
+            </form>
+            <p style="color:#64748b;margin:15px 0;">
+                For automatic scheduled backups, see BACKUP_RECOVERY_GUIDE.md -- run
+                <code>
+                    scripts/backup_database.py
+                </code>
+                via cron / Task Scheduler.
+            </p>
+            <h2 style="font-size:18px;margin:15px 0;">
+                Backup History
+            </h2>
+            {% if backups %}
+                <table>
+                    <tr>
+                        <th>
+                            File
+                        </th>
+                        <th>
+                            Size
+                        </th>
+                        <th>
+                            Type
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            By
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            Actions
+                        </th>
+                    </tr>
+                    {% for b in backups %}
+                        <tr>
+                            <td>
+                                {{ b[1] }}
+                            </td>
+                            <td>
+                                {{ "%.2f"|format(b[2]/1024/1024) }} MB
+                            </td>
+                            <td>
+                                {{ b[3] }}
+                            </td>
+                            <td>
+                                <span class="badge {{ 'a' if b[4]=='success' else 'c' }}">
+                                    {{ b[4] }}
+                                </span>
+                            </td>
+                            <td>
+                                {{ b[6] or "System (scheduled)" }}
+                            </td>
+                            <td>
+                                {{ b[7] }}
+                            </td>
+                            <td>
+                                {% if b[4] == 'success' %}
+                                    <a href="/admin/system/backups/download/{{ b[1] }}" class="btn">
+                                        Download
+                                    </a>
+                                    <form method="POST" action="/admin/system/backups/verify/{{ b[1] }}" style="display:inline;">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <button class="btn secondary">
+                                            Verify
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    {{ b[5] or "" }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No backups yet.
+                </div>
+            {% endif %}
+            <h2 style="font-size:18px;margin:15px 0;">
+                Restore History
+            </h2>
+            {% if restores %}
+                <table>
+                    <tr>
+                        <th>
+                            Source File
+                        </th>
+                        <th>
+                            Safety Backup Taken
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            By
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                    </tr>
+                    {% for r in restores %}
+                        <tr>
+                            <td>
+                                {{ r[1] }}
+                            </td>
+                            <td>
+                                {{ r[2] or "-" }}
+                            </td>
+                            <td>
+                                <span class="badge {{ 'a' if r[3]=='success' else 'c' }}">
+                                    {{ r[3] }}
+                                </span>
+                            </td>
+                            <td>
+                                {{ r[5] or "-" }}
+                            </td>
+                            <td>
+                                {{ r[6] }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No restores performed yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

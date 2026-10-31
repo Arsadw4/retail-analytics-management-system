@@ -1,0 +1,170 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Edit Employee
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+<style>.employee-form-card{max-width:1000px;margin:0 auto;background:var(--theme-surface);border:1px solid var(--theme-border);border-radius:15px;box-shadow:var(--theme-shadow);padding:22px}.form-help{font-size:9px;color:var(--theme-muted);margin:4px 0 0}</style>
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="ra-page-head">
+            <div>
+                <div class="ra-breadcrumb">
+                    Dashboard / People / Employees / Edit
+                </div>
+                <h1>
+                    Edit Employee
+                </h1>
+                <p>
+                    Update the employee information supported by the existing HR record.
+                </p>
+            </div>
+            <div class="ra-head-actions">
+                <a class="ra-btn secondary" href="/admin/hr/employees/{{ employee[0] }}">
+                    View Profile
+                </a>
+                <a class="ra-btn secondary" href="/admin/employees">
+                    Back
+                </a>
+            </div>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category,message in messages %}
+                    <div class="ra-flash">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form class="employee-form-card" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="profile-form-grid">
+                <div class="profile-field">
+                    <label>
+                        Employee Name
+                    </label>
+                    <input type="text" name="name" value="{{ employee[1] or '' }}" required maxlength="100">
+                </div>
+                <div class="profile-field">
+                    <label>
+                        Email
+                    </label>
+                    <input type="email" name="email" value="{{ employee[2] or '' }}" required maxlength="100">
+                </div>
+                <div class="profile-field">
+                    <label>
+                        Phone
+                    </label>
+                    <input type="text" name="phone" value="{{ employee[3] or '' }}" maxlength="20">
+                </div>
+                <div class="profile-field">
+                    <label>
+                        Designation
+                    </label>
+                    <input type="text" name="designation" value="{{ employee[4] or '' }}" maxlength="100">
+                </div>
+                <div class="profile-field">
+                    <label>
+                        Salary
+                    </label>
+                    <input type="number" name="salary" value="{{ employee[5] or 0 }}" step="0.01" min="0" required>
+                </div>
+                <div class="profile-field">
+                    <label>
+                        Date of Birth
+                    </label>
+                    <input type="date" name="date_of_birth" value="{{ employee[14] or '' }}">
+                </div>
+                <div class="profile-field">
+                    <label>
+                        Gender
+                    </label>
+                    <input type="text" name="gender" value="{{ employee[15] or '' }}" maxlength="30">
+                </div>
+                <div class="profile-field">
+                    <label>
+                        Blood Group
+                    </label>
+                    <input type="text" name="blood_group" value="{{ employee[16] or '' }}" maxlength="10">
+                </div>
+                <div class="profile-field">
+                    <label>
+                        Father's Name
+                    </label>
+                    <input type="text" name="father_name" value="{{ employee[17] or '' }}" maxlength="100">
+                </div>
+                <div class="profile-field">
+                    <label>
+                        Marital Status
+                    </label>
+                    <input type="text" name="marital_status" value="{{ employee[18] or '' }}" maxlength="30">
+                </div>
+                <div class="profile-field">
+                    <label>
+                        Nationality
+                    </label>
+                    <input type="text" name="nationality" value="{{ employee[19] or '' }}" maxlength="60">
+                </div>
+                <div class="profile-field">
+                    <label>
+                        Language
+                    </label>
+                    <input type="text" name="language" value="{{ employee[20] or '' }}" maxlength="100">
+                </div>
+                <div class="profile-field">
+                    <label>
+                        Alternate Phone
+                    </label>
+                    <input type="text" name="alternate_phone" value="{{ employee[21] or '' }}" maxlength="20">
+                </div>
+                <div class="profile-field">
+                    <label>
+                        Address
+                    </label>
+                    <input type="text" name="address" value="{{ employee[22] or '' }}" maxlength="255">
+                </div>
+                <div class="profile-field">
+                    <label>
+                        City
+                    </label>
+                    <input type="text" name="city" value="{{ employee[23] or '' }}" maxlength="80">
+                </div>
+                <div class="profile-field">
+                    <label>
+                        State
+                    </label>
+                    <input type="text" name="state" value="{{ employee[24] or '' }}" maxlength="60">
+                </div>
+                <div class="profile-field">
+                    <label>
+                        PIN Code
+                    </label>
+                    <input type="text" name="pin_code" value="{{ employee[25] or '' }}" maxlength="10">
+                </div>
+                <div class="profile-field" style="grid-column:1/-1">
+                    <label for="profile_photo">
+                        Profile Photo
+                    </label>
+                    <input id="profile_photo" type="file" name="profile_photo" accept="image/png,image/jpeg,image/webp">
+                    <label>
+                        <input type="checkbox" name="remove_profile_photo" value="1">
+                        Remove current photo
+                    </label>
+                </div>
+            </div>
+            <p class="form-help">
+                The photo is stored against the employee's linked user account and persists across login/restart.
+            </p>
+            <div class="profile-form-actions">
+                <a class="ra-btn secondary" href="/admin/employees">
+                    Cancel
+                </a>
+                <button class="ra-btn" type="submit">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

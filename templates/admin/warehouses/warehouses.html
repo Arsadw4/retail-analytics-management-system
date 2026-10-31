@@ -1,0 +1,114 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Warehouses
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_pages.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="ra-module">
+        <div class="ra-page-head">
+            <div>
+                <div class="ra-breadcrumb">
+                    Dashboard / Inventory / Warehouses
+                </div>
+                <h1>
+                    Warehouses & Stores
+                </h1>
+                <p>
+                    Manage physical locations and inventory operating points.
+                </p>
+            </div>
+            <div class="ra-head-actions">
+                <a href="/admin/inventory/dashboard" class="ra-btn secondary">
+                    Inventory
+                </a>
+                <a href="/admin/add-warehouse" class="ra-btn">
+                    ＋ Add Warehouse
+                </a>
+            </div>
+        </div>
+        <div class="ra-card">
+            <div class="ra-toolbar">
+                <input class="ra-input" id="warehouseFilter" placeholder="Search warehouse, location or contact...">
+                <span class="ra-note">
+                    Use locations to structure stock and operational reporting.
+                </span>
+            </div>
+            <div class="ra-table-wrap">
+                <table class="ra-table" id="warehouseTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                Location
+                            </th>
+                            <th>
+                                Contact
+                            </th>
+                            <th>
+                                Phone
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                            <th>
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for w in warehouses %}
+                            <tr>
+                                <td>
+                                    <div class="ra-person">
+                                        <div class="ra-avatar-lg">
+                                            W
+                                        </div>
+                                        <div>
+                                            <strong>
+                                                {{ w[1] }}
+                                            </strong>
+                                            <small>
+                                                {{ w[2] or 'Location not specified' }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    {{ w[3] or '-' }}
+                                </td>
+                                <td>
+                                    {{ w[4] or '-' }}
+                                </td>
+                                <td>
+                                    <span class="ra4-status {{ '' if w[5] else 'off' }}">
+                                        {{ 'Active' if w[5] else 'Inactive' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="ra-action-menu">
+                                        <a href="/admin/edit-warehouse/{{ w[0] }}">
+                                            Edit
+                                        </a>
+                                        <a href="#" data-confirm-delete="/admin/delete-warehouse/{{ w[0] }}" data-confirm-message="Delete this warehouse?">
+                                            Delete
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5">
+                                    <div class="ra4-empty">
+                                        No warehouses found.
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+<script nonce="{{ csp_nonce }}">document.getElementById('warehouseFilter')?.addEventListener('input',function(){const q=this.value.toLowerCase();document.querySelectorAll('#warehouseTable tbody tr').forEach(r=>r.style.display=r.innerText.toLowerCase().includes(q)?'':'none')});</script>
+{% endblock %}

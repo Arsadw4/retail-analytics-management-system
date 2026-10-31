@@ -1,0 +1,57 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="edit-container">
+            <a href="/admin/customers" class="back-btn">
+                ← Back to Customers
+            </a>
+            <h1>
+                Edit Customer
+            </h1>
+            <form method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="form-group">
+                    <label>
+                        Customer Name
+                    </label>
+                    <input type="text"
+                    name="name"
+                    value="{{ customer[1] }}"
+                    class="form-control"
+                    required>
+                </div>
+                <div class="form-group">
+                    <label>
+                        Phone Number
+                    </label>
+                    <input type="text"
+                    name="phone"
+                    value="{{ customer[2] }}"
+                    class="form-control"
+                    required>
+                </div>
+                <div class="form-group">
+                    <label>
+                        Email Address
+                    </label>
+                    <input type="email"
+                    name="email"
+                    value="{{ customer[3] }}"
+                    class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>
+                        Address
+                    </label>
+                    <textarea name="address"
+                    class="form-control">
+                        {{ customer[4] }}
+                    </textarea>
+                </div>
+                <button type="submit" class="update-btn">
+                    Update Customer
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

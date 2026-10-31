@@ -1,0 +1,49 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Bar Chart
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <h1>
+            Business Overview
+        </h1>
+        <canvas id="barChart">
+        </canvas>
+    <script nonce="{{ csp_nonce }}">
+
+new Chart(
+    document.getElementById("barChart"),
+    {
+        type: 'bar',
+
+        data: {
+
+            labels: [
+                'Total Products',
+                'Total Customers',
+                'Total Inventory'
+            ],
+
+            datasets: [{
+
+                label: 'Business Overview',
+
+                data: [
+                    {{ total_products }},
+                    {{ total_customers }},
+                    {{ total_inventory }}
+                ],
+
+                borderWidth: 3
+
+            }]
+
+        }
+
+    }
+);
+
+</script>
+    </div>
+{% endblock %}

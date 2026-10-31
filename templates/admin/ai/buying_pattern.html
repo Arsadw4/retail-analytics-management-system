@@ -1,0 +1,77 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Buying Pattern
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ai_bi.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Buying Pattern -- {{ customer[1] if customer else "" }}
+                </h1>
+                <a href="/admin/customers/search" class="btn secondary">
+                    Back
+                </a>
+            </div>
+            <div class="cards">
+                <div class="card">
+                    <h2>
+                        {{ pattern.avg_basket_size }}
+                    </h2>
+                    <p>
+                        Avg Items Per Order
+                    </p>
+                </div>
+            </div>
+            <h2 style="font-size:20px;margin:15px 0;">
+                Preferred Categories
+            </h2>
+            <table>
+                <tr>
+                    <th>
+                        Category
+                    </th>
+                    <th>
+                        Purchases
+                    </th>
+                </tr>
+                {% for c in pattern.top_categories %}
+                    <tr>
+                        <td>
+                            {{ c.category }}
+                        </td>
+                        <td>
+                            {{ c.purchases }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <h2 style="font-size:20px;margin:15px 0;">
+                Preferred Shopping Days
+            </h2>
+            <table>
+                <tr>
+                    <th>
+                        Day
+                    </th>
+                    <th>
+                        Orders
+                    </th>
+                </tr>
+                {% for d in pattern.preferred_days %}
+                    <tr>
+                        <td>
+                            {{ d.day }}
+                        </td>
+                        <td>
+                            {{ d.orders }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}

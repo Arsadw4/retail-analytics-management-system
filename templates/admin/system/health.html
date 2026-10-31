@@ -1,0 +1,233 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    System Health
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_pages.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="ra-module">
+        <div class="ra-page-head">
+            <div>
+                <div class="ra-breadcrumb">
+                    Dashboard / System / Health
+                </div>
+                <h1>
+                    System Health
+                </h1>
+                <p>
+                    Monitor database connectivity, storage, sessions, errors and application performance.
+                </p>
+            </div>
+            <div class="ra-head-actions">
+                <a href="/admin/system/logs" class="ra-btn secondary">
+                    System Logs
+                </a>
+                <a href="/admin/system/backups" class="ra-btn">
+                    Backups
+                </a>
+            </div>
+        </div>
+        <div class="ra4-grid4">
+            <div class="ra4-metric">
+                <small>
+                    Database
+                </small>
+                <strong class="{{ 'ra4-system-ok' if db_ok else 'ra4-system-bad' }}">
+                    {{ 'Online' if db_ok else 'Offline' }}
+                </strong>
+                <span>
+                    Connectivity
+                </span>
+            </div>
+            <div class="ra4-metric">
+                <small>
+                    Database Size
+                </small>
+                <strong>
+                    {{ db_size_mb }} MB
+                </strong>
+                <span>
+                    Current storage
+                </span>
+            </div>
+            <div class="ra4-metric">
+                <small>
+                    Active Sessions
+                </small>
+                <strong>
+                    {{ active_sessions }}
+                </strong>
+                <span>
+                    Current users
+                </span>
+            </div>
+            <div class="ra4-metric">
+                <small>
+                    Recent Errors
+                </small>
+                <strong class="{{ 'ra4-system-bad' if error_count >
+                    0 else 'ra4-system-ok' }}">{{ error_count }}
+                </strong>
+                <span>
+                    Last 2000 log lines
+                </span>
+            </div>
+        </div>
+        <div class="ra4-layout">
+            <div class="ra4-card">
+                <div class="ra4-card-head">
+                    <h3>
+                        Infrastructure Overview
+                    </h3>
+                    <small>
+                        Runtime health
+                    </small>
+                </div>
+                <div class="ra4-card-body">
+                    <div class="ra4-mini-grid">
+                        <div class="ra4-mini">
+                            <small>
+                                Disk Usage
+                            </small>
+                            <strong>
+                                {{ storage.disk_used_pct }}%
+                            </strong>
+                            <div class="ra4-progress">
+                                <i style="width:{{ storage.disk_used_pct }}%">
+                                </i>
+                            </div>
+                        </div>
+                        <div class="ra4-mini">
+                            <small>
+                                Free Disk
+                            </small>
+                            <strong>
+                                {{ storage.disk_free_gb }} GB
+                            </strong>
+                        </div>
+                        <div class="ra4-mini">
+                            <small>
+                                Avg Response
+                            </small>
+                            <strong>
+                                {{ perf.avg_ms }} ms
+                            </strong>
+                        </div>
+                        <div class="ra4-mini">
+                            <small>
+                                Requests Tracked
+                            </small>
+                            <strong>
+                                {{ perf.request_count }}
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ra4-card">
+                <div class="ra4-card-head">
+                    <h3>
+                        Storage Breakdown
+                    </h3>
+                    <small>
+                        Disk footprint
+                    </small>
+                </div>
+                <div class="ra4-card-body">
+                    <div class="ra4-list">
+                        <div class="ra4-list-item">
+                            <div>
+                                <strong>
+                                    Uploads
+                                </strong>
+                                <small>
+                                    Application uploads
+                                </small>
+                            </div>
+                            <span class="ra4-tag">
+                                {{ storage.uploads_mb }} MB
+                            </span>
+                        </div>
+                        <div class="ra4-list-item">
+                            <div>
+                                <strong>
+                                    Logs
+                                </strong>
+                                <small>
+                                    Application logs
+                                </small>
+                            </div>
+                            <span class="ra4-tag">
+                                {{ storage.logs_mb }} MB
+                            </span>
+                        </div>
+                        <div class="ra4-list-item">
+                            <div>
+                                <strong>
+                                    Backups
+                                </strong>
+                                <small>
+                                    Database backups
+                                </small>
+                            </div>
+                            <span class="ra4-tag">
+                                {{ storage.backups_mb }} MB
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ra4-card" style="margin-top:14px">
+            <div class="ra4-card-head">
+                <h3>
+                    Largest Database Tables
+                </h3>
+                <small>
+                    Approximate usage
+                </small>
+            </div>
+            <div class="ra-table-wrap">
+                <table class="ra-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Table
+                            </th>
+                            <th>
+                                Size
+                            </th>
+                            <th>
+                                Rows
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for t in table_sizes %}
+                            <tr>
+                                <td>
+                                    {{ t[0] }}
+                                </td>
+                                <td>
+                                    {{ t[1] }} MB
+                                </td>
+                                <td>
+                                    {{ t[2] }}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="3">
+                                    <div class="ra4-empty">
+                                        No table size data available.
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

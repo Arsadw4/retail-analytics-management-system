@@ -1,0 +1,109 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Product Details
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/product_forms.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="product-form-page">
+        <section class="ra-page-head">
+            <div>
+                <div class="ra-breadcrumb">
+                    Dashboard › Inventory › Products › Details
+                </div>
+                <h1>
+                    Product Details
+                </h1>
+                <p>
+                    View the database-backed product record and current inventory.
+                </p>
+            </div>
+            <div class="ra-head-actions">
+                <a class="ra-btn secondary" href="/admin/products">
+                    Back to Products
+                </a>
+                {% if session.get('role') in ('admin','manager','super_admin') %}
+                    <a class="ra-btn" href="/admin/edit-product/{{ product[0] }}">
+                        Edit Product
+                    </a>
+                {% endif %}
+            </div>
+        </section>
+        <article class="product-form-card">
+            <div class="product-image-upload">
+                <div class="product-image-preview">
+                    {% if product[8] %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ product[8]) }}" alt="{{ product[2] }}">
+                    {% else %}
+                        ▱
+                    {% endif %}
+                </div>
+                <div>
+                    <h2>
+                        {{ product[2] }}
+                    </h2>
+                    <p>
+                        Product ID #{{ product[0] }}
+                    </p>
+                    <p>
+                        Category: {{ category_name or 'Uncategorized' }}
+                    </p>
+                    <p>
+                        SKU: {{ product[3] or '—' }} · Barcode: {{ product[4] or '—' }}
+                    </p>
+                </div>
+            </div>
+            <div class="product-form-grid">
+                <div class="product-field">
+                    <label>
+                        Purchase Price
+                    </label>
+                    <strong>
+                        ₹{{ '%.2f'|format(product[5]|float) }}
+                    </strong>
+                </div>
+                <div class="product-field">
+                    <label>
+                        Selling Price
+                    </label>
+                    <strong>
+                        ₹{{ '%.2f'|format(product[6]|float) }}
+                    </strong>
+                </div>
+                <div class="product-field">
+                    <label>
+                        Current Stock
+                    </label>
+                    <strong>
+                        {{ product[7] }}
+                    </strong>
+                </div>
+                <div class="product-field">
+                    <label>
+                        GST Rate
+                    </label>
+                    <strong>
+                        {{ product[9] or 0 }}%
+                    </strong>
+                </div>
+                <div class="product-field">
+                    <label>
+                        Status
+                    </label>
+                    <strong>
+                        {{ 'Active' if product[10] else 'Inactive' }}
+                    </strong>
+                </div>
+                <div class="product-field">
+                    <label>
+                        Created
+                    </label>
+                    <strong>
+                        {{ product[11] or '—' }}
+                    </strong>
+                </div>
+            </div>
+        </article>
+    </div>
+{% endblock %}

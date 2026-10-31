@@ -1,0 +1,374 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Business Reports
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/enterprise_reports.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="report-page">
+        <div class="report-head">
+            <div>
+                <div class="report-breadcrumb">
+                    Dashboard
+                    <span>
+                        ›
+                    </span>
+                    Reports
+                </div>
+                <h1>
+                    Business Reports
+                </h1>
+                <p>
+                    Analyze your retail business with detailed, database-backed reports and exports.
+                </p>
+            </div>
+            <div class="report-head-actions">
+                <a class="report-btn secondary" href="/admin/sales-report">
+                    Sales Report
+                </a>
+                <a class="report-btn primary" href="/admin/stock-report">
+                    Generate Report
+                </a>
+            </div>
+        </div>
+        <section class="report-cards">
+            <div class="report-stat">
+                <span class="stat-icon blue">
+                    ▣
+                </span>
+                <small>
+                    Total Users
+                </small>
+                <strong>
+                    {{ summary.users }}
+                </strong>
+                <em>
+                    Actual user records
+                </em>
+            </div>
+            <div class="report-stat">
+                <span class="stat-icon navy">
+                    □
+                </span>
+                <small>
+                    Total Products
+                </small>
+                <strong>
+                    {{ summary.products }}
+                </strong>
+                <em>
+                    Active catalogue records
+                </em>
+            </div>
+            <div class="report-stat">
+                <span class="stat-icon cyan">
+                    ♙
+                </span>
+                <small>
+                    Total Customers
+                </small>
+                <strong>
+                    {{ summary.customers }}
+                </strong>
+                <em>
+                    Customer records
+                </em>
+            </div>
+            <div class="report-stat">
+                <span class="stat-icon green">
+                    ₹
+                </span>
+                <small>
+                    Total Sales
+                </small>
+                <strong>
+                    ₹{{ '%.2f'|format(summary.sales|float) }}
+                </strong>
+                <em>
+                    Completed sales
+                </em>
+            </div>
+            <div class="report-stat">
+                <span class="stat-icon purple">
+                    ↗
+                </span>
+                <small>
+                    Total Profit
+                </small>
+                <strong>
+                    ₹{{ '%.2f'|format(summary.profit|float) }}
+                </strong>
+                <em>
+                    Recorded profit
+                </em>
+            </div>
+        </section>
+        <div class="report-layout">
+            <section class="report-main-card">
+                <div class="card-head">
+                    <div>
+                        <h2>
+                            Report Center
+                        </h2>
+                        <p>
+                            Choose a report to drill down into transactions, inventory and financial performance.
+                        </p>
+                    </div>
+                    <span class="live-badge">
+                        ● Live database
+                    </span>
+                </div>
+                <div class="report-type-grid">
+                    <a class="report-type active" href="/admin/sales-report">
+                        <span>
+                            ▤
+                        </span>
+                        <div>
+                            <strong>
+                                Sales Report
+                            </strong>
+                            <small>
+                                Sales summary, transactions and payment analysis.
+                            </small>
+                        </div>
+                        <b>
+                            ›
+                        </b>
+                    </a>
+                    <a class="report-type" href="/admin/stock-report">
+                        <span>
+                            □
+                        </span>
+                        <div>
+                            <strong>
+                                Inventory Report
+                            </strong>
+                            <small>
+                                Stock levels, low stock and inventory valuation.
+                            </small>
+                        </div>
+                        <b>
+                            ›
+                        </b>
+                    </a>
+                    <a class="report-type" href="/admin/profit-report">
+                        <span>
+                            ▥
+                        </span>
+                        <div>
+                            <strong>
+                                Profit & Loss
+                            </strong>
+                            <small>
+                                Business profit, loss and financial performance.
+                            </small>
+                        </div>
+                        <b>
+                            ›
+                        </b>
+                    </a>
+                    <a class="report-type" href="/admin/customers">
+                        <span>
+                            ♙
+                        </span>
+                        <div>
+                            <strong>
+                                Customer Report
+                            </strong>
+                            <small>
+                                Customer records and purchase-related information.
+                            </small>
+                        </div>
+                        <b>
+                            ›
+                        </b>
+                    </a>
+                    <a class="report-type" href="/admin/suppliers">
+                        <span>
+                            ▣
+                        </span>
+                        <div>
+                            <strong>
+                                Supplier Report
+                            </strong>
+                            <small>
+                                Supplier balances, purchase orders and GRNs.
+                            </small>
+                        </div>
+                        <b>
+                            ›
+                        </b>
+                    </a>
+                    <a class="report-type" href="/admin/analytics">
+                        <span>
+                            ▥
+                        </span>
+                        <div>
+                            <strong>
+                                Analytics
+                            </strong>
+                            <small>
+                                Charts and deeper business intelligence.
+                            </small>
+                        </div>
+                        <b>
+                            ›
+                        </b>
+                    </a>
+                </div>
+                <div class="recent-head">
+                    <div>
+                        <h2>
+                            Current Report Snapshot
+                        </h2>
+                        <p>
+                            Generated from the current database state.
+                        </p>
+                    </div>
+                    <span>
+                        {{ summary.sales|float|round(2) }} sales value
+                    </span>
+                </div>
+                <div class="snapshot-grid">
+                    <div>
+                        <small>
+                            Completed transactions
+                        </small>
+                        <strong>
+                            {{ payment_summary|sum(attribute=1) if payment_summary else 0 }}
+                        </strong>
+                    </div>
+                    <div>
+                        <small>
+                            Payment methods
+                        </small>
+                        <strong>
+                            {{ payment_summary|length }}
+                        </strong>
+                    </div>
+                    <div>
+                        <small>
+                            Top products found
+                        </small>
+                        <strong>
+                            {{ top_products|length }}
+                        </strong>
+                    </div>
+                    <div>
+                        <small>
+                            Profit recorded
+                        </small>
+                        <strong>
+                            ₹{{ '%.2f'|format(summary.profit|float) }}
+                        </strong>
+                    </div>
+                </div>
+                <div class="report-note">
+                    Exports are generated from live MySQL records at request time. No report values are hardcoded.
+                </div>
+            </section>
+            <aside class="report-preview">
+                <div class="preview-brand">
+                    <div class="brand-mark">
+                        🛒
+                    </div>
+                    <div>
+                        <strong>
+                            Retail
+                            <span>
+                                Analytics
+                            </span>
+                        </strong>
+                        <small>
+                            Management System
+                        </small>
+                    </div>
+                </div>
+                <div class="preview-rule">
+                </div>
+                <h3>
+                    SALES REPORT
+                </h3>
+                <p>
+                    Current business snapshot
+                </p>
+                <div class="preview-kpis">
+                    <div>
+                        <small>
+                            Total Sales
+                        </small>
+                        <strong>
+                            ₹{{ '%.2f'|format(summary.sales|float) }}
+                        </strong>
+                    </div>
+                    <div>
+                        <small>
+                            Customers
+                        </small>
+                        <strong>
+                            {{ summary.customers }}
+                        </strong>
+                    </div>
+                    <div>
+                        <small>
+                            Products
+                        </small>
+                        <strong>
+                            {{ summary.products }}
+                        </strong>
+                    </div>
+                    <div>
+                        <small>
+                            Profit
+                        </small>
+                        <strong>
+                            ₹{{ '%.2f'|format(summary.profit|float) }}
+                        </strong>
+                    </div>
+                </div>
+                <div class="preview-section">
+                    <strong>
+                        Payment Summary
+                    </strong>
+                    {% for p in payment_summary %}
+                        <div>
+                            <span>
+                                {{ p[0]|title }}
+                            </span>
+                            <b>
+                                ₹{{ '%.2f'|format(p[2]|float) }}
+                            </b>
+                        </div>
+                    {% else %}
+                        <div class="preview-empty">
+                            No completed payment records.
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="preview-section">
+                    <strong>
+                        Top Products
+                    </strong>
+                    {% for p in top_products %}
+                        <div>
+                            <span>
+                                {{ p[0] }}
+                            </span>
+                            <b>
+                                {{ p[1] }}
+                            </b>
+                        </div>
+                    {% else %}
+                        <div class="preview-empty">
+                            No product sales recorded.
+                        </div>
+                    {% endfor %}
+                </div>
+                <footer>
+                    Generated from Retail Analytics Management System · Confidential Business Report
+                </footer>
+            </aside>
+        </div>
+    </div>
+{% endblock %}

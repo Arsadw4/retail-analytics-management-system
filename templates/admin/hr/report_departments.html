@@ -1,0 +1,58 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Department Report
+                </h1>
+                <div>
+                    <a href="/admin/hr/reports/employees" class="btn secondary">
+                        Back
+                    </a>
+                    <a href="/admin/hr/reports/departments/export/csv" class="btn secondary">
+                        CSV
+                    </a>
+                    <a href="/admin/hr/reports/departments/export/excel" class="btn secondary">
+                        Excel
+                    </a>
+                    <a href="/admin/hr/reports/departments/export/pdf" class="btn secondary">
+                        PDF
+                    </a>
+                </div>
+            </div>
+            {% if rows %}
+                <table>
+                    <tr>
+                        <th>
+                            Department
+                        </th>
+                        <th>
+                            Total Employees
+                        </th>
+                        <th>
+                            Total Monthly Salary
+                        </th>
+                    </tr>
+                    {% for r in rows %}
+                        <tr>
+                            <td>
+                                {{ r[1] }}
+                            </td>
+                            <td>
+                                {{ r[2] }}
+                            </td>
+                            <td>
+                                ₹{{ "%.2f"|format(r[3]) }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No departments yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

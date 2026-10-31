@@ -1,0 +1,33 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Add Category
+                </h1>
+                <a href="/admin/categories"
+           class="back-btn">
+                    Back
+                </a>
+            </div>
+            <form method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="form-group">
+                    <label>
+                        Category Name
+                    </label>
+                    <input
+                type="text"
+                name="category_name"
+                required>
+                </div>
+                <button
+            type="submit"
+            class="btn">
+                    Add Category
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

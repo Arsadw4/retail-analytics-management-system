@@ -1,0 +1,37 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="no-print" style="text-align:center;padding:15px;">
+            <a href="/admin/hr/employees/{{ employee[0] }}" class="btn secondary">
+                Back
+            </a>
+            <a href="#" data-print="1" class="btn">
+                Print
+            </a>
+        </div>
+        <div style="max-width:340px;margin:20px auto;border:2px solid #2563eb;border-radius:16px;padding:20px;text-align:center;font-family:'Segoe UI';">
+            <h2 style="color:#2563eb;">
+                Retail Analytics System
+            </h2>
+            <p style="margin:10px 0;font-weight:bold;font-size:18px;">
+                {{ employee[1] }}
+            </p>
+            <p>
+                ID: {{ employee[7] or "-" }}
+            </p>
+            <p>
+                {{ employee[10] or employee[4] or "Employee" }}
+            </p>
+            <p>
+                {{ employee[9] or "-" }}
+            </p>
+            <hr style="margin:10px 0;">
+            <p>
+                Phone: {{ employee[3] or "-" }}
+            </p>
+            <p>
+                Joined: {{ employee[8] or "-" }}
+            </p>
+        </div>
+    </div>
+{% endblock %}

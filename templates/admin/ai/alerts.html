@@ -1,0 +1,35 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    AI Alerts Center
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ai_bi.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    AI Alerts Center
+                </h1>
+                <a href="/admin/ai-dashboard" class="btn secondary">
+                    Back
+                </a>
+            </div>
+            {% if alerts %}
+                {% for a in alerts %}
+                    <div class="alert-row {{ a.severity }}">
+                        <span class="badge {{ a.severity }}">
+                            {{ a.type|replace('_',' ') }}
+                        </span>
+                        {{ a.message }}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    No active alerts.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

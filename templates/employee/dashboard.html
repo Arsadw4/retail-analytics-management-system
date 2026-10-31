@@ -1,0 +1,154 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Employee Dashboard
+{% endblock %}
+{% block page_content %}
+    <div class="ra-page-head">
+        <div>
+            <div class="ra-breadcrumb">
+                Dashboard / Overview
+            </div>
+            <h1>
+                Welcome, {{ session.get('name','Employee') }} 👋
+            </h1>
+            <p>
+                Your retail operations workspace.
+            </p>
+        </div>
+        <div class="ra-head-actions">
+            <a class="ra-btn" href="/admin/billing/pos">
+                ＋ New Sale
+            </a>
+        </div>
+    </div>
+    <section class="ra-kpis">
+        <article class="ra-card ra-kpi">
+            <div>
+                <small>
+                    Total Customers
+                </small>
+                <strong>
+                    {{ total_customers }}
+                </strong>
+                <span>
+                    Customer records
+                </span>
+            </div>
+            <div class="ra-kpi-icon">
+                ♙
+            </div>
+        </article>
+        <article class="ra-card ra-kpi">
+            <div>
+                <small>
+                    Total Products
+                </small>
+                <strong>
+                    {{ total_products }}
+                </strong>
+                <span>
+                    Product catalogue
+                </span>
+            </div>
+            <div class="ra-kpi-icon">
+                □
+            </div>
+        </article>
+        <article class="ra-card ra-kpi">
+            <div>
+                <small>
+                    Total Sales
+                </small>
+                <strong>
+                    ₹{{ total_sales }}
+                </strong>
+                <span>
+                    Recorded sales
+                </span>
+            </div>
+            <div class="ra-kpi-icon">
+                ₹
+            </div>
+        </article>
+        <article class="ra-card ra-kpi">
+            <div>
+                <small>
+                    Account
+                </small>
+                <strong>
+                    {{ session.get('role','employee')|replace('_',' ')|title }}
+                </strong>
+                <span>
+                    Role-based workspace
+                </span>
+            </div>
+            <div class="ra-kpi-icon">
+                ●
+            </div>
+        </article>
+    </section>
+    <div class="dashboard-grid">
+        <article class="ra-card" style="padding:18px">
+            <h2 style="font-size:13px;margin:0 0 6px">
+                Quick Actions
+            </h2>
+            <p style="font-size:9px;color:var(--ra-muted);margin:0 0 14px">
+                Use the same enterprise navigation across the application.
+            </p>
+            <div class="ra-action-grid">
+                <a href="/admin/customers">
+                    <span>
+                        ♙
+                    </span>
+                    <span>
+                        <strong>
+                            Customers
+                        </strong>
+                        <small>
+                            View customer records
+                        </small>
+                    </span>
+                </a>
+                <a href="/admin/products">
+                    <span>
+                        □
+                    </span>
+                    <span>
+                        <strong>
+                            Products
+                        </strong>
+                        <small>
+                            View catalogue
+                        </small>
+                    </span>
+                </a>
+                <a href="/admin/sales">
+                    <span>
+                        ₹
+                    </span>
+                    <span>
+                        <strong>
+                            Sales
+                        </strong>
+                        <small>
+                            Review transactions
+                        </small>
+                    </span>
+                </a>
+                <a href="/admin/billing/pos">
+                    <span>
+                        ▣
+                    </span>
+                    <span>
+                        <strong>
+                            POS / Billing
+                        </strong>
+                        <small>
+                            Start a sale
+                        </small>
+                    </span>
+                </a>
+            </div>
+        </article>
+    </div>
+{% endblock %}

@@ -1,0 +1,276 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    {{ customer[1] }}
+                </h1>
+                <a href="/admin/customers/search" class="btn secondary">
+                    Back to Search
+                </a>
+            </div>
+            <div class="cards">
+                <div class="card">
+                    <h2>
+                        {{ customer[6] }}
+                    </h2>
+                    <p>
+                        Membership Level
+                    </p>
+                </div>
+                <div class="card">
+                    <h2>
+                        {{ customer[5] }}
+                    </h2>
+                    <p>
+                        Loyalty Points
+                    </p>
+                </div>
+                <div class="card">
+                    <h2>
+                        ₹{{ "%.2f"|format(customer[7]) }}
+                    </h2>
+                    <p>
+                        Wallet Balance
+                    </p>
+                </div>
+                <div class="card">
+                    <h2>
+                        ₹{{ "%.2f"|format(customer[9]) }} / ₹{{ "%.2f"|format(customer[8]) }}
+                    </h2>
+                    <p>
+                        Credit Due / Limit
+                    </p>
+                </div>
+                <div class="card">
+                    <h2>
+                        {{ analytics[7] if analytics else 0 }}
+                    </h2>
+                    <p>
+                        Total Orders
+                    </p>
+                </div>
+                <div class="card">
+                    <h2>
+                        ₹{{ "%.2f"|format(analytics[8]) if analytics else "0.00" }}
+                    </h2>
+                    <p>
+                        Total Spent
+                    </p>
+                </div>
+            </div>
+            <p>
+                Phone: {{ customer[2] or "-" }} | Email: {{ customer[3] or "-" }} | Address: {{ customer[4] or "-" }}
+            </p>
+            <div class="pos-wrap" style="margin-top:20px;">
+                <div>
+                    <form method="POST" action="/admin/customers/{{ customer[0] }}/wallet-topup">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="form-group">
+                            <label>
+                                Wallet Top-up Amount
+                            </label>
+                            <input type="number" step="0.01" name="amount" required>
+                        </div>
+                        <button class="btn success">
+                            Add to Wallet
+                        </button>
+                    </form>
+                </div>
+                <div>
+                    <form method="POST" action="/admin/customers/{{ customer[0] }}/redeem-points">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="form-group">
+                            <label>
+                                Redeem Points (to wallet)
+                            </label>
+                            <input type="number" name="points" required>
+                        </div>
+                        <button class="btn warning">
+                            Redeem
+                        </button>
+                    </form>
+                </div>
+                <div>
+                    <form method="POST" action="/admin/customers/{{ customer[0] }}/credit-sale">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="form-group">
+                            <label>
+                                Record Credit Sale Amount
+                            </label>
+                            <input type="number" step="0.01" name="amount" required>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                Notes
+                            </label>
+                            <input type="text" name="notes">
+                        </div>
+                        <button class="btn danger">
+                            Record Credit Sale
+                        </button>
+                    </form>
+                </div>
+                <div>
+                    <form method="POST" action="/admin/customers/{{ customer[0] }}/credit-payment">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="form-group">
+                            <label>
+                                Record Due Payment Amount
+                            </label>
+                            <input type="number" step="0.01" name="amount" required>
+                        </div>
+                        <button class="btn success">
+                            Record Payment
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <h2 style="margin:25px 0 10px;font-size:20px;">
+                Purchase History
+            </h2>
+            {% if purchase_history %}
+                <table>
+                    <tr>
+                        <th>
+                            Invoice
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            Total
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                    {% for h in purchase_history %}
+                        <tr>
+                            <td>
+                                {{ h[1] }}
+                            </td>
+                            <td>
+                                {{ h[2] }}
+                            </td>
+                            <td>
+                                ₹{{ "%.2f"|format(h[3]) }}
+                            </td>
+                            <td>
+                                <span class="badge {{ h[4] }}">
+                                    {{ h[4] }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="/admin/billing/invoice/{{ h[0] }}" class="btn">
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No purchases yet.
+                </div>
+            {% endif %}
+            <h2 style="margin:25px 0 10px;font-size:20px;">
+                Return History
+            </h2>
+            {% if returns %}
+                <table>
+                    <tr>
+                        <th>
+                            Invoice
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Qty
+                        </th>
+                        <th>
+                            Refund
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                    </tr>
+                    {% for r in returns %}
+                        <tr>
+                            <td>
+                                {{ r[1] }}
+                            </td>
+                            <td>
+                                {{ r[2] }}
+                            </td>
+                            <td>
+                                {{ r[3] }}
+                            </td>
+                            <td>
+                                ₹{{ "%.2f"|format(r[4]) }}
+                            </td>
+                            <td>
+                                {{ r[5] }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No returns recorded.
+                </div>
+            {% endif %}
+            <h2 style="margin:25px 0 10px;font-size:20px;">
+                Ledger
+            </h2>
+            {% if ledger %}
+                <table>
+                    <tr>
+                        <th>
+                            Type
+                        </th>
+                        <th>
+                            Amount
+                        </th>
+                        <th>
+                            Balance After
+                        </th>
+                        <th>
+                            Notes
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                    </tr>
+                    {% for l in ledger %}
+                        <tr>
+                            <td>
+                                {{ l[1] }}
+                            </td>
+                            <td>
+                                {{ "%.2f"|format(l[2]) }}
+                            </td>
+                            <td>
+                                {{ "%.2f"|format(l[3]) }}
+                            </td>
+                            <td>
+                                {{ l[5] or "-" }}
+                            </td>
+                            <td>
+                                {{ l[6] }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No ledger entries yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

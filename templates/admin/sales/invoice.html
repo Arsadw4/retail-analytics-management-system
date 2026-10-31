@@ -1,0 +1,67 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="invoice-container">
+            <div class="invoice-card">
+                <h1>
+                    Invoice #{{ sale[0] }}
+                </h1>
+                <div class="invoice-info">
+                    <h2>
+                        Customer: {{ sale[1] }}
+                    </h2>
+                    <p>
+                        Date: {{ sale[4] }}
+                    </p>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                Product
+                            </th>
+                            <th>
+                                Qty
+                            </th>
+                            <th>
+                                Unit Price
+                            </th>
+                            <th>
+                                Subtotal
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                            <tr>
+                                <td>
+                                    {{ item[0] }}
+                                </td>
+                                <td>
+                                    {{ item[1] }}
+                                </td>
+                                <td>
+                                    ₹ {{ item[2] }}
+                                </td>
+                                <td>
+                                    ₹ {{ item[3] }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="total">
+                    Total Amount : ₹ {{ sale[2] }}
+                </div>
+                <div class="buttons">
+                    <button data-print="1" class="print-btn">
+                        Print Invoice
+                    </button>
+                    <a href="/admin/sales" class="back-btn">
+                        Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

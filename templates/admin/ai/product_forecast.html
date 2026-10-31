@@ -1,0 +1,65 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Product Demand Forecast
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ai_bi.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Demand Forecast -- {{ product_name }}
+                </h1>
+                <a href="/admin/predictions" class="btn secondary">
+                    Back
+                </a>
+            </div>
+            <div class="cards">
+                <div class="card">
+                    <h2>
+                        {{ forecast.daily_velocity }}
+                    </h2>
+                    <p>
+                        Avg Units Sold / Day
+                    </p>
+                </div>
+                <div class="card">
+                    <h2>
+                        {{ forecast.forecast_total_units }}
+                    </h2>
+                    <p>
+                        Predicted Units, Next 30 Days
+                    </p>
+                </div>
+            </div>
+            {% if forecast.history %}
+                <table>
+                    <tr>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            Units Sold
+                        </th>
+                    </tr>
+                    {% for h in forecast.history %}
+                        <tr>
+                            <td>
+                                {{ h.date }}
+                            </td>
+                            <td>
+                                {{ h.units }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No sales history for this product yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

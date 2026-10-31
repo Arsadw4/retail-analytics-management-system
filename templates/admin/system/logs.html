@@ -1,0 +1,33 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Application &amp; Error Logs
+                </h1>
+                <a href="/admin/system/health" class="btn secondary">
+                    Back
+                </a>
+            </div>
+            <div style="margin-bottom:15px;">
+                <a href="/admin/system/logs" class="btn secondary">
+                    All
+                </a>
+                <a href="/admin/system/logs?level=ERROR" class="btn danger">
+                    Errors Only
+                </a>
+                <a href="/admin/system/logs?level=INFO" class="btn secondary">
+                    Info Only
+                </a>
+            </div>
+            <pre style="background:#0f172a;color:#e2e8f0;padding:20px;border-radius:10px;overflow-x:auto;font-size:12px;max-height:600px;overflow-y:auto;">
+                {% for l in lines %}
+                    {{ l }}
+                {% else %}
+                    No log entries yet.
+                {% endfor %}
+            </pre>
+        </div>
+    </div>
+{% endblock %}

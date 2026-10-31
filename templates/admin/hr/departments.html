@@ -1,0 +1,112 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Departments &amp; Designations
+                </h1>
+                <a href="/admin/hr/employees" class="btn secondary">
+                    Employees
+                </a>
+            </div>
+            <div class="pos-wrap">
+                <div>
+                    <h3>
+                        Departments
+                    </h3>
+                    <form method="POST" action="/admin/departments/add" style="display:flex;gap:8px;margin:10px 0;">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="text" name="department_name" placeholder="Name" required>
+                        <input type="text" name="description" placeholder="Description">
+                        <button class="btn success">
+                            Add
+                        </button>
+                    </form>
+                    <table>
+                        <tr>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Description
+                            </th>
+                            <th>
+                            </th>
+                        </tr>
+                        {% for d in departments %}
+                            <tr>
+                                <td>
+                                    {{ d[1] }}
+                                </td>
+                                <td>
+                                    {{ d[2] or "-" }}
+                                </td>
+                                <td>
+                                    <form method="POST" action="/admin/departments/delete/{{ d[0] }}">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <button class="btn danger">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div>
+                    <h3>
+                        Designations
+                    </h3>
+                    <form method="POST" action="/admin/designations/add" style="display:flex;gap:8px;margin:10px 0;">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="text" name="designation_name" placeholder="Name" required>
+                        <select name="department_id">
+                            <option value="">
+                                No Department
+                            </option>
+                            {% for d in departments %}
+                                <option value="{{ d[0] }}">
+                                    {{ d[1] }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <button class="btn success">
+                            Add
+                        </button>
+                    </form>
+                    <table>
+                        <tr>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Department
+                            </th>
+                            <th>
+                            </th>
+                        </tr>
+                        {% for des in designations %}
+                            <tr>
+                                <td>
+                                    {{ des[1] }}
+                                </td>
+                                <td>
+                                    {{ des[3] or "-" }}
+                                </td>
+                                <td>
+                                    <form method="POST" action="/admin/designations/delete/{{ des[0] }}">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <button class="btn danger">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

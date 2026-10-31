@@ -1,0 +1,40 @@
+# --- Core framework ---
+Flask==3.1.3
+Werkzeug==3.1.8
+Jinja2==3.1.6
+MarkupSafe==3.0.3
+itsdangerous==2.2.0
+click==8.4.1
+blinker==1.9.0
+
+# --- Database ---
+# Replaces Flask-MySQLdb: pure-Python driver (no C build toolchain
+# needed to deploy) + DBUtils gives us real connection pooling.
+PyMySQL==1.1.1
+DBUtils==3.1.0
+
+# --- Security ---
+Flask-WTF==1.2.2        # CSRF protection + form handling
+Flask-Limiter==3.9.2    # rate limiting (login brute-force defense)
+
+# --- Config ---
+python-dotenv==1.2.2
+
+# --- Reporting (Phase 6) ---
+reportlab==4.2.5        # PDF generation
+openpyxl==3.1.5         # Excel generation
+
+# --- Barcode / QR (Phase 3) ---
+python-barcode==0.15.1
+qrcode==7.4.2
+Pillow>=12,<13
+
+# --- Multi-Factor Authentication (Phase 9) ---
+pyotp==2.9.0
+
+# --- Testing (used by tests/) ---
+pytest==8.3.4
+pytest-cov==6.0.0
+
+# --- Production WSGI server (Phase 10) ---
+gunicorn==23.0.0

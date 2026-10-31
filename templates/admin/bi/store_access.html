@@ -1,0 +1,102 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Power BI Store Access (RLS)
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/hr.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Power BI Row-Level Security -- Store Access
+                </h1>
+                <a href="/admin/activity-logs" class="btn secondary">
+                    Administration
+                </a>
+            </div>
+            <p style="color:#64748b;margin-bottom:15px;">
+                Grants a user visibility into a specific store/warehouse's numbers when they open the
+                Power BI report under the "Store Manager" RLS role. Users with no rows below are
+                unrestricted (use the "Global" role instead in Power BI). See
+                database/powerbi/POWER_BI_SETUP_GUIDE.md for the DAX role setup.
+            </p>
+            {% with messages = get_flashed_messages() %}
+                {% for m in messages %}
+                    <div class="flash">
+                        {{ m }}
+                    </div>
+                {% endfor %}
+            {% endwith %}
+            <form method="POST" action="/admin/bi/store-access/grant" style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <select name="user_id" required>
+                    {% for u in users %}
+                        <option value="{{ u[0] }}">
+                            {{ u[1] }} ({{ u[2] }})
+                        </option>
+                    {% endfor %}
+                </select>
+                <select name="warehouse_id" required>
+                    {% for w in warehouses %}
+                        <option value="{{ w[0] }}">
+                            {{ w[1] }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button class="btn success">
+                    Grant Access
+                </button>
+            </form>
+            {% if access_list %}
+                <table>
+                    <tr>
+                        <th>
+                            User
+                        </th>
+                        <th>
+                            Email
+                        </th>
+                        <th>
+                            Store
+                        </th>
+                        <th>
+                            Granted
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                    {% for a in access_list %}
+                        <tr>
+                            <td>
+                                {{ a[1] }}
+                            </td>
+                            <td>
+                                {{ a[2] }}
+                            </td>
+                            <td>
+                                {{ a[3] }}
+                            </td>
+                            <td>
+                                {{ a[4] }}
+                            </td>
+                            <td>
+                                <form method="POST" action="/admin/bi/store-access/revoke/{{ a[0] }}">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button class="btn danger">
+                                        Revoke
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No store-restricted Power BI users yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,139 @@
+*  {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+body  {
+    background:#f1f5f9;
+    padding:30px;
+}
+.analytics-container  {
+    max-width:1400px;
+    margin:auto;
+}
+.page-header  {
+    margin-bottom:30px;
+}
+.page-header h1  {
+    font-size:50px;
+    color:#0f172a;
+    margin-bottom:10px;
+}
+.page-header p  {
+    font-size:20px;
+    color:#64748b;
+}
+.analytics-cards  {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:20px;
+    margin-bottom:25px;
+}
+.analytics-card  {
+    padding:30px;
+    border-radius:20px;
+    color:white;
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+}
+.analytics-card h3  {
+    font-size:22px;
+    margin-bottom:15px;
+}
+.analytics-card h2  {
+    font-size:42px;
+    font-weight:700;
+}
+.blue  {
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+}
+.green  {
+    background:linear-gradient(135deg,#16a34a,#15803d);
+}
+.orange  {
+    background:linear-gradient(135deg,#f59e0b,#d97706);
+}
+.purple  {
+    background:linear-gradient(135deg,#9333ea,#7e22ce);
+}
+.best  {
+    background:linear-gradient(135deg,#22c55e,#16a34a);
+}
+.worst  {
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+}
+.customer  {
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+}
+.revenue  {
+    background:linear-gradient(135deg,#a855f7,#7e22ce);
+}
+.ai-box  {
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    margin-bottom:25px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+.ai-box h2  {
+    margin-bottom:20px;
+    color:#0f172a;
+}
+.ai-box p  {
+    font-size:22px;
+    color:#334155;
+}
+.ai-box ul  {
+    padding-left:20px;
+}
+.ai-box li  {
+    font-size:18px;
+    line-height:40px;
+    color:#475569;
+}
+.chart-section  {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:25px;
+    margin-top:25px;
+}
+.chart-card  {
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+.chart-card h3  {
+    margin-bottom:20px;
+    color:#0f172a;
+}
+.analytics-buttons  {
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+    margin-top:30px;
+}
+.analytics-buttons a  {
+    text-decoration:none;
+    background:#2563eb;
+    color:white;
+    padding:12px 20px;
+    border-radius:10px;
+    font-weight:600;
+    transition:.3s;
+}
+.analytics-buttons a:hover  {
+    transform:translateY(-3px);
+}
+
+@media(max-width:768px)  {
+    .chart-section  {
+        grid-template-columns:1fr;
+    }
+    .page-header h1  {
+        font-size:35px;
+    }
+    .analytics-card h2  {
+        font-size:30px;
+    }
+}

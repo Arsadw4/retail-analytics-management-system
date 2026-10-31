@@ -1,0 +1,16 @@
+{% extends "errors/_error_base.html" %}
+{% block title %}
+    Bad Request
+{% endblock %}
+{% block code %}
+    400
+{% endblock %}
+{% block message %}
+    Your session or form data expired. Please go back and try again.
+    {% if description %}
+        <br>
+        <small>
+            {{ description }}
+        </small>
+    {% endif %}
+{% endblock %}

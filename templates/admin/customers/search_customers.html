@@ -1,0 +1,106 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Search Customers
+                </h1>
+                <div>
+                    <a href="/admin/customers/analytics" class="btn secondary">
+                        Analytics
+                    </a>
+                    <a href="/admin/customers/export/csv" class="btn secondary">
+                        CSV
+                    </a>
+                    <a href="/admin/customers/export/excel" class="btn secondary">
+                        Excel
+                    </a>
+                    <a href="/admin/customers/export/pdf" class="btn secondary">
+                        PDF
+                    </a>
+                </div>
+            </div>
+            <form method="GET" style="display:flex;gap:10px;margin-bottom:20px;">
+                <input type="text" name="q" placeholder="Name, phone or email" value="{{ query or '' }}">
+                <select name="membership">
+                    <option value="">
+                        All Memberships
+                    </option>
+                    {% for lvl in ['Silver','Gold','Platinum'] %}
+                        <option value="{{ lvl }}" {% if membership == lvl %}selected{% endif %}>
+                            {{ lvl }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button class="btn">
+                    Search
+                </button>
+            </form>
+            {% if results %}
+                <table>
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Phone
+                        </th>
+                        <th>
+                            Email
+                        </th>
+                        <th>
+                            Membership
+                        </th>
+                        <th>
+                            Loyalty
+                        </th>
+                        <th>
+                            Wallet
+                        </th>
+                        <th>
+                            Due
+                        </th>
+                        <th>
+                            Actions
+                        </th>
+                    </tr>
+                    {% for c in results %}
+                        <tr>
+                            <td>
+                                {{ c[1] }}
+                            </td>
+                            <td>
+                                {{ c[2] or "-" }}
+                            </td>
+                            <td>
+                                {{ c[3] or "-" }}
+                            </td>
+                            <td>
+                                {{ c[6] }}
+                            </td>
+                            <td>
+                                {{ c[5] }}
+                            </td>
+                            <td>
+                                ₹{{ c[7] }}
+                            </td>
+                            <td>
+                                ₹{{ c[9] }}
+                            </td>
+                            <td>
+                                <a href="/admin/customers/{{ c[0] }}/profile" class="btn">
+                                    Profile
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No customers match this search.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

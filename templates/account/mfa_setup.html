@@ -1,0 +1,59 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Set Up Two-Factor Authentication
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="ra-page-head">
+            <div>
+                <div class="ra-breadcrumb">
+                    Dashboard / My Security / 2FA
+                </div>
+                <h1>
+                    Set Up Two-Factor Authentication
+                </h1>
+                <p>
+                    Connect your authenticator app and confirm the generated code.
+                </p>
+            </div>
+            <div class="ra-head-actions">
+                <a class="ra-btn secondary" href="/account/security">
+                    Cancel
+                </a>
+            </div>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category,message in messages %}
+                    <div class="ra-flash">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="ra-card" style="max-width:620px;margin:0 auto;padding:24px;text-align:center">
+            <p style="font-size:10px;color:var(--ra-muted)">
+                Scan this QR code with Google Authenticator, Authy, or another TOTP app.
+            </p>
+            <img src="/account/security/mfa/qrcode.png" alt="MFA QR Code" style="width:190px;height:190px;margin:16px auto;display:block">
+            <p style="font-size:10px;color:var(--ra-muted)">
+                Can't scan? Enter this key manually:
+            </p>
+            <code style="display:inline-block;margin:7px 0 18px;padding:8px 10px;border-radius:7px;background:var(--theme-surface-2);color:var(--theme-text);word-break:break-all">
+                {{ secret }}
+            </code>
+            <form method="POST" style="max-width:380px;margin:0 auto">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="form-group">
+                    <label>
+                        6-digit verification code
+                    </label>
+                    <input class="ra-input" style="width:100%" type="text" name="code" inputmode="numeric" pattern="[0-9]*" maxlength="6" required>
+                </div>
+                <button class="ra-btn success" type="submit">
+                    Confirm &amp; Enable
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

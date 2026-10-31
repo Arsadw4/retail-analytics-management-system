@@ -1,0 +1,706 @@
+.dashboard-page  {
+    max-width:1440px;
+    margin:0 auto;
+    padding-bottom:12px
+}
+.dashboard-heading  {
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:15px;
+    padding:21px 0 16px
+}
+.dashboard-heading h1  {
+    font-size:23px;
+    letter-spacing:-.7px;
+    margin:0;
+    color:var(--theme-text)
+}
+.heading-wave  {
+    font-size:18px;
+    margin-left:3px
+}
+.dashboard-heading p  {
+    font-size:10px;
+    color:var(--theme-muted);
+    margin:5px 0 0
+}
+.dashboard-date  {
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:8px 11px;
+    border:1px solid var(--theme-border);
+    background:var(--theme-surface);
+    border-radius:8px;
+    font-size:9px;
+    color:var(--theme-text);
+    white-space:nowrap
+}
+.dashboard-date b  {
+    font-size:10px;
+    color:var(--theme-muted)
+}
+.date-icon  {
+    font-size:11px;
+    color:var(--ra-blue)
+}
+.dashboard-kpis  {
+    display:grid;
+    grid-template-columns:repeat(6,minmax(0,1fr));
+    gap:10px;
+    margin-bottom:13px;
+    align-items:stretch
+}
+.dashboard-kpis .ra-kpi  {
+    min-height:92px;
+    padding:14px 15px;
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:8px;
+    min-width:0
+}
+.ra-kpi small  {
+    font-size:8px;
+    color:var(--theme-muted);
+    display:block
+}
+.ra-kpi strong  {
+    font-size:17px;
+    line-height:1.2;
+    margin:7px 0 5px;
+    display:block;
+    white-space:nowrap
+}
+.ra-kpi .trend  {
+    font-size:8px;
+    white-space:nowrap
+}
+.trend.positive  {
+    color:#16a46a
+}
+.trend.neutral  {
+    color:var(--theme-muted)
+}
+.trend.negative  {
+    color:#f06a6a
+}
+.ra-kpi-icon  {
+    width:34px;
+    height:34px;
+    border-radius:10px;
+    display:grid;
+    place-items:center;
+    font-size:14px;
+    font-weight:800;
+    flex:none
+}
+.ra-kpi-icon.sales  {
+    background:#eaf3ff;
+    color:#1478f2
+}
+.ra-kpi-icon.revenue  {
+    background:#eaf8f2;
+    color:#15945c
+}
+.ra-kpi-icon.profit  {
+    background:#f1ebff;
+    color:#7a49e8
+}
+.ra-kpi-icon.products  {
+    background:#fff4e4;
+    color:#e79513
+}
+.ra-kpi-icon.customers  {
+    background:#e8f7f8;
+    color:#1597aa
+}
+.ra-kpi-icon.loss  {
+    background:#ffeded;
+    color:#e34b50
+}
+.dashboard-primary-grid  {
+    display:grid;
+    grid-template-columns:minmax(0,1.65fr) minmax(280px,.62fr);
+    gap:13px;
+    align-items:stretch
+}
+.dashboard-panel  {
+    overflow:hidden;
+    min-width:0
+}
+.dashboard-panel-head  {
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+    padding:17px 18px 12px;
+    border-bottom:1px solid var(--theme-border)
+}
+.dashboard-panel-head h2,.data-panel-head h2  {
+    font-size:13px;
+    margin:0
+}
+.dashboard-panel-head p,.data-panel-head p  {
+    font-size:8px;
+    color:var(--theme-muted);
+    margin:4px 0 0
+}
+.chart-filter-wrap  {
+    position:relative
+}
+.chart-filter  {
+    height:30px;
+    border:1px solid var(--theme-border);
+    background:var(--theme-surface);
+    color:var(--theme-text);
+    border-radius:7px;
+    padding:0 9px;
+    font-size:8px;
+    cursor:pointer;
+    outline:0
+}
+.chart-filter:focus  {
+    border-color:#8bbaf7;
+    box-shadow:0 0 0 3px rgba(20,115,255,.08)
+}
+.custom-range  {
+    position:absolute;
+    right:0;
+    top:36px;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    gap:5px;
+    padding:7px;
+    background:var(--theme-surface);
+    border:1px solid var(--theme-border);
+    border-radius:8px;
+    box-shadow:0 12px 28px rgba(17,47,83,.15)
+}
+.custom-range input  {
+    height:28px;
+    border:1px solid var(--theme-border);
+    border-radius:6px;
+    background:var(--theme-input);
+    color:var(--theme-text);
+    font-size:8px;
+    padding:0 5px
+}
+.custom-range span  {
+    font-size:8px;
+    color:var(--theme-muted)
+}
+.custom-range button  {
+    height:28px;
+    border:0;
+    border-radius:6px;
+    background:var(--ra-blue);
+    color:#fff;
+    font-size:8px;
+    padding:0 8px;
+    cursor:pointer
+}
+.sr-only  {
+    position:absolute;
+    width:1px;
+    height:1px;
+    padding:0;
+    margin:-1px;
+    overflow:hidden;
+    clip:rect(0,0,0,0);
+    white-space:nowrap;
+    border:0
+}
+.sales-chart  {
+    display:grid;
+    grid-template-columns:40px 1fr;
+    padding:15px 16px 6px 9px;
+    min-height:276px
+}
+.chart-y  {
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    padding:2px 6px 28px 0;
+    color:var(--theme-muted);
+    font-size:8px;
+    text-align:right
+}
+.chart-area  {
+    position:relative;
+    height:250px;
+    min-width:0
+}
+.chart-area svg  {
+    position:absolute;
+    inset:0 0 27px;
+    width:100%;
+    height:220px;
+    overflow:visible
+}
+.chart-grid-lines  {
+    position:absolute;
+    inset:0 0 28px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    pointer-events:none
+}
+.chart-grid-lines i  {
+    display:block;
+    border-top:1px dashed var(--theme-border);
+    height:1px
+}
+.chart-line  {
+    fill:none;
+    stroke:#16c9ff;
+    stroke-width:3.2;
+    stroke-linecap:round;
+    stroke-linejoin:round
+}
+.chart-fill  {
+    fill:url(#salesFill);
+    stroke:none
+}
+.chart-points circle  {
+    fill:var(--theme-surface);
+    stroke:#16c9ff;
+    stroke-width:2;
+    cursor:pointer
+}
+.chart-points circle:focus  {
+    outline:none;
+    stroke-width:3
+}
+.chart-months  {
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    display:flex;
+    justify-content:space-between;
+    gap:6px;
+    color:var(--theme-muted);
+    font-size:8px
+}
+.chart-months span  {
+    min-width:0;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    text-align:center
+}
+.chart-empty  {
+    position:absolute;
+    inset:35px 20px 55px;
+    display:grid;
+    place-items:center;
+    text-align:center;
+    border:1px dashed var(--theme-border);
+    border-radius:11px;
+    background:color-mix(in srgb,var(--theme-surface-2) 72%,transparent);
+    color:var(--theme-muted);
+    font-size:9px
+}
+.chart-empty[hidden],
+.chart-months[hidden],
+.chart-area svg[hidden] {
+    display:none;
+}
+.chart-state {
+    gap:10px;
+}
+.chart-error button {
+    padding:5px 10px;
+    border:1px solid var(--theme-border);
+    border-radius:6px;
+    background:var(--theme-surface);
+    color:var(--theme-text);
+    cursor:pointer;
+}
+.chart-tooltip  {
+    position:absolute;
+    transform:translate(-50%,-100%);
+    z-index:4;
+    padding:7px 9px;
+    border:1px solid var(--theme-border);
+    border-radius:7px;
+    background:var(--theme-surface);
+    box-shadow:0 8px 20px rgba(17,47,83,.14);
+    font-size:8px;
+    pointer-events:none;
+    white-space:nowrap
+}
+.chart-tooltip strong,.chart-tooltip span  {
+    display:block
+}
+.chart-tooltip strong  {
+    font-size:9px;
+    margin-bottom:2px
+}
+.chart-tooltip span  {
+    color:var(--theme-muted)
+}
+.dashboard-summary  {
+    padding:0 18px 16px
+}
+.summary-heading  {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin:0 0 8px
+}
+.summary-heading strong  {
+    font-size:10px
+}
+.summary-heading span  {
+    font-size:8px;
+    color:var(--theme-muted)
+}
+.summary-grid  {
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:7px
+}
+.summary-grid>div  {
+    padding:9px 10px;
+    border:1px solid var(--theme-border);
+    background:var(--theme-surface-2);
+    border-radius:8px;
+    min-width:0
+}
+.summary-grid small,.summary-grid strong  {
+    display:block
+}
+.summary-grid small  {
+    font-size:7px;
+    color:var(--theme-muted);
+    margin-bottom:4px
+}
+.summary-grid strong  {
+    font-size:10px;
+    color:var(--theme-text);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis
+}
+.dashboard-actions  {
+    padding:7px 12px 12px
+}
+.dashboard-actions a  {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:11px 6px;
+    border-bottom:1px solid var(--theme-border)
+}
+.dashboard-actions a:last-child  {
+    border-bottom:0
+}
+.dashboard-actions a>span  {
+    width:32px;
+    height:32px;
+    border-radius:9px;
+    display:grid;
+    place-items:center;
+    font-size:14px;
+    font-weight:800
+}
+.dashboard-actions .qa-blue  {
+    background:#eaf3ff;
+    color:#1478f2
+}
+.dashboard-actions .qa-green  {
+    background:#e9f8f1;
+    color:#13935a
+}
+.dashboard-actions .qa-cyan  {
+    background:#eaf9fb;
+    color:#1597aa
+}
+.dashboard-actions .qa-purple  {
+    background:#f0ebff;
+    color:#7a49e8
+}
+.dashboard-actions div  {
+    flex:1;
+    min-width:0
+}
+.dashboard-actions strong,.dashboard-actions small  {
+    display:block
+}
+.dashboard-actions strong  {
+    font-size:10px
+}
+.dashboard-actions small  {
+    font-size:8px;
+    color:var(--theme-muted);
+    margin-top:2px
+}
+.dashboard-actions b  {
+    font-size:15px;
+    color:var(--theme-muted);
+    font-weight:400
+}
+.dashboard-lower-grid  {
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    gap:13px;
+    margin-top:13px
+}
+.dashboard-data-panel  {
+    min-width:0;
+    overflow:hidden
+}
+.data-panel-head  {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:14px 15px 10px
+}
+.panel-view  {
+    height:27px;
+    display:inline-flex;
+    align-items:center;
+    padding:0 9px;
+    border:1px solid var(--theme-border);
+    border-radius:7px;
+    background:var(--theme-surface);
+    color:var(--theme-text);
+    font-size:8px;
+    white-space:nowrap
+}
+.panel-view:hover  {
+    border-color:#8bbaf7;
+    color:var(--ra-blue)
+}
+.table-wrap  {
+    overflow:auto
+}
+.dashboard-table  {
+    width:100%;
+    border-collapse:collapse;
+    min-width:500px
+}
+.dashboard-table th  {
+    background:var(--theme-surface-2);
+    color:var(--theme-muted);
+    font-size:7px;
+    text-transform:uppercase;
+    letter-spacing:.4px;
+    text-align:left;
+    padding:9px 10px;
+    border-top:1px solid var(--theme-border);
+    border-bottom:1px solid var(--theme-border);
+    white-space:nowrap
+}
+.dashboard-table td  {
+    font-size:9px;
+    color:var(--theme-text);
+    padding:8px 10px;
+    border-bottom:1px solid var(--theme-border);
+    white-space:nowrap;
+    vertical-align:middle
+}
+.dashboard-table tbody tr:last-child td  {
+    border-bottom:0
+}
+.dashboard-table tbody tr:hover td  {
+    background:var(--theme-hover)
+}
+.table-status  {
+    display:inline-block;
+    padding:3px 7px;
+    border-radius:999px;
+    font-size:7px;
+    font-weight:800
+}
+.table-status.ok  {
+    background:#e8f8ef;
+    color:#138c57
+}
+.table-status.danger  {
+    background:#ffe9e7;
+    color:#db3b32
+}
+.table-empty  {
+    text-align:center!important;
+    color:var(--theme-muted)!important;
+    padding:23px 10px!important
+}
+.top-products td:nth-child(3)  {
+    min-width:130px
+}
+.mini-bar  {
+    display:inline-block;
+    vertical-align:middle;
+    width:68px;
+    height:5px;
+    border-radius:5px;
+    background:var(--theme-border);
+    overflow:hidden;
+    margin-right:7px
+}
+.mini-bar i  {
+    display:block;
+    height:100%;
+    border-radius:5px;
+    background:#2998ff;
+    max-width:100%
+}
+.dashboard-footer  {
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    padding:17px 3px 2px;
+    color:var(--theme-muted);
+    font-size:8px
+}
+body.dark-theme .dashboard-page .ra-card  {
+    background:linear-gradient(145deg,#12243a,#102037);
+    border-color:#2d4762;
+    box-shadow:0 10px 28px rgba(0,0,0,.16)
+}
+body.dark-theme .dashboard-heading h1  {
+    color:#f4f8ff
+}
+body.dark-theme .dashboard-date  {
+    background:#16273d;
+    border-color:#304962
+}
+body.dark-theme .dashboard-panel-head  {
+    border-color:#2d4762
+}
+body.dark-theme .chart-filter  {
+    background:#15263b;
+    border-color:#304962
+}
+body.dark-theme .ra-kpi-icon.sales  {
+    background:#17385b;
+    color:#72b6ff
+}
+body.dark-theme .ra-kpi-icon.revenue  {
+    background:#123d31;
+    color:#68d8a3
+}
+body.dark-theme .ra-kpi-icon.profit  {
+    background:#2b2450;
+    color:#b89aff
+}
+body.dark-theme .ra-kpi-icon.products  {
+    background:#3b3018;
+    color:#f2c86d
+}
+body.dark-theme .ra-kpi-icon.customers  {
+    background:#123b42;
+    color:#75d7e1
+}
+body.dark-theme .ra-kpi-icon.loss  {
+    background:#42262b;
+    color:#ff9694
+}
+body.dark-theme .dashboard-actions a>span.qa-blue  {
+    background:#17385b;
+    color:#72b6ff
+}
+body.dark-theme .dashboard-actions a>span.qa-green  {
+    background:#123d31;
+    color:#68d8a3
+}
+body.dark-theme .dashboard-actions a>span.qa-cyan  {
+    background:#123b42;
+    color:#75d7e1
+}
+body.dark-theme .dashboard-actions a>span.qa-purple  {
+    background:#2b2450;
+    color:#b89aff
+}
+.dark-theme .mini-bar  {
+    background:#2d4762
+}
+
+@media(max-width:1150px)  {
+    .dashboard-kpis  {
+        grid-template-columns:repeat(3,minmax(0,1fr))
+    }
+    .dashboard-primary-grid  {
+        grid-template-columns:minmax(0,1.55fr) minmax(260px,.7fr)
+    }
+}
+
+@media(max-width:900px)  {
+    .dashboard-primary-grid,.dashboard-lower-grid  {
+        grid-template-columns:1fr
+    }
+}
+
+@media(max-width:650px)  {
+    .dashboard-heading  {
+        align-items:flex-start;
+        flex-direction:column
+    }
+    .dashboard-kpis  {
+        grid-template-columns:repeat(2,minmax(0,1fr))
+    }
+    .sales-chart  {
+        min-height:255px;
+        padding-right:10px
+    }
+    .chart-area  {
+        height:230px
+    }
+    .chart-area svg  {
+        height:190px
+    }
+    .chart-months  {
+        font-size:7px
+    }
+    .dashboard-date  {
+        width:100%;
+        justify-content:center
+    }
+    .summary-grid  {
+        grid-template-columns:repeat(2,minmax(0,1fr))
+    }
+    .custom-range  {
+        position:fixed;
+        left:10px;
+        right:10px;
+        top:110px;
+        justify-content:center;
+        flex-wrap:wrap
+    }
+    .dashboard-footer  {
+        flex-direction:column
+    }
+    .dashboard-table  {
+        min-width:460px
+    }
+}
+
+@media(max-width:460px)  {
+    .dashboard-kpis  {
+        grid-template-columns:1fr
+    }
+    .summary-grid  {
+        grid-template-columns:1fr
+    }
+    .chart-filter  {
+        max-width:118px
+    }
+    .dashboard-panel-head  {
+        align-items:flex-start
+    }
+    .data-panel-head  {
+        padding-left:12px;
+        padding-right:12px
+    }
+}
+/* Keep the custom date controls hidden until Custom Range is selected. */
+.custom-range[hidden]  {
+    display: none;
+}

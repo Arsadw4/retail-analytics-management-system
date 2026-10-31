@@ -1,0 +1,36 @@
+# deploy/systemd/retail-analytics.service
+#
+# For a non-Docker deployment: runs Gunicorn as a proper background
+# service that survives reboots and restarts automatically on crash.
+# Install: copy to /etc/systemd/system/retail-analytics.service,
+# edit the paths/user below, then:
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now retail-analytics
+
+[Unit]
+Description=Retail Analytics System (Gunicorn)
+After=network.target mysql.service
+Wants=mysql.service
+
+[Service]
+Type=simple
+User=appuser
+Group=appuser
+WorkingDirectory=/path/to/Retail_Analytics_System
+EnvironmentFile=/path/to/Retail_Analytics_System/.env
+ExecStart=/path/to/Retail_Analytics_System/venv/bin/gunicorn \
+    --config deploy/gunicorn.conf.py wsgi:app
+ExecReload=/bin/kill -s HUP $MAINPID
+Restart=on-failure
+RestartSec=5
+KillMode=mixed
+TimeoutStopSec=30
+
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/path/to/Retail_Analytics_System/logs /path/to/Retail_Analytics_System/backups /path/to/Retail_Analytics_System/static/uploads
+
+[Install]
+WantedBy=multi-user.target

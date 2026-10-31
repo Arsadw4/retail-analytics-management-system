@@ -1,0 +1,48 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Line Chart
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <h1>
+            Revenue Analysis
+        </h1>
+        <canvas id="lineChart">
+        </canvas>
+    <script nonce="{{ csp_nonce }}">
+
+new Chart(
+    document.getElementById("lineChart"),
+    {
+        type: 'line',
+
+        data: {
+
+            labels: [
+                'Inventory Value',
+                'Revenue'
+            ],
+
+            datasets: [{
+
+                label: 'Revenue Analysis',
+
+                data: [
+                    {{ inventory_value }},
+                    {{ revenue }}
+                ],
+
+                borderWidth: 3,
+                fill: false
+
+            }]
+
+        }
+
+    }
+);
+
+</script>
+    </div>
+{% endblock %}

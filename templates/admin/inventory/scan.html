@@ -1,0 +1,56 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container" style="max-width:600px;">
+            <div class="header">
+                <h1>
+                    Scan Barcode / QR Code
+                </h1>
+                <a href="/admin/inventory" class="btn secondary">
+                    Back
+                </a>
+            </div>
+            <div class="scan-box">
+                <div id="reader">
+                </div>
+                <p style="margin-top:10px;color:#64748b;">
+                    Point the camera at a product's barcode or QR code.
+                    Camera access requires HTTPS (or localhost) in the browser.
+                </p>
+                <input type="text" id="manual-code" placeholder="Or type/scan a code and press Enter"
+               style="margin-top:15px;">
+            </div>
+            <div id="result" class="product-result" style="display:none;">
+                <h2 id="result-name">
+                </h2>
+                <p>
+                    SKU / Barcode:
+                    <span id="result-barcode">
+                    </span>
+                </p>
+                <p>
+                    Current Stock:
+                    <span id="result-stock">
+                    </span>
+                </p>
+                <p>
+                    Selling Price: ₹
+                    <span id="result-price">
+                    </span>
+                </p>
+                <div style="margin-top:15px;">
+                    <a id="stock-in-link" href="/admin/inventory/stock-in" class="btn success">
+                        Stock In
+                    </a>
+                    <a id="stock-out-link" href="/admin/inventory/stock-out" class="btn warning">
+                        Stock Out
+                    </a>
+                </div>
+            </div>
+            <div id="not-found" class="flash" style="display:none;">
+                No product found for that code.
+            </div>
+        </div>
+    <script src="{{ url_for('static', filename='js/scan.js') }}"></script>
+    </div>
+{% endblock %}

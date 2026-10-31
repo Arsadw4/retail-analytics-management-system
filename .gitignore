@@ -1,0 +1,27 @@
+# Secrets -- never commit real credentials
+.env
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+*.egg-info/
+
+# Logs & runtime artifacts
+logs/*.log
+backups/*.sql
+backups/*.zip
+
+# Uploaded user content (should live in object storage in production,
+# not in the repo)
+static/uploads/*
+!static/uploads/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

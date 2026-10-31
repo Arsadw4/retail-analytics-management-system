@@ -1,0 +1,86 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Search Invoices
+                </h1>
+                <a href="/admin/billing/pos" class="btn secondary">
+                    Back to POS
+                </a>
+            </div>
+            <form method="GET" class="pos-wrap" style="display:flex;gap:10px;margin-bottom:20px;">
+                <input type="text" name="q" placeholder="Invoice number or customer name" value="{{ query or '' }}">
+                <input type="date" name="date_from" value="{{ date_from or '' }}">
+                <input type="date" name="date_to" value="{{ date_to or '' }}">
+                <button class="btn">
+                    Search
+                </button>
+            </form>
+            {% if results %}
+                <table>
+                    <tr>
+                        <th>
+                            Invoice
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            Customer
+                        </th>
+                        <th>
+                            Served By
+                        </th>
+                        <th>
+                            Total
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Actions
+                        </th>
+                    </tr>
+                    {% for r in results %}
+                        <tr>
+                            <td>
+                                {{ r[1] }}
+                            </td>
+                            <td>
+                                {{ r[2] }}
+                            </td>
+                            <td>
+                                {{ r[5] or "Walk-in" }}
+                            </td>
+                            <td>
+                                {{ r[6] or "-" }}
+                            </td>
+                            <td>
+                                {{ "%.2f"|format(r[3]) }}
+                            </td>
+                            <td>
+                                <span class="badge {{ r[4] }}">
+                                    {{ r[4] }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="/admin/billing/invoice/{{ r[0] }}" class="btn">
+                                    View / Reprint
+                                </a>
+                                <a href="/admin/billing/returns/new/{{ r[0] }}" class="btn warning">
+                                    Return
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No invoices match your search.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

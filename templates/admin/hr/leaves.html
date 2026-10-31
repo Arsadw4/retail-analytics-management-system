@@ -1,0 +1,99 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Leave Requests
+                </h1>
+                <div>
+                    <a href="/admin/hr/employees" class="btn secondary">
+                        Back
+                    </a>
+                    <a href="/admin/hr/leaves/request" class="btn success">
+                        + Request Leave
+                    </a>
+                </div>
+            </div>
+            {% if leaves %}
+                <table>
+                    <tr>
+                        <th>
+                            Employee
+                        </th>
+                        <th>
+                            Type
+                        </th>
+                        <th>
+                            From
+                        </th>
+                        <th>
+                            To
+                        </th>
+                        <th>
+                            Reason
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Decided By
+                        </th>
+                        <th>
+                            Actions
+                        </th>
+                    </tr>
+                    {% for l in leaves %}
+                        <tr>
+                            <td>
+                                {{ l[1] }}
+                            </td>
+                            <td>
+                                {{ l[2] }}
+                            </td>
+                            <td>
+                                {{ l[3] }}
+                            </td>
+                            <td>
+                                {{ l[4] }}
+                            </td>
+                            <td>
+                                {{ l[5] or "-" }}
+                            </td>
+                            <td>
+                                <span class="badge {{ l[6] }}">
+                                    {{ l[6] }}
+                                </span>
+                            </td>
+                            <td>
+                                {{ l[7] or "-" }}
+                            </td>
+                            <td>
+                                {% if l[6] == "pending" %}
+                                    <form method="POST" action="/admin/hr/leaves/{{ l[0] }}/decide" style="display:inline;">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <input type="hidden" name="decision" value="approved">
+                                        <button class="btn success">
+                                            Approve
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="/admin/hr/leaves/{{ l[0] }}/decide" style="display:inline;">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <input type="hidden" name="decision" value="rejected">
+                                        <button class="btn danger">
+                                            Reject
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No leave requests.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

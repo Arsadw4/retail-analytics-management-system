@@ -1,0 +1,139 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Suppliers
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/module_common.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="ra-module">
+        <div class="ra-page-head">
+            <div>
+                <div class="ra-breadcrumb">
+                    Dashboard / Procurement / Suppliers
+                </div>
+                <h1>
+                    Supplier Management
+                </h1>
+                <p>
+                    Manage suppliers, procurement relationships and outstanding balances.
+                </p>
+            </div>
+            <div class="ra-head-actions">
+                <a href="/admin/suppliers/performance" class="ra-btn secondary">
+                    Performance
+                </a>
+                <a href="/admin/purchase-orders" class="ra-btn secondary">
+                    Purchase Orders
+                </a>
+                <a href="/admin/grn" class="ra-btn secondary">
+                    GRN
+                </a>
+                <a href="/admin/add-supplier" class="ra-btn">
+                    ＋ Add Supplier
+                </a>
+            </div>
+        </div>
+        <div class="ra-card">
+            <form method="GET" class="ra-filter-row">
+                <input class="ra-input" name="q" value="{{ query or '' }}" placeholder="Search suppliers by name, contact or phone">
+                <button class="ra-btn" type="submit">
+                    Search
+                </button>
+                <div class="ra-report-actions">
+                    <a class="ra-export" href="/admin/suppliers/export/csv">
+                        CSV
+                    </a>
+                    <a class="ra-export" href="/admin/suppliers/export/excel">
+                        Excel
+                    </a>
+                    <a class="ra-export" href="/admin/suppliers/export/pdf">
+                        PDF
+                    </a>
+                </div>
+            </form>
+            <div class="ra-table-wrap">
+                <table class="ra-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Supplier
+                            </th>
+                            <th>
+                                Contact
+                            </th>
+                            <th>
+                                Phone
+                            </th>
+                            <th>
+                                Outstanding
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                            <th>
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in suppliers %}
+                            <tr>
+                                <td>
+                                    <div class="ra-person">
+                                        <div class="ra-avatar-lg">
+                                            {{ (s[1] or 'S')[0]|upper }}
+                                        </div>
+                                        <div>
+                                            <strong>
+                                                {{ s[1] }}
+                                            </strong>
+                                            <small>
+                                                Supplier #{{ s[0] }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    {{ s[2] or '-' }}
+                                </td>
+                                <td>
+                                    {{ s[3] or '-' }}
+                                </td>
+                                <td class="ra-money">
+                                    ₹{{ '%.2f'|format(s[7]) }}
+                                </td>
+                                <td>
+                                    <span class="ra-status {{ 'ok' if s[8] else 'out' }}">
+                                        {{ 'Active' if s[8] else 'Inactive' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="ra-action-menu">
+                                        <a href="/admin/suppliers/{{ s[0] }}/profile">
+                                            Profile
+                                        </a>
+                                        <a href="/admin/edit-supplier/{{ s[0] }}">
+                                            Edit
+                                        </a>
+                                        <a href="#" data-confirm-delete="/admin/delete-supplier/{{ s[0] }}" data-confirm-message="Delete this supplier?">
+                                            Delete
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6">
+                                    <div class="ra-empty-small">
+                                        No suppliers found.
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

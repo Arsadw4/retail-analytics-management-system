@@ -1,0 +1,78 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Auto Reorder Suggestions
+                </h1>
+                <div>
+                    <a href="/admin/inventory" class="btn secondary">
+                        Back
+                    </a>
+                    <a href="#" data-print="1" class="btn">
+                        Print
+                    </a>
+                </div>
+            </div>
+            {% if suggestions %}
+                <table>
+                    <tr>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Current Stock
+                        </th>
+                        <th>
+                            Minimum
+                        </th>
+                        <th>
+                            Maximum
+                        </th>
+                        <th>
+                            Suggested Reorder Qty
+                        </th>
+                        <th>
+                            Supplier
+                        </th>
+                        <th>
+                            Supplier Contact
+                        </th>
+                    </tr>
+                    {% for s in suggestions %}
+                        <tr>
+                            <td>
+                                {{ s[1] }}
+                            </td>
+                            <td>
+                                {{ s[2] }}
+                            </td>
+                            <td>
+                                {{ s[3] }}
+                            </td>
+                            <td>
+                                {{ s[4] or "-" }}
+                            </td>
+                            <td>
+                                <span class="badge low">
+                                    {{ s[5] }}
+                                </span>
+                            </td>
+                            <td>
+                                {{ s[6] or "-" }}
+                            </td>
+                            <td>
+                                {{ s[7] or "-" }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    Nothing needs reordering right now.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

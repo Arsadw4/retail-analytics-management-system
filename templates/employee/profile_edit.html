@@ -1,0 +1,300 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Edit Profile
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="profile-page">
+        <div class="ra-page-head">
+            <div>
+                <div class="ra-breadcrumb">
+                    Dashboard / My Profile / Edit
+                </div>
+                <h1>
+                    Edit Profile
+                </h1>
+                <p>
+                    Update personal information, contact details and quick information. All editable values are saved to the database.
+                </p>
+            </div>
+            <div class="ra-head-actions">
+                <a class="ra-btn secondary" href="/employee/profile">
+                    Cancel
+                </a>
+            </div>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="ra-flashes">
+                    {% for category,message in messages %}
+                        <div class="ra-flash">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        <article class="profile-edit-card">
+            <div class="profile-edit-photo-row">
+                <div class="profile-photo-preview">
+                    {% if profile_photo %}
+                        <img src="{{ url_for('static', filename='uploads/profiles/' ~ profile_photo) }}?v={{ profile_photo_version }}" alt="Profile photo">
+                    {% else %}
+                        {{ (user[1] or 'U')[0]|upper }}
+                    {% endif %}
+                </div>
+                <div>
+                    <h2>
+                        Profile Photo
+                    </h2>
+                    <p class="profile-note">
+                        Change your profile photo using the existing secure upload control.
+                    </p>
+                    <div class="profile-photo-actions">
+                        <form method="POST" action="/employee/profile/photo" enctype="multipart/form-data" class="profile-photo-form">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="file" name="profile_photo" accept="image/png,image/jpeg,image/webp" required>
+                            <button class="ra-btn" type="submit">
+                                Change Photo
+                            </button>
+                        </form>
+                        {% if profile_photo %}
+                            <form method="POST" action="/employee/profile/photo/remove" class="profile-photo-remove-form">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button class="ra-btn secondary" type="submit">
+                                    Remove Photo
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <form method="POST" action="/employee/profile/edit">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <section class="profile-edit-section">
+                    <div class="profile-edit-section-head">
+                        <div>
+                            <h2>
+                                Personal Information
+                            </h2>
+                            <p>
+                                Complete personal details stored against your account.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="profile-form-grid">
+                        <div class="profile-field">
+                            <label for="full_name">
+                                Full Name
+                            </label>
+                            <input id="full_name" name="full_name" value="{{ user[1] or '' }}" required maxlength="100">
+                        </div>
+                        <div class="profile-field">
+                            <label for="date_of_birth">
+                                Date of Birth
+                            </label>
+                            <input id="date_of_birth" type="date" name="date_of_birth" value="{{ profile_data.date_of_birth or '' }}">
+                        </div>
+                        <div class="profile-field">
+                            <label for="gender">
+                                Gender
+                            </label>
+                            <select id="gender" name="gender">
+                                <option value="">
+                                    Select
+                                </option>
+                                {% for v in ['Male','Female','Other'] %}
+                                    <option value="{{ v }}" {% if profile_data.gender == v %}selected{% endif %}>
+                                        {{ v }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="profile-field">
+                            <label for="blood_group">
+                                Blood Group
+                            </label>
+                            <select id="blood_group" name="blood_group">
+                                <option value="">
+                                    Select
+                                </option>
+                                {% for v in ['A+','A-','B+','B-','AB+','AB-','O+','O-'] %}
+                                    <option value="{{ v }}" {% if profile_data.blood_group == v %}selected{% endif %}>
+                                        {{ v }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="profile-field">
+                            <label for="father_name">
+                                Father's Name
+                            </label>
+                            <input id="father_name" name="father_name" value="{{ profile_data.father_name or '' }}" maxlength="100">
+                        </div>
+                        <div class="profile-field">
+                            <label for="marital_status">
+                                Marital Status
+                            </label>
+                            <select id="marital_status" name="marital_status">
+                                <option value="">
+                                    Select
+                                </option>
+                                {% for v in ['Single','Married','Divorced','Widowed'] %}
+                                    <option value="{{ v }}" {% if profile_data.marital_status == v %}selected{% endif %}>
+                                        {{ v }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="profile-field">
+                            <label for="nationality">
+                                Nationality
+                            </label>
+                            <input id="nationality" name="nationality" value="{{ profile_data.nationality or '' }}" maxlength="60">
+                        </div>
+                        <div class="profile-field">
+                            <label for="language">
+                                Language
+                            </label>
+                            <input id="language" name="language" value="{{ profile_data.language or '' }}" maxlength="100">
+                        </div>
+                    </div>
+                </section>
+                <section class="profile-edit-section">
+                    <div class="profile-edit-section-head">
+                        <div>
+                            <h2>
+                                Contact Details
+                            </h2>
+                            <p>
+                                Maintain the complete contact information used by the system.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="profile-form-grid">
+                        <div class="profile-field">
+                            <label for="email">
+                                Email Address
+                            </label>
+                            <input id="email" type="email" name="email" value="{{ user[2] or '' }}" required maxlength="100">
+                        </div>
+                        <div class="profile-field">
+                            <label for="phone">
+                                Phone Number
+                            </label>
+                            <input id="phone" name="phone" value="{{ profile_data.phone or '' }}" maxlength="20">
+                        </div>
+                        <div class="profile-field">
+                            <label for="alternate_phone">
+                                Alternate Phone
+                            </label>
+                            <input id="alternate_phone" name="alternate_phone" value="{{ profile_data.alternate_phone or '' }}" maxlength="20">
+                        </div>
+                        <div class="profile-field">
+                            <label for="address">
+                                Address
+                            </label>
+                            <input id="address" name="address" value="{{ profile_data.address or '' }}" maxlength="255">
+                        </div>
+                        <div class="profile-field">
+                            <label for="city">
+                                City
+                            </label>
+                            <input id="city" name="city" value="{{ profile_data.city or '' }}" maxlength="80">
+                        </div>
+                        <div class="profile-field">
+                            <label for="state">
+                                State
+                            </label>
+                            <input id="state" name="state" value="{{ profile_data.state or '' }}" maxlength="60">
+                        </div>
+                        <div class="profile-field">
+                            <label for="pin_code">
+                                PIN Code
+                            </label>
+                            <input id="pin_code" name="pin_code" value="{{ profile_data.pin_code or '' }}" maxlength="10" inputmode="numeric">
+                        </div>
+                    </div>
+                </section>
+                <section class="profile-edit-section">
+                    <div class="profile-edit-section-head">
+                        <div>
+                            <h2>
+                                Quick Information
+                            </h2>
+                            <p>
+                                Fill the profile summary shown on the My Profile page. Employee/User ID and account status remain system-controlled.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="profile-form-grid">
+                        <div class="profile-field">
+                            <label>
+                                Employee / User ID
+                            </label>
+                            <input value="{{ profile_data.quick_id }}" disabled>
+                        </div>
+                        <div class="profile-field">
+                            <label for="department_id">
+                                Department
+                            </label>
+                            <select id="department_id" name="department_id">
+                                <option value="">
+                                    Not assigned
+                                </option>
+                                {% for d in departments %}
+                                    <option value="{{ d[0] }}" {% if profile_data.department_id == d[0] %}selected{% endif %}>
+                                        {{ d[1] }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="profile-field">
+                            <label for="designation">
+                                Designation
+                            </label>
+                            <input id="designation" name="designation" value="{{ profile_data.designation or '' }}" maxlength="100">
+                        </div>
+                        <div class="profile-field">
+                            <label for="designation_id">
+                                Structured Designation
+                            </label>
+                            <select id="designation_id" name="designation_id">
+                                <option value="">
+                                    Not assigned
+                                </option>
+                                {% for d in designations %}
+                                    <option value="{{ d[0] }}" {% if profile_data.designation_id == d[0] %}selected{% endif %}>
+                                        {{ d[1] }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="profile-field">
+                            <label for="date_of_joining">
+                                Join Date
+                            </label>
+                            <input id="date_of_joining" type="date" name="date_of_joining" value="{{ profile_data.join_date or '' }}">
+                        </div>
+                        <div class="profile-field">
+                            <label>
+                                Account Status
+                            </label>
+                            <input value="{{ user[5]|title }}" disabled>
+                        </div>
+                    </div>
+                </section>
+                <div class="profile-form-actions">
+                    <a class="ra-btn secondary" href="/employee/profile">
+                        Cancel
+                    </a>
+                    <button class="ra-btn" type="submit">
+                        Save All Changes
+                    </button>
+                </div>
+            </form>
+        </article>
+    </div>
+{% endblock %}

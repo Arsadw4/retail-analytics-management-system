@@ -1,0 +1,73 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Fast &amp; Slow Moving Products
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ai_bi.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Fast &amp; Slow Moving Products (last 30 days)
+                </h1>
+                <a href="/admin/ai-dashboard" class="btn secondary">
+                    Back
+                </a>
+            </div>
+            <div class="pos-wrap">
+                <div>
+                    <h3>
+                        Fast Moving
+                    </h3>
+                    <table>
+                        <tr>
+                            <th>
+                                Product
+                            </th>
+                            <th>
+                                Units Sold
+                            </th>
+                        </tr>
+                        {% for m in data.fast_moving %}
+                            <tr>
+                                <td>
+                                    {{ m.product_name }}
+                                </td>
+                                <td>
+                                    {{ m.units_sold }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div>
+                    <h3>
+                        Slow Moving
+                    </h3>
+                    <table>
+                        <tr>
+                            <th>
+                                Product
+                            </th>
+                            <th>
+                                Units Sold
+                            </th>
+                        </tr>
+                        {% for m in data.slow_moving %}
+                            <tr>
+                                <td>
+                                    {{ m.product_name }}
+                                </td>
+                                <td>
+                                    {{ m.units_sold }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

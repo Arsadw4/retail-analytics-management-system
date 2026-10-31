@@ -1,0 +1,258 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Analytics
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_pages.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="ra-module">
+        <div class="ra-page-head">
+            <div>
+                <div class="ra-breadcrumb">
+                    Dashboard / Analytics
+                </div>
+                <h1>
+                    Business Analytics
+                </h1>
+                <p>
+                    One workspace for operational metrics, performance and business trends.
+                </p>
+            </div>
+            <div class="ra-head-actions">
+                <a class="ra-btn secondary" href="/admin/bar-chart">
+                    Bar Chart
+                </a>
+                <a class="ra-btn" href="/admin/profit-loss">
+                    Profit & Loss
+                </a>
+            </div>
+        </div>
+        <div class="ra4-grid4">
+            <div class="ra4-metric">
+                <small>
+                    Completed Sales
+                </small>
+                <strong>
+                    {{ completed_sales }}
+                </strong>
+                <span>
+                    Successful transactions
+                </span>
+            </div>
+            <div class="ra4-metric">
+                <small>
+                    Revenue
+                </small>
+                <strong>
+                    ₹{{ '%.0f'|format(completed_revenue) }}
+                </strong>
+                <span>
+                    Completed sales only
+                </span>
+            </div>
+            <div class="ra4-metric">
+                <small>
+                    Profit
+                </small>
+                <strong>
+                    ₹{{ '%.0f'|format(completed_profit) }}
+                </strong>
+                <span>
+                    Completed sales only
+                </span>
+            </div>
+            <div class="ra4-metric">
+                <small>
+                    Inventory Value
+                </small>
+                <strong>
+                    ₹{{ '%.0f'|format(inventory_value) }}
+                </strong>
+                <span>
+                    Current stock value
+                </span>
+            </div>
+        </div>
+        <div class="ra4-grid4">
+            <div class="ra4-metric">
+                <small>
+                    Total Products
+                </small>
+                <strong>
+                    {{ total_products }}
+                </strong>
+                <span>
+                    Catalogue size
+                </span>
+            </div>
+            <div class="ra4-metric">
+                <small>
+                    Total Customers
+                </small>
+                <strong>
+                    {{ total_customers }}
+                </strong>
+                <span>
+                    Customer base
+                </span>
+            </div>
+            <div class="ra4-metric">
+                <small>
+                    Inventory Units
+                </small>
+                <strong>
+                    {{ total_inventory }}
+                </strong>
+                <span>
+                    Inventory records
+                </span>
+            </div>
+            <div class="ra4-metric">
+                <small>
+                    Stock Quantity
+                </small>
+                <strong>
+                    {{ total_stock }}
+                </strong>
+                <span>
+                    Current stock
+                </span>
+            </div>
+        </div>
+        <div class="ra4-layout">
+            <div class="ra4-card">
+                <div class="ra4-card-head">
+                    <h3>
+                        Business Snapshot
+                    </h3>
+                    <small>
+                        Existing analytics engine
+                    </small>
+                </div>
+                <div class="ra4-card-body">
+                    <div class="ra4-admin-grid">
+                        <a class="ra4-admin-link" href="/admin/bar-chart">
+                            <div class="ico">
+                                ▥
+                            </div>
+                            <div>
+                                <strong>
+                                    Performance Charts
+                                </strong>
+                                <small>
+                                    Compare business metrics
+                                </small>
+                            </div>
+                        </a>
+                        <a class="ra4-admin-link" href="/admin/line-chart">
+                            <div class="ico">
+                                ↗
+                            </div>
+                            <div>
+                                <strong>
+                                    Trend Analysis
+                                </strong>
+                                <small>
+                                    Revenue and stock trends
+                                </small>
+                            </div>
+                        </a>
+                        <a class="ra4-admin-link" href="/admin/pie-chart">
+                            <div class="ico">
+                                ◔
+                            </div>
+                            <div>
+                                <strong>
+                                    Distribution
+                                </strong>
+                                <small>
+                                    Portfolio composition
+                                </small>
+                            </div>
+                        </a>
+                        <a class="ra4-admin-link" href="/admin/profit-loss">
+                            <div class="ico">
+                                ₹
+                            </div>
+                            <div>
+                                <strong>
+                                    Profit & Loss
+                                </strong>
+                                <small>
+                                    Financial performance
+                                </small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="ra4-card">
+                <div class="ra4-card-head">
+                    <h3>
+                        AI Highlights
+                    </h3>
+                    <small>
+                        Current recommendations
+                    </small>
+                </div>
+                <div class="ra4-card-body">
+                    <div class="ra4-list">
+                        <div class="ra4-list-item">
+                            <div>
+                                <strong>
+                                    Best Product
+                                </strong>
+                                <small>
+                                    Highest-performing product
+                                </small>
+                            </div>
+                            <span class="ra4-tag ok">
+                                {{ best_product }}
+                            </span>
+                        </div>
+                        <div class="ra4-list-item">
+                            <div>
+                                <strong>
+                                    Top Customer
+                                </strong>
+                                <small>
+                                    Highest-value customer
+                                </small>
+                            </div>
+                            <span class="ra4-tag">
+                                {{ top_customer }}
+                            </span>
+                        </div>
+                        <div class="ra4-list-item">
+                            <div>
+                                <strong>
+                                    Low Stock Signal
+                                </strong>
+                                <small>
+                                    Inventory attention required
+                                </small>
+                            </div>
+                            <span class="ra4-tag warn">
+                                {{ low_stock }}
+                            </span>
+                        </div>
+                        <div class="ra4-list-item">
+                            <div>
+                                <strong>
+                                    Revenue Prediction
+                                </strong>
+                                <small>
+                                    Forecast output
+                                </small>
+                            </div>
+                            <span class="ra4-tag ok">
+                                ₹{{ '%.0f'|format(revenue) }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <h1>
+                Inventory Report Dashboard
+            </h1>
+            <div class="cards">
+                <div class="card blue">
+                    <h3>
+                        Total Inventory Value
+                    </h3>
+                    <h2>
+                        ₹ {{ summary.total_value or 0 }}
+                    </h2>
+                </div>
+                <div class="card green">
+                    <h3>
+                        Total Items
+                    </h3>
+                    <h2>
+                        {{ summary.total_items or 0 }}
+                    </h2>
+                </div>
+                <div class="card orange">
+                    <h3>
+                        Total Stock
+                    </h3>
+                    <h2>
+                        {{ summary.total_stock or 0 }}
+                    </h2>
+                </div>
+                <div class="card purple">
+                    <h3>
+                        Profit Potential
+                    </h3>
+                    <h2>
+                        ₹ {{ summary.profit or 0 }}
+                    </h2>
+                </div>
+                <div class="card yellow">
+                    <h3>
+                        Low Stock
+                    </h3>
+                    <h2>
+                        {{ low_stock }}
+                    </h2>
+                </div>
+                <div class="card red">
+                    <h3>
+                        Out Of Stock
+                    </h3>
+                    <h2>
+                        {{ out_of_stock }}
+                    </h2>
+                </div>
+            </div>
+            <div class="report-table">
+                <h2>
+                    Inventory Summary
+                </h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                Product
+                            </th>
+                            <th>
+                                Stock
+                            </th>
+                            <th>
+                                Purchase Price
+                            </th>
+                            <th>
+                                Selling Price
+                            </th>
+                            <th>
+                                Stock Value
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in inventory %}
+                            <tr>
+                                <td>
+                                    {{ item[1] }}
+                                </td>
+                                <td>
+                                    {{ item[2] }}
+                                </td>
+                                <td>
+                                    ₹ {{ item[5] }}
+                                </td>
+                                <td>
+                                    ₹ {{ item[6] }}
+                                </td>
+                                <td>
+                                    ₹ {{ item[7] }}
+                                </td>
+                                <td>
+                                    {{ item[8] }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

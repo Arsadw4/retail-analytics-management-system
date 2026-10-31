@@ -1,0 +1,79 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Customer Analytics
+                </h1>
+                <a href="/admin/customers/search" class="btn secondary">
+                    Back
+                </a>
+            </div>
+            {% if customers %}
+                <table>
+                    <tr>
+                        <th>
+                            Customer
+                        </th>
+                        <th>
+                            Membership
+                        </th>
+                        <th>
+                            Loyalty
+                        </th>
+                        <th>
+                            Wallet
+                        </th>
+                        <th>
+                            Orders
+                        </th>
+                        <th>
+                            Total Spent
+                        </th>
+                        <th>
+                            Avg Order
+                        </th>
+                        <th>
+                            Last Purchase
+                        </th>
+                    </tr>
+                    {% for c in customers %}
+                        <tr>
+                            <td>
+                                <a href="/admin/customers/{{ c[0] }}/profile">
+                                    {{ c[1] }}
+                                </a>
+                            </td>
+                            <td>
+                                {{ c[2] }}
+                            </td>
+                            <td>
+                                {{ c[3] }}
+                            </td>
+                            <td>
+                                ₹{{ "%.2f"|format(c[4]) }}
+                            </td>
+                            <td>
+                                {{ c[7] }}
+                            </td>
+                            <td>
+                                ₹{{ "%.2f"|format(c[8]) }}
+                            </td>
+                            <td>
+                                ₹{{ "%.2f"|format(c[9]) }}
+                            </td>
+                            <td>
+                                {{ c[10] or "-" }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No customer data yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Goods Received Notes
+                </h1>
+                <div>
+                    <a href="/admin/suppliers" class="btn secondary">
+                        Suppliers
+                    </a>
+                    <a href="/admin/grn/add" class="btn success">
+                        + New GRN
+                    </a>
+                </div>
+            </div>
+            {% if grns %}
+                <table>
+                    <tr>
+                        <th>
+                            GRN Number
+                        </th>
+                        <th>
+                            Supplier
+                        </th>
+                        <th>
+                            PO
+                        </th>
+                        <th>
+                            Received Date
+                        </th>
+                        <th>
+                            Total
+                        </th>
+                        <th>
+                            By
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                    {% for g in grns %}
+                        <tr>
+                            <td>
+                                {{ g[1] }}
+                            </td>
+                            <td>
+                                {{ g[2] }}
+                            </td>
+                            <td>
+                                {{ g[3] or "-" }}
+                            </td>
+                            <td>
+                                {{ g[4] }}
+                            </td>
+                            <td>
+                                ₹{{ "%.2f"|format(g[5]) }}
+                            </td>
+                            <td>
+                                {{ g[6] or "-" }}
+                            </td>
+                            <td>
+                                <a href="/admin/grn/{{ g[0] }}" class="btn">
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No GRNs recorded yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

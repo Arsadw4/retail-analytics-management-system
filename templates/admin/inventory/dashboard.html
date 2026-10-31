@@ -1,0 +1,348 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_css %}
+<style>
+.inv-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}.section-card{overflow:hidden}.section-title{padding:17px 18px 11px;border-bottom:1px solid #edf2f7}.section-title h2{margin:0;font-size:13px}.section-title p{margin:4px 0 0;color:#8491a4;font-size:9px}.badge{display:inline-block;padding:4px 7px;border-radius:999px;font-size:8px;font-weight:700}.badge.low,.badge.soon{background:#fff4df;color:#c57900}.badge.expired{background:#ffe9e7;color:#db3b32}.badge.stockin{background:#e8f8ef;color:#138c57}.badge.stockout{background:#ffe9e7;color:#db3b32}.empty{padding:30px;text-align:center;color:#8996a9;font-size:10px}.movement-type{font-weight:700}
+@media(max-width:950px){.inv-grid{grid-template-columns:1fr}}
+</style>
+{% endblock %}
+{% block page_content %}
+    <section class="ra-page-head">
+        <div>
+            <div class="ra-breadcrumb">
+                Dashboard
+                <span>
+                    ›
+                </span>
+                Inventory
+            </div>
+            <h1>
+                Inventory Command Center
+            </h1>
+            <p>
+                Monitor stock health, replenishment, expiry and movements.
+            </p>
+        </div>
+        <div class="ra-head-actions">
+            <a class="ra-btn secondary" href="/admin/warehouses">
+                Warehouses
+            </a>
+            <a class="ra-btn secondary" href="/admin/inventory/scan">
+                Scan
+            </a>
+            <a class="ra-btn success" href="/admin/inventory/stock-in">
+                ＋ Stock In
+            </a>
+            <a class="ra-btn warning" href="/admin/inventory/stock-out">
+                − Stock Out
+            </a>
+        </div>
+    </section>
+    <section class="ra-kpis inventory-kpis">
+        <article class="ra-card ra-kpi">
+            <div>
+                <small>
+                    Total Items
+                </small>
+                <strong>
+                    {{ summary.total_items }}
+                </strong>
+                <span class="positive">
+                    Catalogue coverage
+                </span>
+            </div>
+            <div class="ra-kpi-icon">
+                □
+            </div>
+        </article>
+        <article class="ra-card ra-kpi">
+            <div>
+                <small>
+                    Units in Stock
+                </small>
+                <strong>
+                    {{ summary.total_stock }}
+                </strong>
+                <span class="positive">
+                    Available quantity
+                </span>
+            </div>
+            <div class="ra-kpi-icon">
+                ▤
+            </div>
+        </article>
+        <article class="ra-card ra-kpi">
+            <div>
+                <small>
+                    Stock Value
+                </small>
+                <strong>
+                    ₹{{ '%.2f'|format(summary.total_value) }}
+                </strong>
+                <span class="positive">
+                    Current valuation
+                </span>
+            </div>
+            <div class="ra-kpi-icon">
+                ₹
+            </div>
+        </article>
+        <article class="ra-card ra-kpi">
+            <div>
+                <small>
+                    Attention Needed
+                </small>
+                <strong>
+                    {{ low_stock + out_stock }}
+                </strong>
+                <span class="negative">
+                    {{ low_stock }} low · {{ out_stock }} out
+                </span>
+            </div>
+            <div class="ra-kpi-icon">
+                !
+            </div>
+        </article>
+    </section>
+    <div class="inv-grid">
+        <article class="ra-card section-card">
+            <div class="section-title">
+                <h2>
+                    Reorder Suggestions
+                </h2>
+                <p>
+                    Products that are below their configured minimum level.
+                </p>
+            </div>
+            {% if reorder_suggestions %}
+                <div class="ra-table-wrap">
+                    <table class="ra-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Product
+                                </th>
+                                <th>
+                                    Current
+                                </th>
+                                <th>
+                                    Minimum
+                                </th>
+                                <th>
+                                    Suggested
+                                </th>
+                                <th>
+                                    Supplier
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for r in reorder_suggestions %}
+                                <tr>
+                                    <td>
+                                        {{ r[1] }}
+                                    </td>
+                                    <td>
+                                        {{ r[2] }}
+                                    </td>
+                                    <td>
+                                        {{ r[3] }}
+                                    </td>
+                                    <td>
+                                        <span class="badge low">
+                                            {{ r[5] }}
+                                        </span>
+                                    </td>
+                                    <td class="muted">
+                                        {{ r[6] or '-' }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty">
+                    ✓ No products currently need reordering.
+                </div>
+            {% endif %}
+        </article>
+        <article class="ra-card section-card">
+            <div class="section-title">
+                <h2>
+                    Inventory Actions
+                </h2>
+                <p>
+                    Common stock operations.
+                </p>
+            </div>
+            <div style="padding:12px">
+                <div class="ra-action-grid">
+                    <a href="/admin/low-stock">
+                        !
+                        <span>
+                            <strong>
+                                Low Stock
+                            </strong>
+                            <small>
+                                Review alerts
+                            </small>
+                        </span>
+                    </a>
+                    <a href="/admin/inventory/reorder-suggestions">
+                        ↗
+                        <span>
+                            <strong>
+                                Reorder
+                            </strong>
+                            <small>
+                                Suggested quantities
+                            </small>
+                        </span>
+                    </a>
+                    <a href="/admin/inventory/batches">
+                        ▦
+                        <span>
+                            <strong>
+                                Batches
+                            </strong>
+                            <small>
+                                Batch tracking
+                            </small>
+                        </span>
+                    </a>
+                    <a href="/admin/inventory/expiry-report">
+                        ◷
+                        <span>
+                            <strong>
+                                Expiry
+                            </strong>
+                            <small>
+                                Upcoming expiry
+                            </small>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </article>
+    </div>
+    <div class="inv-grid" style="margin-top:14px">
+        <article class="ra-card section-card">
+            <div class="section-title">
+                <h2>
+                    Expiring Within 30 Days
+                </h2>
+                <p>
+                    Keep expiry risk visible before it becomes a loss.
+                </p>
+            </div>
+            {% if expiring_soon %}
+                <div class="ra-table-wrap">
+                    <table class="ra-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Product
+                                </th>
+                                <th>
+                                    Batch
+                                </th>
+                                <th>
+                                    Qty
+                                </th>
+                                <th>
+                                    Expiry
+                                </th>
+                                <th>
+                                    Days Left
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for b in expiring_soon %}
+                                <tr>
+                                    <td>
+                                        {{ b[2] }}
+                                    </td>
+                                    <td>
+                                        {{ b[3] }}
+                                    </td>
+                                    <td>
+                                        {{ b[4] }}
+                                    </td>
+                                    <td>
+                                        {{ b[5] }}
+                                    </td>
+                                    <td>
+                                        <span class="badge {{ 'expired' if b[6] < 0 else 'soon' }}">
+                                            {{ b[6] }} days
+                                        </span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty">
+                    ✓ No batches expiring soon.
+                </div>
+            {% endif %}
+        </article>
+        <article class="ra-card section-card">
+            <div class="section-title">
+                <h2>
+                    Recent Stock Movements
+                </h2>
+                <p>
+                    Latest inbound and outbound activity.
+                </p>
+            </div>
+            {% if recent_movements %}
+                <div class="ra-table-wrap">
+                    <table class="ra-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Product
+                                </th>
+                                <th>
+                                    Type
+                                </th>
+                                <th>
+                                    Qty
+                                </th>
+                                <th>
+                                    Date
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for m in recent_movements[:8] %}
+                                <tr>
+                                    <td>
+                                        {{ m[1] }}
+                                    </td>
+                                    <td>
+                                        <span class="badge {{ 'stockin' if m[2]=='stock_in' else 'stockout' }}">
+                                            {{ m[2] }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {{ m[3] }}
+                                    </td>
+                                    <td>
+                                        {{ m[8] }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty">
+                    No stock movements recorded yet.
+                </div>
+            {% endif %}
+        </article>
+    </div>
+{% endblock %}

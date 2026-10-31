@@ -1,0 +1,173 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Smart Recommendations
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ai_bi.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Smart Recommendations
+                </h1>
+                <a href="/admin/ai-dashboard" class="btn secondary">
+                    Back
+                </a>
+            </div>
+            <div class="pos-wrap">
+                <form method="GET" style="display:flex;gap:8px;">
+                    <select name="product_id">
+                        <option value="">
+                            -- Pick a product --
+                        </option>
+                        {% for p in products %}
+                            <option value="{{ p[0] }}" {% if selected_product==p[0] %}selected{% endif %}>
+                                {{ p[2] }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <button class="btn">
+                        Show Product Suggestions
+                    </button>
+                </form>
+                <form method="GET" style="display:flex;gap:8px;">
+                    <select name="customer_id">
+                        <option value="">
+                            -- Pick a customer --
+                        </option>
+                        {% for c in customers %}
+                            <option value="{{ c[0] }}" {% if selected_customer==c[0] %}selected{% endif %}>
+                                {{ c[1] }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <button class="btn">
+                        Show Customer Suggestions
+                    </button>
+                </form>
+            </div>
+            {% if selected_product %}
+                <h2 style="font-size:20px;margin:20px 0 10px;">
+                    Frequently Bought Together
+                </h2>
+                {% if fbt %}
+                    <table>
+                        <tr>
+                            <th>
+                                Product
+                            </th>
+                            <th>
+                                Times Bought Together
+                            </th>
+                        </tr>
+                        {% for r in fbt %}
+                            <tr>
+                                <td>
+                                    {{ r[1] }}
+                                </td>
+                                <td>
+                                    {{ r[2] }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <div class="empty-state">
+                        Not enough co-purchase data yet.
+                    </div>
+                {% endif %}
+                <h2 style="font-size:20px;margin:20px 0 10px;">
+                    Upsell Suggestions (same category, higher price)
+                </h2>
+                {% if upsell %}
+                    <table>
+                        <tr>
+                            <th>
+                                Product
+                            </th>
+                            <th>
+                                Price
+                            </th>
+                        </tr>
+                        {% for r in upsell %}
+                            <tr>
+                                <td>
+                                    {{ r[1] }}
+                                </td>
+                                <td>
+                                    ₹{{ r[2] }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <div class="empty-state">
+                        No higher-priced alternatives in this category.
+                    </div>
+                {% endif %}
+            {% endif %}
+            {% if selected_customer %}
+                <h2 style="font-size:20px;margin:20px 0 10px;">
+                    Recommended For This Customer
+                </h2>
+                {% if customer_recs %}
+                    <table>
+                        <tr>
+                            <th>
+                                Product
+                            </th>
+                            <th>
+                                Score
+                            </th>
+                        </tr>
+                        {% for r in customer_recs %}
+                            <tr>
+                                <td>
+                                    {{ r[1] }}
+                                </td>
+                                <td>
+                                    {{ r[2] }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <div class="empty-state">
+                        No recommendations available yet.
+                    </div>
+                {% endif %}
+            {% endif %}
+            <h2 style="font-size:20px;margin:20px 0 10px;">
+                Top Sellers Overall
+            </h2>
+            {% if top_sellers %}
+                <table>
+                    <tr>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Units Sold
+                        </th>
+                    </tr>
+                    {% for r in top_sellers %}
+                        <tr>
+                            <td>
+                                {{ r[1] }}
+                            </td>
+                            <td>
+                                {{ r[2] }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No sales recorded yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

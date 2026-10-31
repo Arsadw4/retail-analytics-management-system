@@ -1,0 +1,63 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Permission Management
+                </h1>
+                <a href="/admin/sessions" class="btn secondary">
+                    Sessions
+                </a>
+            </div>
+            <p style="color:#64748b;margin-bottom:15px;">
+                Governs Phase 6's own approval/HR/admin actions
+                (leave approval, salary processing, department management, etc). Core module access elsewhere
+                in the app remains role-based (see the project security documentation).
+            </p>
+            <table>
+                <tr>
+                    <th>
+                        Permission
+                    </th>
+                    {% for r in roles %}
+                        <th>
+                            {{ r }}
+                        </th>
+                    {% endfor %}
+                </tr>
+                {% for perm_key, desc in permissions %}
+                    <tr>
+                        <td>
+                            {{ perm_key }}
+                            <br>
+                            <small style="color:#94a3b8;">
+                                {{ desc }}
+                            </small>
+                        </td>
+                        {% for r in roles %}
+                            <td style="text-align:center;">
+                                <form method="POST" action="/admin/permissions/toggle">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="role" value="{{ r }}">
+                                    <input type="hidden" name="permission_key" value="{{ perm_key }}">
+                                    {% if perm_key in matrix.get(r, []) %}
+                                        <input type="hidden" name="granted" value="0">
+                                        <button class="btn success" style="padding:4px 10px;">
+                                            ✓
+                                        </button>
+                                    {% else %}
+                                        <input type="hidden" name="granted" value="1">
+                                        <button class="btn secondary" style="padding:4px 10px;">
+                                            ✗
+                                        </button>
+                                    {% endif %}
+                                </form>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}

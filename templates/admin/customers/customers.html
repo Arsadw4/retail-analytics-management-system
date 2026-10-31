@@ -1,0 +1,167 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Customers
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/module_common.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="ra-module">
+        <div class="ra-page-head">
+            <div>
+                <div class="ra-breadcrumb">
+                    Dashboard / Operations / Customers
+                </div>
+                <h1>
+                    Customer Management
+                </h1>
+                <p>
+                    Manage customer relationships, purchases and profiles.
+                </p>
+            </div>
+            <div class="ra-head-actions">
+                <a href="/admin/customers/search" class="ra-btn secondary">
+                    Search / Profiles
+                </a>
+                <a href="/admin/customers/analytics" class="ra-btn secondary">
+                    Analytics
+                </a>
+                <a href="/admin/add-customer" class="ra-btn">
+                    ＋ Add Customer
+                </a>
+            </div>
+        </div>
+        <div class="ra-stat-grid">
+            <div class="ra-card ra-stat">
+                <span class="label">
+                    Total Customers
+                </span>
+                <span class="value">
+                    {{ customers|length }}
+                </span>
+                <span class="meta">
+                    Active customer records
+                </span>
+            </div>
+            <div class="ra-card ra-stat">
+                <span class="label">
+                    Customer Profiles
+                </span>
+                <span class="value">
+                    {{ customers|length }}
+                </span>
+                <span class="meta">
+                    Ready for 360° view
+                </span>
+            </div>
+            <div class="ra-card ra-stat">
+                <span class="label">
+                    Quick Access
+                </span>
+                <span class="value">
+                    ⌕
+                </span>
+                <span class="meta">
+                    Search by name, phone or email
+                </span>
+            </div>
+            <div class="ra-card ra-stat">
+                <span class="label">
+                    CRM Analytics
+                </span>
+                <span class="value">
+                    ↗
+                </span>
+                <span class="meta">
+                    Insights and loyalty
+                </span>
+            </div>
+        </div>
+        <div class="ra-card">
+            <div class="ra-toolbar">
+                <input class="ra-input" id="customerFilter" placeholder="Search customers in this list...">
+                <span class="ra-subtle">
+                    Use Global Search for cross-module results.
+                </span>
+            </div>
+            <div class="ra-table-wrap">
+                <table class="ra-table ra-customer-table" id="customerTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                ID
+                            </th>
+                            <th>
+                                Customer
+                            </th>
+                            <th>
+                                Phone
+                            </th>
+                            <th>
+                                Email
+                            </th>
+                            <th>
+                                Address
+                            </th>
+                            <th>
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for customer in customers %}
+                            <tr>
+                                <td>
+                                    #{{ customer[0] }}
+                                </td>
+                                <td>
+                                    <div class="ra-person">
+                                        <div class="ra-avatar-lg">
+                                            {{ (customer[1] or 'C')[0]|upper }}
+                                        </div>
+                                        <div>
+                                            <strong>
+                                                {{ customer[1] }}
+                                            </strong>
+                                            <small>
+                                                Customer #{{ customer[0] }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    {{ customer[2] or '-' }}
+                                </td>
+                                <td>
+                                    {{ customer[3] or '-' }}
+                                </td>
+                                <td>
+                                    {{ customer[4] or '-' }}
+                                </td>
+                                <td>
+                                    <div class="ra-action-menu">
+                                        <a href="/admin/customers/{{ customer[0] }}/profile">
+                                            Profile
+                                        </a>
+                                        <a href="/admin/edit-customer/{{ customer[0] }}">
+                                            Edit
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6">
+                                    <div class="ra-empty-small">
+                                        No customers found.
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+<script nonce="{{ csp_nonce }}">document.getElementById('customerFilter')?.addEventListener('input',function(){const q=this.value.toLowerCase();document.querySelectorAll('#customerTable tbody tr').forEach(r=>r.style.display=r.innerText.toLowerCase().includes(q)?'':'none')});</script>
+{% endblock %}

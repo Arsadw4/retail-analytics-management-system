@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.pyo
+.git/
+.gitignore
+.env
+venv/
+.venv/
+logs/*.log
+backups/*.sql
+static/uploads/*
+!static/uploads/.gitkeep
+.DS_Store
+Thumbs.db
+*.md
+tests/
+.pytest_cache/

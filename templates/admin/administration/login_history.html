@@ -1,0 +1,67 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Login History
+                </h1>
+                <a href="/admin/activity-logs" class="btn secondary">
+                    All Activity
+                </a>
+            </div>
+            {% if history %}
+                <table>
+                    <tr>
+                        <th>
+                            User
+                        </th>
+                        <th>
+                            Email
+                        </th>
+                        <th>
+                            Event
+                        </th>
+                        <th>
+                            Details
+                        </th>
+                        <th>
+                            IP
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                    </tr>
+                    {% for h in history %}
+                        <tr>
+                            <td>
+                                {{ h[2] or "Unknown" }}
+                            </td>
+                            <td>
+                                {{ h[3] or "-" }}
+                            </td>
+                            <td>
+                                <span class="badge {{ h[4]|lower }}">
+                                    {{ h[4] }}
+                                </span>
+                            </td>
+                            <td>
+                                {{ h[5] or "-" }}
+                            </td>
+                            <td>
+                                {{ h[6] or "-" }}
+                            </td>
+                            <td>
+                                {{ h[7] }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No login history yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

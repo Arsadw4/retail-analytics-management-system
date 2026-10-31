@@ -1,0 +1,13 @@
+-- Ad-hoc queries used during development/debugging.
+-- NEVER run this file against schema.sql or in production -- it
+-- contains DELETE statements. Kept only for reference; it used to
+-- live appended at the bottom of schema.sql, which made schema.sql
+-- unsafe to execute unattended.
+
+-- SHOW TABLES;
+-- SHOW CREATE TABLE sales;
+-- DESCRIBE users;
+-- SELECT user_id, full_name, email, role FROM users;
+-- SELECT * FROM inventory WHERE current_stock <= minimum_stock;
+-- SELECT * FROM inventory WHERE current_stock = 0;
+-- SELECT * FROM inventory ORDER BY stock_value DESC;

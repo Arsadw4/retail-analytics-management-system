@@ -1,0 +1,81 @@
+*  {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+body  {
+    background:#f4f6f9;
+    padding:30px;
+}
+.container  {
+    max-width:1400px;
+    margin:auto;
+}
+h1  {
+    font-size:40px;
+    margin-bottom:30px;
+    color:#111827;
+}
+.cards  {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+    margin-bottom:30px;
+}
+.card  {
+    padding:25px;
+    border-radius:15px;
+    color:white;
+    box-shadow:0 5px 20px rgba(0,0,0,.1);
+}
+.card h3  {
+    margin-bottom:10px;
+    font-size:18px;
+}
+.card h2  {
+    font-size:32px;
+}
+.blue  {
+    background:#2563eb;
+}
+.green  {
+    background:#16a34a;
+}
+.orange  {
+    background:#f59e0b;
+}
+.purple  {
+    background:#9333ea;
+}
+.yellow  {
+    background:#eab308;
+}
+.red  {
+    background:#ef4444;
+}
+.report-table  {
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+.report-table h2  {
+    margin-bottom:20px;
+}
+table  {
+    width:100%;
+    border-collapse:collapse;
+}
+table th  {
+    background:#2563eb;
+    color:white;
+    padding:15px;
+}
+table td  {
+    padding:15px;
+    border-bottom:1px solid #e5e7eb;
+}
+table tr:hover  {
+    background:#f9fafb;
+}

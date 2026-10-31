@@ -1,0 +1,104 @@
+.product-form-page  {
+    max-width:1100px;
+    margin:0 auto
+}
+.product-form-card  {
+    background:var(--theme-surface);
+    border:1px solid var(--theme-border);
+    border-radius:13px;
+    box-shadow:var(--theme-shadow);
+    padding:20px
+}
+.product-image-upload  {
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:14px;
+    border:1px solid var(--theme-border);
+    background:var(--theme-surface-2);
+    border-radius:11px;
+    margin-bottom:17px
+}
+.product-image-preview  {
+    width:82px;
+    height:82px;
+    border-radius:11px;
+    border:1px solid var(--theme-border);
+    background:var(--theme-surface);
+    display:grid;
+    place-items:center;
+    overflow:hidden;
+    color:#1478f2;
+    font-size:25px;
+    flex:none
+}
+.product-image-preview img  {
+    width:100%;
+    height:100%;
+    object-fit:cover
+}
+.product-image-upload h2  {
+    font-size:12px;
+    margin:0 0 4px
+}
+.product-image-upload p  {
+    font-size:8px;
+    color:var(--theme-muted);
+    margin:0 0 9px
+}
+.remove-image  {
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:8px;
+    color:var(--theme-muted);
+    margin-left:8px
+}
+.product-form-grid  {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px
+}
+.product-field label  {
+    display:block;
+    font-size:9px;
+    font-weight:700;
+    color:var(--theme-muted);
+    margin-bottom:5px
+}
+.product-field label span  {
+    font-weight:400
+}
+.product-field input,.product-field select  {
+    width:100%;
+    height:40px;
+    border:1px solid var(--theme-border);
+    border-radius:8px;
+    padding:0 10px;
+    background:var(--theme-input);
+    color:var(--theme-text);
+    outline:0;
+    font-size:10px
+}
+.product-form-actions  {
+    display:flex;
+    justify-content:flex-end;
+    gap:8px;
+    margin-top:17px
+}
+
+@media(max-width:650px)  {
+    .product-image-upload  {
+        align-items:flex-start;
+        flex-direction:column
+    }
+    .product-form-grid  {
+        grid-template-columns:1fr
+    }
+    .remove-image  {
+        margin:8px 0 0
+    }
+    .product-form-actions>*  {
+        flex:1
+    }
+}

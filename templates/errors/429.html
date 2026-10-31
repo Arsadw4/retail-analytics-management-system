@@ -1,0 +1,16 @@
+{% extends "errors/_error_base.html" %}
+{% block title %}
+    Too Many Requests
+{% endblock %}
+{% block code %}
+    429
+{% endblock %}
+{% block message %}
+    Too many attempts. Please wait a few minutes and try again.
+    {% if description %}
+        <br>
+        <small>
+            {{ description }}
+        </small>
+    {% endif %}
+{% endblock %}

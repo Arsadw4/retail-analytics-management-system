@@ -1,0 +1,149 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Sales
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/module_common.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="ra-module">
+        <div class="ra-page-head">
+            <div>
+                <div class="ra-breadcrumb">
+                    Dashboard / Operations / Sales
+                </div>
+                <h1>
+                    Sales Management
+                </h1>
+                <p>
+                    Track transactions, revenue and profitability.
+                </p>
+            </div>
+            <div class="ra-head-actions">
+                <a href="/admin/billing/pos" class="ra-btn secondary">
+                    Open POS
+                </a>
+                <a href="/admin/create-sale" class="ra-btn">
+                    ＋ New Sale
+                </a>
+            </div>
+        </div>
+        <div class="ra-stat-grid">
+            <div class="ra-card ra-stat">
+                <span class="label">
+                    Transactions
+                </span>
+                <span class="value">
+                    {{ sales|length }}
+                </span>
+                <span class="meta">
+                    Recorded sales
+                </span>
+            </div>
+            <div class="ra-card ra-stat">
+                <span class="label">
+                    Revenue
+                </span>
+                <span class="value">
+                    ₹{{ '%.2f'|format(sales|sum(attribute=2)) }}
+                </span>
+                <span class="meta">
+                    Across listed transactions
+                </span>
+            </div>
+            <div class="ra-card ra-stat">
+                <span class="label">
+                    Profit
+                </span>
+                <span class="value">
+                    ₹{{ '%.2f'|format(sales|sum(attribute=3)) }}
+                </span>
+                <span class="meta">
+                    Gross profit on listed sales
+                </span>
+            </div>
+            <div class="ra-card ra-stat">
+                <span class="label">
+                    Avg. Sale
+                </span>
+                <span class="value">
+                    ₹{{ '%.2f'|format((sales|sum(attribute=2) / (sales|length)) if sales|length else 0) }}
+                </span>
+                <span class="meta">
+                    Average transaction value
+                </span>
+            </div>
+        </div>
+        <div class="ra-card">
+            <div class="ra-toolbar">
+                <input id="salesFilter" class="ra-input" placeholder="Search invoice, customer or amount...">
+                <span class="ra-subtle">
+                    {{ sales|length }} transactions
+                </span>
+            </div>
+            <div class="ra-table-wrap">
+                <table class="ra-table" id="salesTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                Sale ID
+                            </th>
+                            <th>
+                                Customer
+                            </th>
+                            <th>
+                                Total
+                            </th>
+                            <th>
+                                Profit
+                            </th>
+                            <th>
+                                Date
+                            </th>
+                            <th>
+                                Invoice
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sale in sales %}
+                            <tr>
+                                <td>
+                                    #{{ sale[0] }}
+                                </td>
+                                <td>
+                                    <strong>
+                                        {{ sale[1] }}
+                                    </strong>
+                                </td>
+                                <td class="ra-money">
+                                    ₹{{ sale[2] }}
+                                </td>
+                                <td class="ra-money">
+                                    ₹{{ sale[3] }}
+                                </td>
+                                <td>
+                                    {{ sale[4] }}
+                                </td>
+                                <td>
+                                    <a class="ra-mini" href="/admin/invoice/{{ sale[0] }}">
+                                        View Invoice
+                                    </a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6">
+                                    <div class="ra-empty-small">
+                                        No sales recorded yet.
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+<script nonce="{{ csp_nonce }}">document.getElementById('salesFilter')?.addEventListener('input',function(){const q=this.value.toLowerCase();document.querySelectorAll('#salesTable tbody tr').forEach(r=>r.style.display=r.innerText.toLowerCase().includes(q)?'':'none')});</script>
+{% endblock %}

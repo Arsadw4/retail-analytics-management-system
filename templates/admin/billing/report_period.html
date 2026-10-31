@@ -1,0 +1,64 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    {{ period }} Sales Report
+                </h1>
+                <div>
+                    <a href="/admin/billing/dashboard" class="btn secondary">
+                        Back
+                    </a>
+                    <a href="#" data-print="1" class="btn">
+                        Print
+                    </a>
+                </div>
+            </div>
+            {% if rows %}
+                <table>
+                    <tr>
+                        <th>
+                            Period
+                        </th>
+                        <th>
+                            Bills
+                        </th>
+                        <th>
+                            Revenue
+                        </th>
+                        <th>
+                            Profit
+                        </th>
+                        <th>
+                            Tax Collected
+                        </th>
+                    </tr>
+                    {% for r in rows %}
+                        <tr>
+                            <td>
+                                {{ r[1] if period == "Weekly" else r[0] }}
+                            </td>
+                            <td>
+                                {{ r[2] if period == "Weekly" else r[1] }}
+                            </td>
+                            <td>
+                                {{ "%.2f"|format(r[3] if period == "Weekly" else r[2]) }}
+                            </td>
+                            <td>
+                                {{ "%.2f"|format(r[4] if period == "Weekly" else r[3]) }}
+                            </td>
+                            <td>
+                                {{ "%.2f"|format(r[5] if period == "Weekly" else r[4]) }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No completed sales recorded yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

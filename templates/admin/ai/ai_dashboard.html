@@ -1,0 +1,267 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    AI Insights
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_pages.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="ra-module">
+        <div class="ra-page-head">
+            <div>
+                <div class="ra-breadcrumb">
+                    Dashboard / Analytics & AI / AI Insights
+                </div>
+                <h1>
+                    AI Business Intelligence
+                </h1>
+                <p>
+                    Forecast demand, understand customers and turn business signals into actions.
+                </p>
+            </div>
+            <div class="ra-head-actions">
+                <a class="ra-btn secondary" href="/admin/ai/reports/executive-summary">
+                    Executive Summary
+                </a>
+                <a class="ra-btn" href="/admin/predictions">
+                    Open Forecasting
+                </a>
+            </div>
+        </div>
+        <div class="ra4-hero">
+            <div class="ra4-hero-card">
+                <h2>
+                    AI command center
+                </h2>
+                <p>
+                    Your existing prediction, recommendation, customer intelligence and alert engines are surfaced in one decision-making workspace.
+                </p>
+                <div class="ra4-chips">
+                    <span class="ra4-chip">
+                        ✦ Revenue Forecast
+                    </span>
+                    <span class="ra4-chip">
+                        ◉ Customer Intelligence
+                    </span>
+                    <span class="ra4-chip">
+                        ⌁ Demand Forecasting
+                    </span>
+                    <span class="ra4-chip">
+                        ⚠ Smart Alerts
+                    </span>
+                </div>
+            </div>
+            <div class="ra4-card">
+                <div class="ra4-card-head">
+                    <h3>
+                        Decision Signals
+                    </h3>
+                    <small>
+                        Live from current data
+                    </small>
+                </div>
+                <div class="ra4-card-body">
+                    <div class="ra4-alert">
+                        <div>
+                            ⚠
+                        </div>
+                        <div>
+                            <b>
+                                {{ alert_count }} active business alerts
+                            </b>
+                            <small>
+                                Review stock and demand signals.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="ra4-alert" style="background:#eef8ff;border-color:#d8eaff">
+                        <div>
+                            ◉
+                        </div>
+                        <div>
+                            <b>
+                                {{ churn_count }} customers at churn risk
+                            </b>
+                            <small>
+                                Open customer intelligence to plan retention.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ra4-grid4">
+            <div class="ra4-metric">
+                <small>
+                    7-Day Revenue Forecast
+                </small>
+                <strong>
+                    ₹{{ '%.0f'|format(next_week_forecast) }}
+                </strong>
+                <span>
+                    ↗ {{ daily.trend|title }} trend
+                </span>
+            </div>
+            <div class="ra4-metric">
+                <small>
+                    Active Alerts
+                </small>
+                <strong>
+                    {{ alert_count }}
+                </strong>
+                <span>
+                    Signals requiring attention
+                </span>
+            </div>
+            <div class="ra4-metric">
+                <small>
+                    Churn Risk Customers
+                </small>
+                <strong>
+                    {{ churn_count }}
+                </strong>
+                <span>
+                    Retention opportunity
+                </span>
+            </div>
+            <div class="ra4-metric">
+                <small>
+                    Forecast Horizon
+                </small>
+                <strong>
+                    7 Days
+                </strong>
+                <span>
+                    Daily prediction engine
+                </span>
+            </div>
+        </div>
+        <div class="ra4-layout">
+            <div class="ra4-card">
+                <div class="ra4-card-head">
+                    <h3>
+                        AI Navigation
+                    </h3>
+                    <small>
+                        Explore intelligence modules
+                    </small>
+                </div>
+                <div class="ra4-card-body">
+                    <div class="ra4-admin-grid">
+                        <a class="ra4-admin-link" href="/admin/predictions">
+                            <div class="ico">
+                                ⌁
+                            </div>
+                            <div>
+                                <strong>
+                                    Forecasting
+                                </strong>
+                                <small>
+                                    Revenue & demand predictions
+                                </small>
+                            </div>
+                        </a>
+                        <a class="ra4-admin-link" href="/admin/recommendations">
+                            <div class="ico">
+                                ★
+                            </div>
+                            <div>
+                                <strong>
+                                    Recommendations
+                                </strong>
+                                <small>
+                                    Cross-sell & upsell
+                                </small>
+                            </div>
+                        </a>
+                        <a class="ra4-admin-link" href="/admin/ai/customer-segmentation">
+                            <div class="ico">
+                                ◉
+                            </div>
+                            <div>
+                                <strong>
+                                    Customer Segmentation
+                                </strong>
+                                <small>
+                                    RFM intelligence
+                                </small>
+                            </div>
+                        </a>
+                        <a class="ra4-admin-link" href="/admin/ai/churn-risk">
+                            <div class="ico">
+                                !
+                            </div>
+                            <div>
+                                <strong>
+                                    Churn Risk
+                                </strong>
+                                <small>
+                                    Retention opportunities
+                                </small>
+                            </div>
+                        </a>
+                        <a class="ra4-admin-link" href="/admin/ai/profitability">
+                            <div class="ico">
+                                ₹
+                            </div>
+                            <div>
+                                <strong>
+                                    Profitability
+                                </strong>
+                                <small>
+                                    Product profit intelligence
+                                </small>
+                            </div>
+                        </a>
+                        <a class="ra4-admin-link" href="/admin/ai/abc-analysis">
+                            <div class="ico">
+                                A
+                            </div>
+                            <div>
+                                <strong>
+                                    ABC Analysis
+                                </strong>
+                                <small>
+                                    Inventory prioritisation
+                                </small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="ra4-card">
+                <div class="ra4-card-head">
+                    <h3>
+                        Top Profitable Products
+                    </h3>
+                    <small>
+                        AI ranking
+                    </small>
+                </div>
+                <div class="ra4-card-body">
+                    <div class="ra4-list">
+                        {% for p in top_products[:5] %}
+                            <div class="ra4-list-item">
+                                <div>
+                                    <strong>
+                                        {{ p[1] }}
+                                    </strong>
+                                    <small>
+                                        Profit contribution
+                                    </small>
+                                </div>
+                                <span class="ra4-tag ok">
+                                    ₹{{ '%.0f'|format(p[3]) }}
+                                </span>
+                            </div>
+                        {% else %}
+                            <div class="ra4-empty">
+                                No profitability data available.
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Supplier Performance Analytics
+                </h1>
+                <a href="/admin/suppliers" class="btn secondary">
+                    Back
+                </a>
+            </div>
+            {% if suppliers %}
+                <table>
+                    <tr>
+                        <th>
+                            Supplier
+                        </th>
+                        <th>
+                            Outstanding
+                        </th>
+                        <th>
+                            Total POs
+                        </th>
+                        <th>
+                            Total GRNs
+                        </th>
+                        <th>
+                            Total Purchase Value
+                        </th>
+                    </tr>
+                    {% for s in suppliers %}
+                        <tr>
+                            <td>
+                                <a href="/admin/suppliers/{{ s[0] }}/profile">
+                                    {{ s[1] }}
+                                </a>
+                            </td>
+                            <td>
+                                ₹{{ "%.2f"|format(s[2]) }}
+                            </td>
+                            <td>
+                                {{ s[3] }}
+                            </td>
+                            <td>
+                                {{ s[4] }}
+                            </td>
+                            <td>
+                                ₹{{ "%.2f"|format(s[5]) }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No supplier data yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

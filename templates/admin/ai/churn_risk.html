@@ -1,0 +1,73 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Churn Risk
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ai_bi.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Customers At Churn Risk
+                </h1>
+                <a href="/admin/ai/customer-segmentation" class="btn secondary">
+                    Back
+                </a>
+            </div>
+            {% if customers %}
+                <table>
+                    <tr>
+                        <th>
+                            Customer
+                        </th>
+                        <th>
+                            Days Since Last Purchase
+                        </th>
+                        <th>
+                            Total Orders
+                        </th>
+                        <th>
+                            Lifetime Spend
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                    {% for c in customers %}
+                        <tr>
+                            <td>
+                                {{ c.customer_name }}
+                            </td>
+                            <td>
+                                {{ c.recency_days }}
+                            </td>
+                            <td>
+                                {{ c.frequency }}
+                            </td>
+                            <td>
+                                ₹{{ "%.2f"|format(c.monetary) }}
+                            </td>
+                            <td>
+                                {% if c.segment == "At Risk" %}
+                                    <span class="badge at-risk">
+                                        {{ c.segment }}
+                                    </span>
+                                {% else %}
+                                    <span class="badge lost">
+                                        {{ c.segment }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No customers currently at churn risk.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

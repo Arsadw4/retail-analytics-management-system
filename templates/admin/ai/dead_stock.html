@@ -1,0 +1,53 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Dead Stock
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ai_bi.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Dead Stock (no sales in 90 days)
+                </h1>
+                <a href="/admin/ai-dashboard" class="btn secondary">
+                    Back
+                </a>
+            </div>
+            {% if products %}
+                <table>
+                    <tr>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Stock On Hand
+                        </th>
+                        <th>
+                            Value Tied Up
+                        </th>
+                    </tr>
+                    {% for p in products %}
+                        <tr>
+                            <td>
+                                {{ p[1] }}
+                            </td>
+                            <td>
+                                {{ p[2] }}
+                            </td>
+                            <td>
+                                ₹{{ "%.2f"|format(p[3]) }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No dead stock detected.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

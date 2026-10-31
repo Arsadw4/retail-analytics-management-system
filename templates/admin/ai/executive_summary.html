@@ -1,0 +1,111 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Executive Summary
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ai_bi.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Executive Summary
+                </h1>
+                <div>
+                    <a href="/admin/ai-dashboard" class="btn secondary">
+                        Back
+                    </a>
+                    <a href="#" data-print="1" class="btn">
+                        Print
+                    </a>
+                </div>
+            </div>
+            <div class="cards">
+                <div class="card">
+                    <h2>
+                        ₹{{ "%.0f"|format(daily.forecast|sum) }}
+                    </h2>
+                    <p>
+                        7-Day Revenue Forecast
+                    </p>
+                </div>
+                <div class="card">
+                    <h2>
+                        {{ a_count }}/{{ abc_total }}
+                    </h2>
+                    <p>
+                        "A" Grade Products (top revenue drivers)
+                    </p>
+                </div>
+                <div class="card">
+                    <h2>
+                        {{ alerts|length }}
+                    </h2>
+                    <p>
+                        Active Alerts
+                    </p>
+                </div>
+                <div class="card">
+                    <h2>
+                        {{ churn|length }}
+                    </h2>
+                    <p>
+                        Customers At Churn Risk
+                    </p>
+                </div>
+                <div class="card">
+                    <h2>
+                        {{ dead_stock|length }}
+                    </h2>
+                    <p>
+                        Dead Stock Products
+                    </p>
+                </div>
+            </div>
+            <h2 style="font-size:20px;margin:20px 0 10px;">
+                Top 5 Most Profitable Products
+            </h2>
+            <table>
+                <tr>
+                    <th>
+                        Product
+                    </th>
+                    <th>
+                        Revenue
+                    </th>
+                    <th>
+                        Profit
+                    </th>
+                    <th>
+                        Margin %
+                    </th>
+                </tr>
+                {% for p in top_products %}
+                    <tr>
+                        <td>
+                            {{ p[1] }}
+                        </td>
+                        <td>
+                            ₹{{ "%.2f"|format(p[2]) }}
+                        </td>
+                        <td>
+                            ₹{{ "%.2f"|format(p[3]) }}
+                        </td>
+                        <td>
+                            {{ p[4] }}%
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <h2 style="font-size:20px;margin:20px 0 10px;">
+                Top Alerts
+            </h2>
+            {% for a in alerts[:10] %}
+                <div class="alert-row {{ a.severity }}">
+                    {{ a.message }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

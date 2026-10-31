@@ -1,0 +1,71 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Sales Returns
+                </h1>
+                <a href="/admin/billing/search" class="btn secondary">
+                    Find Invoice to Return
+                </a>
+            </div>
+            {% if returns %}
+                <table>
+                    <tr>
+                        <th>
+                            Invoice
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Qty
+                        </th>
+                        <th>
+                            Refund
+                        </th>
+                        <th>
+                            Reason
+                        </th>
+                        <th>
+                            By
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                    </tr>
+                    {% for r in returns %}
+                        <tr>
+                            <td>
+                                {{ r[1] }}
+                            </td>
+                            <td>
+                                {{ r[2] }}
+                            </td>
+                            <td>
+                                {{ r[3] }}
+                            </td>
+                            <td>
+                                {{ "%.2f"|format(r[4]) }}
+                            </td>
+                            <td>
+                                {{ r[5] or "-" }}
+                            </td>
+                            <td>
+                                {{ r[6] or "-" }}
+                            </td>
+                            <td>
+                                {{ r[7] }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No returns recorded yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

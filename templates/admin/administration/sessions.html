@@ -1,0 +1,79 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Active Sessions
+                </h1>
+                <a href="/admin/permissions" class="btn secondary">
+                    Permissions
+                </a>
+            </div>
+            <p style="color:#64748b;margin-bottom:15px;">
+                Tracks known logins for visibility. "Revoke" removes the record from
+                this list; see the project security documentation for what that does and does not do to an already-open browser tab.
+            </p>
+            {% if sessions %}
+                <table>
+                    <tr>
+                        <th>
+                            User
+                        </th>
+                        <th>
+                            Email
+                        </th>
+                        <th>
+                            IP
+                        </th>
+                        <th>
+                            Device
+                        </th>
+                        <th>
+                            Started
+                        </th>
+                        <th>
+                            Last Seen
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                    {% for s in sessions %}
+                        <tr>
+                            <td>
+                                {{ s[1] }}
+                            </td>
+                            <td>
+                                {{ s[2] }}
+                            </td>
+                            <td>
+                                {{ s[3] or "-" }}
+                            </td>
+                            <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;">
+                                {{ s[4] or "-" }}
+                            </td>
+                            <td>
+                                {{ s[5] }}
+                            </td>
+                            <td>
+                                {{ s[6] }}
+                            </td>
+                            <td>
+                                <form method="POST" action="/admin/sessions/{{ s[0] }}/revoke">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button class="btn danger">
+                                        Revoke
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No active sessions recorded.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

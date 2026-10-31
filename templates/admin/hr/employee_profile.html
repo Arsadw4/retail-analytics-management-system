@@ -1,0 +1,434 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <div style="display:flex;align-items:center;gap:12px;min-width:0;">
+                    {% if profile_photo %}
+                        <img src="{{ url_for('static', filename='uploads/profiles/' ~ profile_photo) }}?v={{ profile_photo_version }}" alt="{{ employee[1] }}" style="width:54px;height:54px;border-radius:50%;object-fit:cover;">
+                    {% else %}
+                        <div style="width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:#eaf3ff;color:#1473ff;font-weight:800;">
+                            {{ (employee[1] or 'E')[0]|upper }}
+                        </div>
+                    {% endif %}
+                    <h1>
+                        {{ employee[1] }}
+                        {% if employee[7] %}
+                            ({{ employee[7] }})
+                        {% endif %}
+                    </h1>
+                </div>
+                <div>
+                    <a href="/admin/hr/employees" class="btn secondary">
+                        Back
+                    </a>
+                    <a href="/admin/hr/employees/{{ employee[0] }}/id-card" class="btn">
+                        ID Card
+                    </a>
+                </div>
+            </div>
+            <p>
+                Email: {{ employee[2] or "-" }} | Phone: {{ employee[3] or "-" }} | Role: {{ employee[13] or "-" }}
+            </p>
+            <p>
+                Department: {{ employee[9] or "-" }} | Designation: {{ employee[10] or employee[4] or "-" }} | Joined: {{ employee[8] or "-" }} | Salary: ₹{{ employee[5] or 0 }}
+            </p>
+            <div class="ra-card" style="margin:14px 0;padding:15px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
+                <div>
+                    {% if profile_photo %}
+                        <img src="{{ url_for('static', filename='uploads/profiles/' ~ profile_photo) }}?v={{ profile_photo_version }}" alt="{{ employee[1] }}" style="width:78px;height:78px;border-radius:50%;object-fit:cover;">
+                    {% else %}
+                        <div style="width:78px;height:78px;border-radius:50%;display:grid;place-items:center;background:#eaf3ff;color:#1473ff;font-weight:800;font-size:25px;">
+                            {{ (employee[1] or 'E')[0]|upper }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div style="flex:1;min-width:220px;">
+                    <strong style="font-size:12px;display:block;">
+                        Profile Photo
+                    </strong>
+                    <span style="font-size:9px;color:var(--theme-muted);display:block;margin:4px 0 8px;">
+                        Stored against this employee's linked user account. No database schema change is used.
+                    </span>
+                    {% if session.get('role') in ('admin','super_admin') and employee[6] %}
+                        <form method="POST" action="/admin/hr/employees/{{ employee[0] }}/photo" enctype="multipart/form-data" style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;background:transparent;border:0;padding:0;box-shadow:none;">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="file" name="profile_photo" accept="image/png,image/jpeg,image/webp" required>
+                            <button class="btn success" type="submit">
+                                Upload / Change
+                            </button>
+                        </form>
+                        <form method="POST" action="/admin/hr/employees/{{ employee[0] }}/photo/remove" style="margin-top:7px;background:transparent;border:0;padding:0;box-shadow:none;">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button class="btn danger" type="submit">
+                                Remove Photo
+                            </button>
+                        </form>
+                    {% else %}
+                        <span style="font-size:9px;color:var(--theme-muted);">
+                            Photo management is available only to authorized administrators.
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            <form method="POST" action="/admin/hr/employees/{{ employee[0] }}/update-details" style="max-width:500px;margin:15px 0;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="form-group">
+                    <label>
+                        Department
+                    </label>
+                    <select name="department_id">
+                        <option value="">
+                            --
+                        </option>
+                        {% for d in departments %}
+                            <option value="{{ d[0] }}" {% if employee[11]==d[0] %}selected{% endif %}>
+                                {{ d[1] }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>
+                        Designation
+                    </label>
+                    <select name="designation_id">
+                        <option value="">
+                            --
+                        </option>
+                        {% for d in designations %}
+                            <option value="{{ d[0] }}" {% if employee[12]==d[0] %}selected{% endif %}>
+                                {{ d[1] }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>
+                        Date of Joining
+                    </label>
+                    <input type="date" name="date_of_joining" value="{{ employee[8] or '' }}">
+                </div>
+                <div class="form-group">
+                    <label>
+                        Date of Birth
+                    </label>
+                    <input type="date" name="date_of_birth" value="{{ employee[14] or '' }}">
+                </div>
+                <div class="form-group">
+                    <label>
+                        Gender
+                    </label>
+                    <input type="text" name="gender" value="{{ employee[15] or '' }}" maxlength="30">
+                </div>
+                <div class="form-group">
+                    <label>
+                        Blood Group
+                    </label>
+                    <input type="text" name="blood_group" value="{{ employee[16] or '' }}" maxlength="10">
+                </div>
+                <div class="form-group">
+                    <label>
+                        Father's Name
+                    </label>
+                    <input type="text" name="father_name" value="{{ employee[17] or '' }}" maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label>
+                        Marital Status
+                    </label>
+                    <input type="text" name="marital_status" value="{{ employee[18] or '' }}" maxlength="30">
+                </div>
+                <div class="form-group">
+                    <label>
+                        Nationality
+                    </label>
+                    <input type="text" name="nationality" value="{{ employee[19] or '' }}" maxlength="60">
+                </div>
+                <div class="form-group">
+                    <label>
+                        Language
+                    </label>
+                    <input type="text" name="language" value="{{ employee[20] or '' }}" maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label>
+                        Alternate Phone
+                    </label>
+                    <input type="text" name="alternate_phone" value="{{ employee[21] or '' }}" maxlength="20">
+                </div>
+                <div class="form-group">
+                    <label>
+                        Address
+                    </label>
+                    <input type="text" name="address" value="{{ employee[22] or '' }}" maxlength="255">
+                </div>
+                <div class="form-group">
+                    <label>
+                        City
+                    </label>
+                    <input type="text" name="city" value="{{ employee[23] or '' }}" maxlength="80">
+                </div>
+                <div class="form-group">
+                    <label>
+                        State
+                    </label>
+                    <input type="text" name="state" value="{{ employee[24] or '' }}" maxlength="60">
+                </div>
+                <div class="form-group">
+                    <label>
+                        PIN Code
+                    </label>
+                    <input type="text" name="pin_code" value="{{ employee[25] or '' }}" maxlength="10">
+                </div>
+                <button class="btn success">
+                    Update HR Details
+                </button>
+            </form>
+            <h2 style="font-size:20px;margin:20px 0 10px;">
+                Attendance (last 60 days)
+            </h2>
+            {% if attendance %}
+                <table>
+                    <tr>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Check In
+                        </th>
+                        <th>
+                            Check Out
+                        </th>
+                    </tr>
+                    {% for a in attendance %}
+                        <tr>
+                            <td>
+                                {{ a[0] }}
+                            </td>
+                            <td>
+                                {{ a[1] }}
+                            </td>
+                            <td>
+                                {{ a[2] or "-" }}
+                            </td>
+                            <td>
+                                {{ a[3] or "-" }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No attendance recorded.
+                </div>
+            {% endif %}
+            <h2 style="font-size:20px;margin:20px 0 10px;">
+                Leave Requests
+            </h2>
+            {% if leaves %}
+                <table>
+                    <tr>
+                        <th>
+                            Type
+                        </th>
+                        <th>
+                            From
+                        </th>
+                        <th>
+                            To
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                    {% for l in leaves %}
+                        <tr>
+                            <td>
+                                {{ l[1] }}
+                            </td>
+                            <td>
+                                {{ l[2] }}
+                            </td>
+                            <td>
+                                {{ l[3] }}
+                            </td>
+                            <td>
+                                <span class="badge {{ l[5] }}">
+                                    {{ l[5] }}
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No leave requests.
+                </div>
+            {% endif %}
+            <h2 style="font-size:20px;margin:20px 0 10px;">
+                Salary History
+            </h2>
+            {% if salary_history %}
+                <table>
+                    <tr>
+                        <th>
+                            Month
+                        </th>
+                        <th>
+                            Basic
+                        </th>
+                        <th>
+                            Allowances
+                        </th>
+                        <th>
+                            Deductions
+                        </th>
+                        <th>
+                            Net
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                    {% for s in salary_history %}
+                        <tr>
+                            <td>
+                                {{ s[1] }}
+                            </td>
+                            <td>
+                                {{ s[2] }}
+                            </td>
+                            <td>
+                                {{ s[3] }}
+                            </td>
+                            <td>
+                                {{ s[4] }}
+                            </td>
+                            <td>
+                                ₹{{ s[5] }}
+                            </td>
+                            <td>
+                                <span class="badge {{ s[6] }}">
+                                    {{ s[6] }}
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No salary records.
+                </div>
+            {% endif %}
+            <h2 style="font-size:20px;margin:20px 0 10px;">
+                Performance Reviews
+            </h2>
+            <form method="POST" action="/admin/hr/employees/{{ employee[0] }}/review" style="display:flex;gap:8px;margin-bottom:10px;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="text" name="review_period" placeholder="Period e.g. Q3-2026" required>
+                <input type="number" step="0.1" min="1" max="5" name="rating" placeholder="Rating 1-5" required>
+                <input type="text" name="remarks" placeholder="Remarks">
+                <button class="btn success">
+                    Add Review
+                </button>
+            </form>
+            {% if performance %}
+                <table>
+                    <tr>
+                        <th>
+                            Period
+                        </th>
+                        <th>
+                            Rating
+                        </th>
+                        <th>
+                            Remarks
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                    </tr>
+                    {% for p in performance %}
+                        <tr>
+                            <td>
+                                {{ p[1] }}
+                            </td>
+                            <td>
+                                {{ p[2] }}/5
+                            </td>
+                            <td>
+                                {{ p[3] or "-" }}
+                            </td>
+                            <td>
+                                {{ p[4] }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No reviews yet.
+                </div>
+            {% endif %}
+            <h2 style="font-size:20px;margin:20px 0 10px;">
+                Documents
+            </h2>
+            <form method="POST" action="/admin/hr/employees/{{ employee[0] }}/documents" enctype="multipart/form-data" style="display:flex;gap:8px;margin-bottom:10px;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="text" name="document_type" placeholder="Type e.g. ID Proof" required>
+                <input type="file" name="document" required>
+                <button class="btn success">
+                    Upload
+                </button>
+            </form>
+            {% if documents %}
+                <table>
+                    <tr>
+                        <th>
+                            Type
+                        </th>
+                        <th>
+                            File
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                    {% for doc in documents %}
+                        <tr>
+                            <td>
+                                {{ doc[1] }}
+                            </td>
+                            <td>
+                                <a href="/static/uploads/employee_docs/{{ doc[2] }}" target="_blank">
+                                    View
+                                </a>
+                            </td>
+                            <td>
+                                {{ doc[4] }}
+                            </td>
+                            <td>
+                                <form method="POST" action="/admin/hr/documents/{{ doc[0] }}/delete">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button class="btn danger">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No documents uploaded.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

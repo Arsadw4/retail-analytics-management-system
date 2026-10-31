@@ -1,0 +1,77 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Edit User
+                </h1>
+                <a href="/admin/users" class="back-btn">
+                    ← Back
+                </a>
+            </div>
+            <form method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="form-group">
+                    <label>
+                        Full Name
+                    </label>
+                    <input type="text"
+                   name="full_name"
+                   value="{{ user[1] }}"
+                   required>
+                </div>
+                <div class="form-group">
+                    <label>
+                        Email
+                    </label>
+                    <input type="email"
+                   name="email"
+                   value="{{ user[2] }}"
+                   required>
+                </div>
+                <div class="form-group">
+                    <label>
+                        Role
+                    </label>
+                    <select name="role">
+                        {% if session.get('role') == 'super_admin' %}
+                            <option value="super_admin" {{ 'selected' if user[4] == 'super_admin' else '' }}>Super Admin</option>
+                        {% endif %}
+                        <option value="admin" {{ 'selected' if user[4] == 'admin' else '' }}>
+                            Admin
+                        </option>
+                        <option value="manager" {{ 'selected' if user[4] == 'manager' else '' }}>
+                            Manager
+                        </option>
+                        <option value="cashier" {{ 'selected' if user[4] == 'cashier' else '' }}>
+                            Cashier
+                        </option>
+                        <option value="inventory_manager" {{ 'selected' if user[4] == 'inventory_manager' else '' }}>
+                            Inventory Manager
+                        </option>
+                        <option value="hr" {{ 'selected' if user[4] == 'hr' else '' }}>
+                            HR
+                        </option>
+                        <option value="accountant" {{ 'selected' if user[4] == 'accountant' else '' }}>
+                            Accountant
+                        </option>
+                        <option value="employee" {{ 'selected' if user[4] == 'employee' else '' }}>
+                            Employee
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="status">Account status</label>
+                    <select id="status" name="status" required>
+                        <option value="active" {{ 'selected' if user[5] == 'active' else '' }}>Active</option>
+                        <option value="inactive" {{ 'selected' if user[5] == 'inactive' else '' }}>Inactive</option>
+                    </select>
+                </div>
+                <button class="btn">
+                    Update User
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

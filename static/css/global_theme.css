@@ -1,0 +1,467 @@
+/* Global application theme layer. Loaded after page-specific styles so every
+   module inherits the same light/dark surface, text, control and overlay tokens. */
+:root  {
+    --theme-bg:#f4f7fb;
+    --theme-surface:#fff;
+    --theme-surface-2:#f8fafd;
+    --theme-text:#10213f;
+    --theme-muted:#7b8aa0;
+    --theme-border:#e1e9f3;
+    --theme-input:#fff;
+    --theme-hover:#f1f6fc;
+    --theme-shadow:0 5px 18px rgba(20,52,88,.035);
+    --theme-danger-bg:#fff3f3;
+}
+body  {
+    background:var(--theme-bg);
+    color:var(--theme-text);
+    padding:0
+}
+input,select,textarea,button  {
+    font:inherit
+}
+.ra-card,.ra4-card,.ra4-metric,.ra4-admin-link,.ra4-mini,.panel,.kpi-card,.ra-quick-card,
+.legacy-page form:not(.inline-form),.legacy-page table,.form-container,.container,.table-box,.card,.form-box,
+.reset-form,.profile-card,.profile-info-card,.profile-photo-card,.profile-edit-card  {
+    background:var(--theme-surface);
+    color:var(--theme-text)
+}
+.ra-table th,.legacy-page th  {
+    background:var(--theme-surface-2);
+    color:var(--theme-muted);
+    border-color:var(--theme-border)
+}
+.ra-table td,.legacy-page td  {
+    color:var(--theme-text);
+    border-color:var(--theme-border)
+}
+.ra-input,.ra-select,.legacy-page input,.legacy-page select,.legacy-page textarea,
+.reset-form input,.profile-edit-card input,.profile-edit-card select  {
+    background:var(--theme-input);
+    color:var(--theme-text);
+    border-color:var(--theme-border)
+}
+.ra-input::placeholder,.legacy-page input::placeholder,.legacy-page textarea::placeholder  {
+    color:var(--theme-muted)
+}
+.ra-toolbar,.ra4-card-head,.ra4-tabs,.panel-header,.health-item,.action-list a  {
+    border-color:var(--theme-border)
+}
+.ra-btn.secondary,.ra-mini,.ra-action-menu a  {
+    background:var(--theme-surface);
+    color:var(--theme-text);
+    border-color:var(--theme-border)
+}
+.ra-btn.secondary:hover,.ra-mini:hover,.ra-action-menu a:hover  {
+    background:var(--theme-hover)
+}
+.ra-topbar  {
+    background:var(--theme-bg);
+    border-color:var(--theme-border)
+}
+.ra-search,.ra-icon-btn,.ra-notify-menu,.ra-profile-menu  {
+    background:var(--theme-surface);
+    border-color:var(--theme-border);
+    color:var(--theme-text)
+}
+.ra-search input  {
+    background:transparent;
+    color:var(--theme-text)
+}
+.ra-search kbd  {
+    background:var(--theme-surface-2);
+    border-color:var(--theme-border);
+    color:var(--theme-muted)
+}
+.ra-search-results  {
+    background:var(--theme-surface);
+    border-color:var(--theme-border)
+}
+.ra-result:hover,.ra-profile-menu-links a:hover,.ra-notify-item:hover  {
+    background:var(--theme-hover)
+}
+.ra-result-main strong,.ra-profile-menu-links strong,.ra-notify-item strong  {
+    color:var(--theme-text)
+}
+.ra-result-main small,.ra-profile-menu-links small,.ra-notify-item small  {
+    color:var(--theme-muted)
+}
+.ra-flash  {
+    background:#eaf3ff;
+    color:#1558a8
+}
+body.dark-theme  {
+    --theme-bg:#091321;
+    --theme-surface:#111d31;
+    --theme-surface-2:#17263b;
+    --theme-text:#e8eef8;
+    --theme-muted:#94a6bd;
+    --theme-border:#2b3c54;
+    --theme-input:#0f1b2d;
+    --theme-hover:#16263d;
+    --theme-shadow:0 8px 24px rgba(0,0,0,.22);
+    --theme-danger-bg:#351d24;
+}
+body.dark-theme .ra-main  {
+    background:var(--theme-bg)
+}
+body.dark-theme .ra-topbar  {
+    background:rgba(9,19,33,.94)
+}
+body.dark-theme .ra-icon-btn  {
+    color:#c5d2e1
+}
+body.dark-theme .ra-page-head h1,body.dark-theme .ra-page-head p,body.dark-theme .ra-breadcrumb,
+body.dark-theme .legacy-page .header h1,body.dark-theme .legacy-page .header h2,
+body.dark-theme .legacy-page h1,body.dark-theme .legacy-page h2,body.dark-theme .legacy-page h3,
+body.dark-theme .legacy-page label  {
+    color:var(--theme-text)
+}
+body.dark-theme .legacy-page td,.dark-theme .legacy-page td  {
+    color:#d3deeb
+}
+body.dark-theme .legacy-page tbody tr:hover,body.dark-theme .ra-table tbody tr:hover td  {
+    background:var(--theme-hover)
+}
+body.dark-theme .ra4-list-item,body.dark-theme .module-grid a,body.dark-theme .ra4-admin-link,
+body.dark-theme .ra4-mini,body.dark-theme .modal-actions a,body.dark-theme .action-list a  {
+    background:#0f1b2d;
+    border-color:var(--theme-border);
+    color:var(--theme-text)
+}
+body.dark-theme .ra4-metric span,body.dark-theme .ra4-card-head small,body.dark-theme .module-grid small,
+body.dark-theme .ra4-admin-link small,body.dark-theme .ra4-mini small,.ra-subtle  {
+    color:var(--theme-muted)
+}
+body.dark-theme .ra-flash  {
+    background:#172f4b;
+    color:#a9cdfc
+}
+body.dark-theme .ra-quick-card,.dark-theme .quick-modal-card  {
+    background:var(--theme-surface);
+    color:var(--theme-text)
+}
+body.dark-theme .ra-modal-close,.dark-theme .modal-close  {
+    background:#1b2a40;
+    color:#dbe6f3
+}
+body.dark-theme .ra-action-grid a  {
+    background:#0f1b2d;
+    border-color:var(--theme-border)
+}
+body.dark-theme .legacy-page .btn.secondary  {
+    background:#111d31;
+    color:#d7e2ef;
+    border-color:#2b3c54
+}
+body.dark-theme .legacy-page .btn  {
+    color:#fff
+}
+body.dark-theme .ra4-progress  {
+    background:#1d2d42
+}
+body.dark-theme .ra4-tabs a  {
+    color:#a8b8cb
+}
+body.dark-theme .ra4-tabs a.active  {
+    background:#173052;
+    color:#8ebcff
+}
+body.dark-theme .ra-status.ok,.dark-theme .ra4-status  {
+    background:#123426;
+    color:#78d8a7
+}
+body.dark-theme .ra-status.low  {
+    background:#3a2e13;
+    color:#f3c978
+}
+body.dark-theme .ra-status.out  {
+    background:#3a1f20;
+    color:#ff9e98
+}
+body.dark-theme .reset-alert  {
+    background:#332914;
+    color:#f3c978;
+    border-color:#5a4720
+}
+
+@media(max-width:1050px)  {
+    .ra-page  {
+        padding-left:16px;
+        padding-right:16px
+    }
+}
+body.dark-theme .ra-panel,body.dark-theme .ra-product-card,body.dark-theme .ra-profile-stat,body.dark-theme .ra-report-card,
+body.dark-theme .ra-export,body.dark-theme .ra-note,body.dark-theme .ra-pill,body.dark-theme .ra-cart,
+body.dark-theme .ra-bar-chart,body.dark-theme .invoice-a4,body.dark-theme .invoice-58,body.dark-theme .invoice-80  {
+    background:var(--theme-surface);
+    border-color:var(--theme-border);
+    color:var(--theme-text)
+}
+body.dark-theme .ra-panel-head,body.dark-theme .ra-profile-stat,body.dark-theme .ra-filter-row  {
+    border-color:var(--theme-border)
+}
+body.dark-theme .ra-panel-head,body.dark-theme .ra-tabs  {
+    border-color:var(--theme-border)
+}
+body.dark-theme .ra-tab,body.dark-theme .ra-profile-stat small,body.dark-theme .ra-report-card small,body.dark-theme .ra-bar-label  {
+    color:var(--theme-muted)
+}
+body.dark-theme .ra-tab.active  {
+    background:#173052;
+    color:#8ebcff
+}
+.dark-theme .ra-pill  {
+    color:#c5d2e1
+}
+.dark-theme .ra-pill.active  {
+    background:#173052;
+    color:#8ebcff;
+    border-color:#4b8bd6
+}
+body.dark-theme .ra-cart-item,body.dark-theme .ra-total.grand  {
+    border-color:var(--theme-border)
+}
+body.dark-theme .ra-product-card:hover,body.dark-theme .ra-export:hover  {
+    background:var(--theme-hover)
+}
+body.dark-theme .ra-subtle  {
+    color:var(--theme-muted)
+}
+body.dark-theme .ra4-list-item,body.dark-theme .ra4-alert,body.dark-theme .ra4-mini  {
+    border-color:var(--theme-border)
+}
+body.dark-theme .ra4-list-item  {
+    background:#0f1b2d
+}
+.dark-theme .ra4-alert  {
+    background:#302814
+}
+.dark-theme .ra4-mini  {
+    background:#0f1b2d
+}
+body.dark-theme .ra-table  {
+    background:#111d31
+}
+body.dark-theme .ra-table th  {
+    background:#17263b;
+    color:#a9bad0;
+    border-color:#2b3c54
+}
+body.dark-theme .ra-table td  {
+    background:#111d31;
+    color:#c5d2e1;
+    border-color:#26374d
+}
+body.dark-theme .ra-table tbody tr:hover td  {
+    background:#16263d
+}
+body.dark-theme .ra-action-menu a  {
+    background:#0f1b2d;
+    color:#c5d2e1;
+    border-color:#2b3c54
+}
+body.dark-theme .ra-action-menu a:hover  {
+    background:#1a2f49;
+    color:#fff;
+    border-color:#4b8bd6
+}
+body.dark-theme .ra-person strong  {
+    color:#e8eef8
+}
+body.dark-theme .ra-person small  {
+    color:#94a6bd
+}
+body.dark-theme .ra-badge  {
+    background:#172a42;
+    color:#8ebcff
+}
+body.dark-theme .reset-subtitle,body.dark-theme .reset-help  {
+    color:#94a6bd
+}
+body.dark-theme .reset-form  {
+    background:#111d31;
+    border-color:#2b3c54
+}
+body.dark-theme .reset-form label  {
+    color:#a9bad0
+}
+body.dark-theme .reset-form input  {
+    background:#0f1b2d;
+    border-color:#2b3c54;
+    color:#e8eef8
+}
+body.dark-theme .reset-alert  {
+    background:#332914;
+    color:#f3c978;
+    border-color:#5a4720
+}
+body.dark-theme .auth-theme-toggle  {
+    background:#111d31;
+    color:#e8eef8;
+    border-color:#2b3c54
+}
+body.dark-theme .login-page  {
+    background:#091321;
+    color:#e8eef8
+}
+body.dark-theme .login-panel,body.dark-theme .login-card,body.dark-theme .login-container  {
+    background:#111d31;
+    color:#e8eef8
+}
+body.dark-theme .login-card  {
+    border-color:#2b3c54
+}
+body.dark-theme .login-subtitle,body.dark-theme .panel-topline,body.dark-theme .panel-footer,body.dark-theme .subtitle  {
+    color:#94a6bd
+}
+body.dark-theme .input-wrap  {
+    background:#0f1b2d;
+    border-color:#2b3c54
+}
+body.dark-theme .input-wrap input  {
+    color:#e8eef8
+}
+body.dark-theme .input-wrap input::placeholder  {
+    color:#73869e
+}
+body.dark-theme .form-options a,body.dark-theme .links a  {
+    color:#8ebcff
+}
+body.dark-theme .forgot-card  {
+    background:#111d31;
+    color:#e8eef8;
+    border-color:#2b3c54
+}
+body.dark-theme .forgot-card p  {
+    color:#94a6bd
+}
+body.dark-theme .forgot-card input  {
+    background:#0f1b2d;
+    color:#e8eef8;
+    border-color:#2b3c54
+}
+body.dark-theme .profile-role  {
+    background:#173052;
+    color:#8ebcff
+}
+body.dark-theme .profile-section h2 span  {
+    background:#173052;
+    color:#8ebcff
+}
+body.dark-theme .profile-tab.active  {
+    background:#173052;
+    color:#8ebcff
+}
+.legacy-page .btn  {
+    border:0;
+    border-radius:8px;
+    padding:10px 14px;
+    font-size:10px;
+    font-weight:700;
+    cursor:pointer;
+    display:inline-block;
+    text-decoration:none;
+    transition:background .16s,border-color .16s,transform .16s
+}
+.legacy-page .btn:hover  {
+    transform:translateY(-1px)
+}
+.legacy-page .form-control,.legacy-page input,.legacy-page select,.legacy-page textarea  {
+    font-family:"Segoe UI",Arial,sans-serif
+}
+/* Pre-paint theme variables: the login/base templates set html[data-theme]
+   before body scripts execute, so navigation does not flash the wrong theme. */
+html[data-theme="dark"] body  {
+    --theme-bg:#091321;
+    --theme-surface:#111d31;
+    --theme-surface-2:#17263b;
+    --theme-text:#e8eef8;
+    --theme-muted:#94a6bd;
+    --theme-border:#2b3c54;
+    --theme-input:#0f1b2d;
+    --theme-hover:#16263d;
+    --theme-shadow:0 8px 24px rgba(0,0,0,.22);
+    --theme-danger-bg:#351d24;
+    --ra-bg:#091321;
+    --ra-text:#e8eef8;
+    --ra-line:#2b3c54;
+    --ra-white:#111d31;
+    background:var(--theme-bg);
+    color:var(--theme-text);
+}
+html[data-theme="dark"] .ra-main  {
+    background:var(--theme-bg)
+}
+html[data-theme="dark"] .ra-topbar  {
+    background:rgba(9,19,33,.94)
+}
+html[data-theme="dark"] .error-message  {
+    color:var(--theme-muted)
+}
+.auth-theme-toggle  {
+    position:fixed;
+    right:22px;
+    top:18px;
+    width:42px;
+    height:42px;
+    border:1px solid var(--theme-border,#d8e3f1);
+    border-radius:12px;
+    background:var(--theme-surface,#fff);
+    color:var(--theme-text,#10213f);
+    z-index:200;
+    cursor:pointer;
+    box-shadow:0 8px 24px rgba(17,47,83,.08)
+}
+/* Unified internal application palette. Login styles remain untouched. */
+body  {
+    background:var(--theme-bg);
+    color:var(--theme-text)
+}
+body.dark-theme .ra-theme-switch:before  {
+    background:#173052
+}
+body.dark-theme .ra-profile-menu-foot a:hover  {
+    background:#2d1b20
+}
+body.dark-theme .ra-profile-menu-links a>span,body.dark-theme .ra-profile-menu-theme>span  {
+    background:#173052;
+    color:#8ebcff
+}
+body.dark-theme .ra-flash  {
+    background:#173052;
+    color:#b7d5ff
+}
+/* Final reference palette overrides for the modern dashboard components. */
+body.dark-theme .dashboard-page .ra-kpi-icon.sales  {
+    background:#173052;
+    color:#8ebcff
+}
+body.dark-theme .dashboard-page .ra-kpi-icon.revenue  {
+    background:#123426;
+    color:#78d8a7
+}
+body.dark-theme .dashboard-page .ra-kpi-icon.profit  {
+    background:#292047;
+    color:#b79aff
+}
+body.dark-theme .dashboard-page .ra-kpi-icon.products  {
+    background:#3a2e13;
+    color:#f3c978
+}
+body.dark-theme .dashboard-page .dashboard-actions a>span.qa-blue  {
+    background:#173052;
+    color:#8ebcff
+}
+body.dark-theme .dashboard-page .dashboard-actions a>span.qa-green  {
+    background:#123426;
+    color:#78d8a7
+}
+body.dark-theme .dashboard-page .dashboard-actions a>span.qa-cyan  {
+    background:#12353a;
+    color:#7fd5df
+}
+body.dark-theme .dashboard-page .dashboard-actions a>span.qa-purple  {
+    background:#292047;
+    color:#b79aff
+}

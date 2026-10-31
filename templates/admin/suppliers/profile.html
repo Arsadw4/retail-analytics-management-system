@@ -1,0 +1,184 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    {{ supplier[1] }}
+                </h1>
+                <a href="/admin/suppliers" class="btn secondary">
+                    Back
+                </a>
+            </div>
+            <div class="cards">
+                <div class="card">
+                    <h2>
+                        ₹{{ "%.2f"|format(supplier[7]) }}
+                    </h2>
+                    <p>
+                        Outstanding Balance
+                    </p>
+                </div>
+                <div class="card">
+                    <h2>
+                        {{ performance[3] if performance else 0 }}
+                    </h2>
+                    <p>
+                        Total Purchase Orders
+                    </p>
+                </div>
+                <div class="card">
+                    <h2>
+                        {{ performance[4] if performance else 0 }}
+                    </h2>
+                    <p>
+                        Total GRNs
+                    </p>
+                </div>
+                <div class="card">
+                    <h2>
+                        ₹{{ "%.2f"|format(performance[5]) if performance else "0.00" }}
+                    </h2>
+                    <p>
+                        Total Purchase Value
+                    </p>
+                </div>
+            </div>
+            <p>
+                Contact: {{ supplier[2] or "-" }} | Phone: {{ supplier[3] or "-" }} | Email: {{ supplier[4] or "-" }} | GST: {{ supplier[6] or "-" }}
+            </p>
+            <form method="POST" action="/admin/suppliers/{{ supplier[0] }}/payment" style="max-width:500px;margin-top:20px;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="form-group">
+                    <label>
+                        Record Payment Amount
+                    </label>
+                    <input type="number" step="0.01" name="amount" required>
+                </div>
+                <div class="form-group">
+                    <label>
+                        Method
+                    </label>
+                    <select name="payment_method">
+                        <option value="bank_transfer">
+                            Bank Transfer
+                        </option>
+                        <option value="cash">
+                            Cash
+                        </option>
+                        <option value="upi">
+                            UPI
+                        </option>
+                        <option value="cheque">
+                            Cheque
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>
+                        Reference No.
+                    </label>
+                    <input type="text" name="reference_no">
+                </div>
+                <button class="btn success">
+                    Record Payment
+                </button>
+            </form>
+            <h2 style="margin:25px 0 10px;font-size:20px;">
+                Purchase Orders
+            </h2>
+            {% if pos %}
+                <table>
+                    <tr>
+                        <th>
+                            PO Number
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Expected
+                        </th>
+                        <th>
+                            Total
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                    {% for p in pos %}
+                        <tr>
+                            <td>
+                                {{ p[1] }}
+                            </td>
+                            <td>
+                                {{ p[2] }}
+                            </td>
+                            <td>
+                                {{ p[3] or "-" }}
+                            </td>
+                            <td>
+                                ₹{{ "%.2f"|format(p[4]) }}
+                            </td>
+                            <td>
+                                <a href="/admin/purchase-orders/{{ p[0] }}" class="btn">
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No purchase orders yet.
+                </div>
+            {% endif %}
+            <h2 style="margin:25px 0 10px;font-size:20px;">
+                Ledger
+            </h2>
+            {% if ledger %}
+                <table>
+                    <tr>
+                        <th>
+                            Type
+                        </th>
+                        <th>
+                            Amount
+                        </th>
+                        <th>
+                            Balance After
+                        </th>
+                        <th>
+                            Notes
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                    </tr>
+                    {% for l in ledger %}
+                        <tr>
+                            <td>
+                                {{ l[1] }}
+                            </td>
+                            <td>
+                                ₹{{ "%.2f"|format(l[2]) }}
+                            </td>
+                            <td>
+                                ₹{{ "%.2f"|format(l[3]) }}
+                            </td>
+                            <td>
+                                {{ l[4] or "-" }}
+                            </td>
+                            <td>
+                                {{ l[5] }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No ledger entries yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

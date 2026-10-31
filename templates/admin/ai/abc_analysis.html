@@ -1,0 +1,75 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    ABC Inventory Analysis
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ai_bi.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    ABC Inventory Analysis
+                </h1>
+                <div>
+                    <a href="/admin/ai-dashboard" class="btn secondary">
+                        Back
+                    </a>
+                    <a href="/admin/ai/reports/inventory-intelligence/export/csv" class="btn secondary">
+                        CSV
+                    </a>
+                    <a href="/admin/ai/reports/inventory-intelligence/export/excel" class="btn secondary">
+                        Excel
+                    </a>
+                    <a href="/admin/ai/reports/inventory-intelligence/export/pdf" class="btn secondary">
+                        PDF
+                    </a>
+                </div>
+            </div>
+            <p style="color:#64748b;margin-bottom:15px;">
+                A = top 80% of revenue (highest priority), B = next 15%, C = remaining 5%.
+            </p>
+            {% if products %}
+                <table>
+                    <tr>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Revenue
+                        </th>
+                        <th>
+                            Cumulative %
+                        </th>
+                        <th>
+                            Grade
+                        </th>
+                    </tr>
+                    {% for p in products %}
+                        <tr>
+                            <td>
+                                {{ p.product_name }}
+                            </td>
+                            <td>
+                                ₹{{ "%.2f"|format(p.revenue) }}
+                            </td>
+                            <td>
+                                {{ p.cumulative_pct }}%
+                            </td>
+                            <td>
+                                <span class="badge {{ p.grade|lower }}">
+                                    {{ p.grade }}
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No sales recorded yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,528 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    My Profile
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+{% block page_content %}
+    {% set role = session.get('role') %}
+    <div class="profile-page">
+        <section class="profile-heading">
+            <div>
+                <div class="ra-breadcrumb">
+                    Dashboard
+                    <span>
+                        ›
+                    </span>
+                    My Profile
+                </div>
+                <h1>
+                    My Profile
+                </h1>
+                <p>
+                    View and manage your account information.
+                </p>
+            </div>
+            <div class="profile-heading-actions">
+                {% if can_edit %}
+                    <a class="ra-btn secondary" href="/employee/profile/edit">
+                        ✎ Edit Profile
+                    </a>
+                {% endif %}
+                {% if can_edit %}
+                    <a class="ra-btn" href="/employee/change-password">
+                        ▣ Change Password
+                    </a>
+                {% endif %}
+            </div>
+        </section>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="ra-flashes">
+                    {% for category,message in messages %}
+                        <div class="ra-flash">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        <section class="profile-top-grid">
+            <article class="profile-card profile-identity">
+                <div class="profile-summary">
+                    <div class="profile-avatar-xl">
+                        {% if profile_photo %}
+                            <img src="{{ url_for('static', filename='uploads/profiles/' ~ profile_photo) }}?v={{ session.get('profile_photo_version','') }}" alt="Profile photo">
+                        {% else %}
+                            {{ (user[1] or user[2] or 'U')[0]|upper }}
+                        {% endif %}
+                    </div>
+                    <div class="profile-identity-copy">
+                        <div class="profile-name-row">
+                            <h2>
+                                {{ user[1] or 'User' }}
+                            </h2>
+                            <span class="profile-role">
+                                {{ user[4]|replace('_',' ')|title }}
+                            </span>
+                        </div>
+                        <div class="profile-idline">
+                            ID:
+                            <strong>
+                                {{ employee[7] if employee else user[0] }}
+                            </strong>
+                            <span>
+                                •
+                            </span>
+                            {{ user[2] }}
+                        </div>
+                        <div class="profile-meta">
+                            <span>
+                                ▦ Retail Analytics
+                            </span>
+                            {% if employee %}
+                                <span>
+                                    ▣ {{ employee[9] or 'Department not assigned' }}
+                                </span>
+                                <span>
+                                    ▤ {{ employee[10] or employee[4] or 'Designation not assigned' }}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <article class="profile-card quick-card">
+                <div class="profile-card-title-row">
+                    <h2>
+                        Quick Info
+                    </h2>
+                    {% if can_edit %}
+                        <a class="ra-btn secondary compact" href="/employee/profile/edit">
+                            Edit
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="quick-info-list">
+                    <div class="quick-info-row">
+                        <span>
+                            Employee / User ID
+                        </span>
+                        <strong>
+                            {{ profile_data.quick_id }}
+                        </strong>
+                    </div>
+                    <div class="quick-info-row">
+                        <span>
+                            Department
+                        </span>
+                        <strong>
+                            {{ profile_data.department or '—' }}
+                        </strong>
+                    </div>
+                    <div class="quick-info-row">
+                        <span>
+                            Designation
+                        </span>
+                        <strong>
+                            {{ profile_data.designation or '—' }}
+                        </strong>
+                    </div>
+                    <div class="quick-info-row">
+                        <span>
+                            Join Date
+                        </span>
+                        <strong>
+                            {{ profile_data.join_date or '—' }}
+                        </strong>
+                    </div>
+                    <div class="quick-info-row">
+                        <span>
+                            Status
+                        </span>
+                        <strong class="status-active">
+                            ● {{ user[5]|title }}
+                        </strong>
+                    </div>
+                </div>
+            </article>
+            <article class="profile-card theme-card">
+                <h2>
+                    Theme
+                </h2>
+                <div class="theme-preview">
+                    <span class="theme-sun">
+                        ☀
+                    </span>
+                    <button class="theme-profile-switch" type="button" data-theme-toggle aria-label="Toggle light / dark mode">
+                        <i>
+                        </i>
+                    </button>
+                    <span class="theme-moon">
+                        ☾
+                    </span>
+                </div>
+                <strong class="theme-current" id="profileThemeLabel">
+                    Light Mode
+                </strong>
+                <p>
+                    Switch between light and dark mode for a better experience.
+                </p>
+            </article>
+        </section>
+        <section class="profile-info-card">
+            <nav class="profile-tabs" aria-label="Profile sections">
+                <a class="profile-tab active" href="#personal">
+                    Personal Information
+                </a>
+                <a class="profile-tab" href="#contact">
+                    Contact Details
+                </a>
+                <a class="profile-tab" href="#employment">
+                    Employment Details
+                </a>
+                <a class="profile-tab" href="#documents">
+                    Documents
+                </a>
+                <a class="profile-tab" href="/account/security">
+                    Security
+                </a>
+                <a class="profile-tab" href="#activity">
+                    Activity
+                </a>
+            </nav>
+            <div class="profile-section" id="personal">
+                <h2>
+                    <span>
+                        ♙
+                    </span>
+                    Personal Information
+                    {% if can_edit %}
+                        <a class="ra-btn secondary" href="/employee/profile/edit">
+                            Edit
+                        </a>
+                    {% endif %}
+                </h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <small>
+                            Full Name
+                        </small>
+                        <strong>
+                            {{ user[1] or '—' }}
+                        </strong>
+                    </div>
+                    <div class="info-item">
+                        <small>
+                            Date of Birth
+                        </small>
+                        <strong>
+                            {{ profile_data.date_of_birth or '—' }}
+                        </strong>
+                    </div>
+                    <div class="info-item">
+                        <small>
+                            Gender
+                        </small>
+                        <strong>
+                            {{ profile_data.gender or '—' }}
+                        </strong>
+                    </div>
+                    <div class="info-item">
+                        <small>
+                            Blood Group
+                        </small>
+                        <strong>
+                            {{ profile_data.blood_group or '—' }}
+                        </strong>
+                    </div>
+                    <div class="info-item">
+                        <small>
+                            Father's Name
+                        </small>
+                        <strong>
+                            {{ profile_data.father_name or '—' }}
+                        </strong>
+                    </div>
+                    <div class="info-item">
+                        <small>
+                            Marital Status
+                        </small>
+                        <strong>
+                            {{ profile_data.marital_status or '—' }}
+                        </strong>
+                    </div>
+                    <div class="info-item">
+                        <small>
+                            Nationality
+                        </small>
+                        <strong>
+                            {{ profile_data.nationality or '—' }}
+                        </strong>
+                    </div>
+                    <div class="info-item">
+                        <small>
+                            Language
+                        </small>
+                        <strong>
+                            {{ profile_data.language or '—' }}
+                        </strong>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-section" id="contact">
+                <h2>
+                    <span>
+                        ⌕
+                    </span>
+                    Contact Details
+                    {% if can_edit %}
+                        <a class="ra-btn secondary" href="/employee/profile/edit">
+                            Edit
+                        </a>
+                    {% endif %}
+                </h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <small>
+                            Email Address
+                        </small>
+                        <strong>
+                            {{ user[2] or '—' }}
+                        </strong>
+                    </div>
+                    <div class="info-item">
+                        <small>
+                            Phone Number
+                        </small>
+                        <strong>
+                            {{ profile_data.phone or '—' }}
+                        </strong>
+                    </div>
+                    <div class="info-item">
+                        <small>
+                            Alternate Phone
+                        </small>
+                        <strong>
+                            {{ profile_data.alternate_phone or '—' }}
+                        </strong>
+                    </div>
+                    <div class="info-item">
+                        <small>
+                            Address
+                        </small>
+                        <strong>
+                            {{ profile_data.address or '—' }}
+                        </strong>
+                    </div>
+                    <div class="info-item">
+                        <small>
+                            City
+                        </small>
+                        <strong>
+                            {{ profile_data.city or '—' }}
+                        </strong>
+                    </div>
+                    <div class="info-item">
+                        <small>
+                            State
+                        </small>
+                        <strong>
+                            {{ profile_data.state or '—' }}
+                        </strong>
+                    </div>
+                    <div class="info-item">
+                        <small>
+                            PIN Code
+                        </small>
+                        <strong>
+                            {{ profile_data.pin_code or '—' }}
+                        </strong>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-section" id="employment">
+                <h2>
+                    <span>
+                        ▣
+                    </span>
+                    Employment Details
+                </h2>
+                <div class="info-grid">
+                    {% if employee %}
+                        <div class="info-item">
+                            <small>
+                                Department
+                            </small>
+                            <strong>
+                                {{ employee[9] or '—' }}
+                            </strong>
+                        </div>
+                        <div class="info-item">
+                            <small>
+                                Designation
+                            </small>
+                            <strong>
+                                {{ employee[10] or employee[4] or '—' }}
+                            </strong>
+                        </div>
+                        <div class="info-item">
+                            <small>
+                                Date of Joining
+                            </small>
+                            <strong>
+                                {{ employee[8] or '—' }}
+                            </strong>
+                        </div>
+                        <div class="info-item">
+                            <small>
+                                Salary
+                            </small>
+                            <strong>
+                                ₹{{ employee[5] or 0 }}
+                            </strong>
+                        </div>
+                        <div class="info-item">
+                            <small>
+                                Employee Code
+                            </small>
+                            <strong>
+                                {{ employee[7] or '—' }}
+                            </strong>
+                        </div>
+                        <div class="info-item">
+                            <small>
+                                Role
+                            </small>
+                            <strong>
+                                {{ employee[13] or user[4]|title }}
+                            </strong>
+                        </div>
+                    {% else %}
+                        <div class="info-item">
+                            <small>
+                                Employment Record
+                            </small>
+                            <strong>
+                                No linked employee record
+                            </strong>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="profile-section" id="documents">
+                <h2>
+                    <span>
+                        □
+                    </span>
+                    Documents
+                </h2>
+                <p class="profile-note">
+                    Document management is available from the authorized employee profile in Human Resources. No document fields are fabricated here.
+                </p>
+            </div>
+            <div class="profile-section" id="activity">
+                <h2>
+                    <span>
+                        ◷
+                    </span>
+                    Activity
+                </h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <small>
+                            Last Login
+                        </small>
+                        <strong>
+                            {{ user[8] or '—' }}
+                        </strong>
+                    </div>
+                    <div class="info-item">
+                        <small>
+                            Account Created
+                        </small>
+                        <strong>
+                            {{ user[10] or '—' }}
+                        </strong>
+                    </div>
+                    <div class="info-item">
+                        <small>
+                            MFA
+                        </small>
+                        <strong>
+                            {{ 'Enabled' if user[11] else 'Disabled' }}
+                        </strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="profile-bottom-grid">
+            <article class="profile-card system-card">
+                <h2>
+                    <span>
+                        ⚙
+                    </span>
+                    System Information
+                </h2>
+                <div class="system-grid">
+                    <div class="info-item">
+                        <small>
+                            User ID
+                        </small>
+                        <strong>
+                            {{ user[0] }}
+                        </strong>
+                    </div>
+                    <div class="info-item">
+                        <small>
+                            Username
+                        </small>
+                        <strong>
+                            {{ user[2].split('@')[0] if user[2] else '—' }}
+                        </strong>
+                    </div>
+                    <div class="info-item">
+                        <small>
+                            Account Created
+                        </small>
+                        <strong>
+                            {{ user[10] or '—' }}
+                        </strong>
+                    </div>
+                    <div class="info-item">
+                        <small>
+                            Last Login
+                        </small>
+                        <strong>
+                            {{ user[8] or '—' }}
+                        </strong>
+                    </div>
+                </div>
+            </article>
+            <article class="profile-card security-card">
+                <h2>
+                    <span>
+                        ♢
+                    </span>
+                    Account Security
+                </h2>
+                <p>
+                    Manage password, multi-factor authentication and active sessions using the existing security controls.
+                </p>
+                <a href="/account/security" class="ra-btn secondary">
+                    Open Security
+                </a>
+            </article>
+        </section>
+    </div>
+<script nonce="{{ csp_nonce }}">
+(function(){
+  const label=document.getElementById('profileThemeLabel');
+  const modeButton=document.querySelector('.theme-mode-button');
+  const icon=document.querySelector('[data-profile-theme-icon]');
+  function sync(){const dark=document.body.classList.contains('dark-theme');if(label)label.textContent=dark?'Dark Mode':'Light Mode';if(modeButton){const t=modeButton.querySelector('span:last-child');if(t)t.textContent=dark?'Light Mode':'Dark Mode';}if(icon)icon.textContent=dark?'☀':'☾';}
+  window.addEventListener('ra-theme-changed',sync); sync();
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+        <script nonce="{{ csp_nonce }}">(function(){try{if(localStorage.getItem("ra_theme")==="dark"){document.documentElement.dataset.theme="dark";}}catch(e){}})();</script>
+            <title>
+                Two-Factor Verification
+            </title>
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/global_theme.css') }}">
+        </head>
+        <body>
+            <button class="auth-theme-toggle" data-theme-toggle type="button" aria-label="Switch to dark mode">
+                <span data-theme-icon>
+                    ☾
+                </span>
+            </button>
+            <div class="login-container">
+                <div class="login-card">
+                    <h2>
+                        Two-Factor Verification
+                    </h2>
+                    <p class="subtitle">
+                        Enter the 6-digit code from your authenticator app.
+                    </p>
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            <div class="error-message">
+                                {{ messages[0] }}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    <form method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="text" name="code" placeholder="6-digit code" inputmode="numeric"
+                   pattern="[0-9]*" autofocus required>
+                        <button type="submit">
+                            Verify
+                        </button>
+                    </form>
+                    <div class="links">
+                        <a href="/login">
+                            Back to Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+        <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+        </body>
+    </html>

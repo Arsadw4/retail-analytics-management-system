@@ -1,0 +1,296 @@
+# DAX Measures — Retail Analytics System
+
+Paste these into Power BI Desktop as new measures on the table noted for
+each (Modeling > New Measure). All reference the table/column names
+produced by `database/star_schema.sql` — import that as your Power BI
+tables (see `POWER_BI_SETUP_GUIDE.md`) before adding these.
+
+Every measure below assumes standard star-schema relationships:
+`FactSales[product_key] -> DimProduct[product_key]`, `FactSales[date_key]
+-> DimDate[date_key]`, etc. (all single-direction, dimension-to-fact) --
+see the setup guide for the exact relationship list.
+
+---
+
+## Sales & Revenue (table: FactSales)
+
+```dax
+Total Sales =
+SUM ( FactSales[line_revenue] )
+```
+
+```dax
+Total Discount =
+SUM ( FactSales[line_discount_allocated] )
+```
+
+```dax
+Total Tax Collected =
+SUM ( FactSales[line_tax_allocated] )
+```
+
+```dax
+Net Sales =
+[Total Sales] - [Total Discount]
+```
+Note: line_revenue is already tax-exclusive (Phase 4 stores
+selling_price without GST baked in), so "Net Sales" here means
+after-discount revenue, not revenue-minus-tax.
+
+```dax
+Gross Profit =
+SUM ( FactSales[line_profit] )
+```
+
+```dax
+Profit Margin % =
+DIVIDE ( [Gross Profit], [Total Sales], 0 )
+```
+
+```dax
+Average Order Value =
+DIVIDE (
+    [Total Sales],
+    DISTINCTCOUNT ( FactSales[sale_id] ),
+    0
+)
+```
+
+```dax
+Total Orders =
+DISTINCTCOUNT ( FactSales[sale_id] )
+```
+
+```dax
+Units Sold =
+SUM ( FactSales[quantity] )
+```
+
+## Time Intelligence (requires DimDate marked as the model's official
+## Date table — see setup guide)
+
+```dax
+Monthly Revenue =
+CALCULATE ( [Total Sales], DATESMTD ( DimDate[date_key] ) )
+```
+
+```dax
+Sales - Previous Month =
+CALCULATE ( [Total Sales], DATEADD ( DimDate[date_key], -1, MONTH ) )
+```
+
+```dax
+Sales Growth % =
+DIVIDE (
+    [Total Sales] - [Sales - Previous Month],
+    [Sales - Previous Month],
+    BLANK ()
+)
+```
+
+```dax
+Sales YTD =
+TOTALYTD ( [Total Sales], DimDate[date_key] )
+```
+
+```dax
+Sales Same Period Last Year =
+CALCULATE ( [Total Sales], SAMEPERIODLASTYEAR ( DimDate[date_key] ) )
+```
+
+## Top Products / Ranking (table: FactSales, use with a Product visual)
+
+```dax
+Top Selling Products Rank =
+RANKX ( ALL ( DimProduct[product_name] ), [Total Sales], , DESC )
+```
+
+```dax
+Top 10 Products Sales =
+IF ( [Top Selling Products Rank] <= 10, [Total Sales] )
+```
+
+## Inventory (table: FactInventory / FactInventory_snapshot)
+
+```dax
+Inventory Value =
+SUM ( FactInventory[stock_value] )
+```
+
+```dax
+Low Stock Item Count =
+CALCULATE (
+    DISTINCTCOUNT ( FactInventory[product_key] ),
+    FactInventory[status] = "Low Stock"
+)
+```
+
+```dax
+Out Of Stock Item Count =
+CALCULATE (
+    DISTINCTCOUNT ( FactInventory[product_key] ),
+    FactInventory[status] = "Out Of Stock"
+)
+```
+
+```dax
+Stock Turnover Ratio =
+-- Units sold in period / average units held in period. A simple,
+-- commonly used approximation -- true turnover needs a stock-movement
+-- time series (FactSales gives units sold; FactInventory gives the
+-- CURRENT snapshot, used here as the average-stock proxy).
+DIVIDE ( [Units Sold], SUM ( FactInventory[current_stock] ), 0 )
+```
+
+```dax
+Days Of Stock Remaining =
+DIVIDE (
+    SUM ( FactInventory[current_stock] ),
+    DIVIDE ( [Units Sold], 30, 0 ),  -- avg daily sales over the visible period
+    BLANK ()
+)
+```
+
+## Customer Analytics (table: FactSales + DimCustomer)
+
+```dax
+Customer Lifetime Value =
+CALCULATE (
+    [Total Sales],
+    ALLEXCEPT ( FactSales, FactSales[customer_key] )
+)
+```
+
+```dax
+Active Customers =
+CALCULATE (
+    DISTINCTCOUNT ( FactSales[customer_key] ),
+    FactSales[status] = "completed"
+)
+```
+
+```dax
+Repeat Customer Rate =
+VAR CustomersWithMultipleOrders =
+    COUNTROWS (
+        FILTER (
+            SUMMARIZE ( FactSales, FactSales[customer_key], "Orders", DISTINCTCOUNT ( FactSales[sale_id] ) ),
+            [Orders] > 1
+        )
+    )
+RETURN
+    DIVIDE ( CustomersWithMultipleOrders, [Active Customers], 0 )
+```
+
+## Purchases / Supplier (table: FactPurchases)
+
+```dax
+Total Purchase Value =
+SUM ( FactPurchases[line_cost] )
+```
+
+```dax
+Total Units Purchased =
+SUM ( FactPurchases[quantity_received] )
+```
+
+```dax
+Average Unit Cost =
+DIVIDE ( [Total Purchase Value], [Total Units Purchased], 0 )
+```
+
+## Payments (table: FactPayments)
+
+```dax
+Total Payments Collected =
+SUM ( FactPayments[amount] )
+```
+
+```dax
+Cash Payments % =
+DIVIDE (
+    CALCULATE ( [Total Payments Collected], FactPayments[payment_method] = "cash" ),
+    [Total Payments Collected],
+    0
+)
+```
+
+## Employee Performance (table: FactSales + DimEmployee)
+
+```dax
+Sales Per Employee =
+CALCULATE ( [Total Sales], ALLEXCEPT ( FactSales, FactSales[employee_key] ) )
+```
+
+```dax
+Orders Handled =
+DISTINCTCOUNT ( FactSales[sale_id] )
+```
+
+## KPI status measures (for KPI card conditional formatting)
+
+```dax
+Sales Growth Status =
+VAR g = [Sales Growth %]
+RETURN SWITCH ( TRUE (), g >= 0.05, "Good", g >= 0, "Flat", "Down" )
+```
+
+```dax
+Stock Health Status =
+VAR lowCount = [Low Stock Item Count]
+RETURN SWITCH ( TRUE (), lowCount = 0, "Healthy", lowCount <= 5, "Watch", "Critical" )
+```
+
+---
+
+## Calculated columns (add on the noted table, not as measures)
+
+```dax
+-- On DimProduct:
+Margin Bucket =
+SWITCH (
+    TRUE (),
+    DimProduct[margin_percent] >= 40, "High Margin",
+    DimProduct[margin_percent] >= 20, "Medium Margin",
+    "Low Margin"
+)
+```
+
+```dax
+-- On DimCustomer:
+Customer Tenure (Years) =
+DATEDIFF ( DimCustomer[customer_since], TODAY (), YEAR )
+```
+
+## Calculated table example
+
+```dax
+-- A standalone "Top 20 Products by Revenue" table for a dedicated page:
+Top20Products =
+TOPN ( 20, SUMMARIZE ( FactSales, DimProduct[product_name], "Revenue", [Total Sales] ), [Revenue], DESC )
+```
+
+---
+
+## DAX optimization notes
+
+- Every measure above uses `DIVIDE()` instead of `/` — avoids
+  divide-by-zero errors without needing `IFERROR()`, and is the
+  documented best-practice pattern for Power BI performance (`DIVIDE`
+  short-circuits; `IFERROR` evaluates the expression first, then
+  catches the error, which is slower).
+- Time-intelligence measures (`Sales YTD`, `Monthly Revenue`, etc.)
+  require `DimDate[date_key]` to be marked as the model's official Date
+  table (Table tools > Mark as date table) and related to
+  `FactSales[date_key]` — do this once, first, or every time-intelligence
+  measure above will error.
+- `Customer Lifetime Value` and `Sales Per Employee` use
+  `ALLEXCEPT`, which is preferred over `ALL()` + re-adding filters:
+  fewer virtual table operations for VertiPaq to materialize.
+- Avoid calculated columns where a measure will do (e.g. don't make
+  "Total Sales" a calculated column on FactSales) — calculated columns
+  are computed at refresh time and stored, and don't respond to slicers;
+  measures are computed at query time exactly when needed. The two
+  calculated-column examples above are legitimate exceptions: they
+  categorize a dimension row (not a fact aggregation), which is exactly
+  what calculated columns are for.

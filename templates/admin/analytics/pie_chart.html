@@ -1,0 +1,49 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Pie Chart
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <h1>
+            Business Distribution
+        </h1>
+        <canvas id="pieChart">
+        </canvas>
+    <script nonce="{{ csp_nonce }}">
+
+new Chart(
+    document.getElementById("pieChart"),
+    {
+        type: 'pie',
+
+        data: {
+
+            labels: [
+                'Total Products',
+                'Total Customers',
+                'Total Inventory'
+            ],
+
+            datasets: [{
+
+                label: 'Business Distribution',
+
+                data: [
+                    {{ total_products }},
+                    {{ total_customers }},
+                    {{ total_inventory }}
+                ],
+
+                borderWidth: 2
+
+            }]
+
+        }
+
+    }
+);
+
+</script>
+    </div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container" style="max-width:650px;">
+            <div class="header">
+                <h1>
+                    ⚠️ Restore Database
+                </h1>
+                <a href="/admin/system/backups" class="btn secondary">
+                    Back
+                </a>
+            </div>
+            <div class="alert-row high">
+                This OVERWRITES your current database with the contents of the selected backup file.
+                A safety backup of the current database is taken automatically first, but any data
+                created after that safety backup will still be lost. This cannot be undone from within
+                the app -- see BACKUP_RECOVERY_GUIDE.md.
+            </div>
+            <form method="POST" enctype="multipart/form-data" style="margin-top:20px;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="form-group">
+                    <label>
+                        Restore From
+                    </label>
+                    <select name="source" data-restore-source>
+                        <option value="existing">
+                            An existing backup on this server
+                        </option>
+                        <option value="upload">
+                            Upload a .sql backup file
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group" id="existing-row">
+                    <label>
+                        Backup File
+                    </label>
+                    <select name="existing_file">
+                        {% for b in backups %}
+                            {% if b[4] == 'success' %}
+                                <option value="{{ b[1] }}">
+                                    {{ b[1] }} ({{ b[7] }})
+                                </option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group" id="upload-row" style="display:none;">
+                    <label>
+                        Upload Backup File (.sql)
+                    </label>
+                    <input type="file" name="backup_file" accept=".sql">
+                </div>
+                <div class="form-group">
+                    <label>
+                        Type
+                        <strong>
+                            RESTORE
+                        </strong>
+                        to confirm this irreversible action
+                    </label>
+                    <input type="text" name="confirmation" required>
+                </div>
+                <button class="btn danger" type="submit">
+                    Restore Database
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

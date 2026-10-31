@@ -1,0 +1,129 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    User Administration
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_pages.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="ra-module">
+        <div class="ra-page-head">
+            <div>
+                <div class="ra-breadcrumb">
+                    Dashboard / Administration / Users
+                </div>
+                <h1>
+                    User Administration
+                </h1>
+                <p>
+                    Manage application accounts and access roles securely.
+                </p>
+            </div>
+            <div class="ra-head-actions">
+                <a href="/admin/permissions" class="ra-btn secondary">
+                    Roles & Permissions
+                </a>
+                <a href="/admin/add-user" class="ra-btn">
+                    ＋ Add User
+                </a>
+            </div>
+        </div>
+        <div class="ra-card">
+            <div class="ra-toolbar">
+                <input class="ra-input" id="userFilter" placeholder="Search name, email or role...">
+                <span class="ra-note">
+                    Only authorized administrators can manage accounts.
+                </span>
+            </div>
+            <div class="ra-table-wrap">
+                <table class="ra-table" id="userTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                User
+                            </th>
+                            <th>
+                                Email
+                            </th>
+                            <th>
+                                Role
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                            <th>
+                                Security
+                            </th>
+                            <th>
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td>
+                                    <div class="ra-person">
+                                        <div class="ra-avatar-lg">
+                                            {{ (user[1] or 'U')[0]|upper }}
+                                        </div>
+                                        <div>
+                                            <strong>
+                                                {{ user[1] }}
+                                            </strong>
+                                            <small>
+                                                User #{{ user[0] }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    {{ user[2] }}
+                                </td>
+                                <td>
+                                    <span class="ra-badge">
+                                        {{ user[4]|title }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="ra4-status {{ 'off' if user[5] and user[5]|lower != 'active' else '' }}">
+                                        {{ user[5] or 'active' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if user[11] %}
+                                        MFA Enabled
+                                    {% else %}
+                                        Standard Login
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="ra-action-menu">
+                                        <a href="/admin/edit-user/{{ user[0] }}">
+                                            Edit
+                                        </a>
+                                        <a href="/admin/users/{{ user[0] }}/reset-password">
+                                            Reset Password
+                                        </a>
+                                        <a href="#" data-confirm-delete="/admin/delete-user/{{ user[0] }}" data-confirm-message="Delete this user? This cannot be undone.">
+                                            Delete
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6">
+                                    <div class="ra4-empty">
+                                        No users found.
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+<script nonce="{{ csp_nonce }}">document.getElementById('userFilter')?.addEventListener('input',function(){const q=this.value.toLowerCase();document.querySelectorAll('#userTable tbody tr').forEach(r=>r.style.display=r.innerText.toLowerCase().includes(q)?'':'none')});</script>
+{% endblock %}

@@ -1,0 +1,250 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block title %}
+    Sales &amp; Demand Predictions
+{% endblock %}
+{% block page_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ai_bi.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Sales &amp; Demand Predictions
+                </h1>
+                <div>
+                    <a href="/admin/ai-dashboard" class="btn secondary">
+                        Back
+                    </a>
+                    <a href="/admin/ai/reports/forecast/export/csv" class="btn secondary">
+                        CSV
+                    </a>
+                    <a href="/admin/ai/reports/forecast/export/excel" class="btn secondary">
+                        Excel
+                    </a>
+                    <a href="/admin/ai/reports/forecast/export/pdf" class="btn secondary">
+                        PDF
+                    </a>
+                </div>
+            </div>
+            <div class="cards">
+                <div class="card">
+                    <h2>
+                        <span class="badge {{ daily.trend }}">
+                            {{ daily.trend }}
+                        </span>
+                    </h2>
+                    <p>
+                        Daily Sales Trend
+                    </p>
+                </div>
+                <div class="card">
+                    <h2>
+                        <span class="badge {{ weekly.trend }}">
+                            {{ weekly.trend }}
+                        </span>
+                    </h2>
+                    <p>
+                        Weekly Sales Trend
+                    </p>
+                </div>
+                <div class="card">
+                    <h2>
+                        <span class="badge {{ monthly.trend }}">
+                            {{ monthly.trend }}
+                        </span>
+                    </h2>
+                    <p>
+                        Monthly Sales Trend
+                    </p>
+                </div>
+            </div>
+            <h2 style="font-size:20px;margin:20px 0 10px;">
+                Next 7 Days -- Daily Sales Forecast
+            </h2>
+            {% if daily.forecast %}
+                <table>
+                    <tr>
+                        {% for v in daily.forecast %}
+                            <th>
+                                Day {{ loop.index }}
+                            </th>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        {% for v in daily.forecast %}
+                            <td>
+                                ₹{{ "%.0f"|format(v) }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    Not enough sales history yet to forecast.
+                </div>
+            {% endif %}
+            <h2 style="font-size:20px;margin:20px 0 10px;">
+                Next 4 Weeks -- Weekly Sales Forecast
+            </h2>
+            {% if weekly.forecast %}
+                <table>
+                    <tr>
+                        {% for v in weekly.forecast %}
+                            <th>
+                                Week {{ loop.index }}
+                            </th>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        {% for v in weekly.forecast %}
+                            <td>
+                                ₹{{ "%.0f"|format(v) }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    Not enough sales history yet to forecast.
+                </div>
+            {% endif %}
+            <h2 style="font-size:20px;margin:20px 0 10px;">
+                Next 3 Months -- Monthly Sales Forecast
+            </h2>
+            {% if monthly.forecast %}
+                <table>
+                    <tr>
+                        {% for v in monthly.forecast %}
+                            <th>
+                                Month {{ loop.index }}
+                            </th>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        {% for v in monthly.forecast %}
+                            <td>
+                                ₹{{ "%.0f"|format(v) }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    Not enough sales history yet to forecast.
+                </div>
+            {% endif %}
+            <h2 style="font-size:20px;margin:20px 0 10px;">
+                Seasonal Trend -- Best Days
+            </h2>
+            {% if seasonal.by_weekday %}
+                <table>
+                    <tr>
+                        <th>
+                            Day
+                        </th>
+                        <th>
+                            Avg Revenue
+                        </th>
+                    </tr>
+                    {% for d in seasonal.by_weekday %}
+                        <tr>
+                            <td>
+                                {{ d.day }}
+                            </td>
+                            <td>
+                                ₹{{ "%.0f"|format(d.avg_revenue) }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+            <h2 style="font-size:20px;margin:20px 0 10px;">
+                Out-of-Stock Risk (next 7 days)
+            </h2>
+            {% if stockout_risk %}
+                <table>
+                    <tr>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Stock
+                        </th>
+                        <th>
+                            Daily Velocity
+                        </th>
+                        <th>
+                            Days Remaining
+                        </th>
+                    </tr>
+                    {% for r in stockout_risk %}
+                        <tr>
+                            <td>
+                                <a href="/admin/predictions/product/{{ r.product_id }}">
+                                    {{ r.product_name }}
+                                </a>
+                            </td>
+                            <td>
+                                {{ r.current_stock }}
+                            </td>
+                            <td>
+                                {{ r.daily_velocity }}
+                            </td>
+                            <td>
+                                {{ r.days_of_stock_remaining }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No products predicted to stock out soon.
+                </div>
+            {% endif %}
+            <h2 style="font-size:20px;margin:20px 0 10px;">
+                AI-Suggested Reorders (demand-aware)
+            </h2>
+            {% if reorder %}
+                <table>
+                    <tr>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Stock
+                        </th>
+                        <th>
+                            Velocity/day
+                        </th>
+                        <th>
+                            Suggested Reorder Qty
+                        </th>
+                    </tr>
+                    {% for r in reorder %}
+                        <tr>
+                            <td>
+                                {{ r.product_name }}
+                            </td>
+                            <td>
+                                {{ r.current_stock }}
+                            </td>
+                            <td>
+                                {{ r.daily_velocity }}
+                            </td>
+                            <td>
+                                <span class="badge medium">
+                                    {{ r.suggested_reorder_qty }}
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    No demand-driven reorders needed right now.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

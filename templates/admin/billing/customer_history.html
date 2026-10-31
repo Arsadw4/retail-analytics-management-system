@@ -1,0 +1,63 @@
+{% extends 'layouts/admin_shell.html' %}
+{% block page_content %}
+    <div class="legacy-page">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    Billing History -- {{ customer[1] if customer else "" }}
+                </h1>
+                <a href="/admin/billing/pos" class="btn secondary">
+                    Back to POS
+                </a>
+            </div>
+            {% if history %}
+                <table>
+                    <tr>
+                        <th>
+                            Invoice
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            Total
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Actions
+                        </th>
+                    </tr>
+                    {% for h in history %}
+                        <tr>
+                            <td>
+                                {{ h[1] }}
+                            </td>
+                            <td>
+                                {{ h[2] }}
+                            </td>
+                            <td>
+                                {{ "%.2f"|format(h[3]) }}
+                            </td>
+                            <td>
+                                <span class="badge {{ h[4] }}">
+                                    {{ h[4] }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="/admin/billing/invoice/{{ h[0] }}" class="btn">
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    This customer has no billing history yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
